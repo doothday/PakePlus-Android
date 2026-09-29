@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>拖延干预工作台</title>
+<meta name="theme-color" content="#C08A1E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#F2EDDD;
+  --paper2:#E9E2CC;
+  --card:#FFFDF5;
+  --ink:#24352D;
+  --ink-soft:#5C6B60;
+  --line:#D8CEB6;
+  --gold:#C08A1E;
+  --gold-deep:#9A6E12;
+  --green:#2E7D5B;
+  --ember:#C96F2B;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.6}
+.app{max-width:540px;margin:0 auto;padding:0 14px 100px}
+/* ===== 顶栏 ===== */
+header{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+.hbar{max-width:540px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 14px}
+.logo{font-family:'Noto Serif SC','Songti SC',serif;font-weight:900;font-size:18px;letter-spacing:.5px;border:none;background:none;padding:0;cursor:pointer;text-align:left;color:inherit}
+.logo small{display:block;font-family:'Noto Sans SC',sans-serif;font-weight:500;font-size:10px;color:var(--ink-soft);letter-spacing:2px}
+.coin-pill{display:flex;gap:7px;align-items:center;border:1px solid var(--gold);background:#fff;border-radius:999px;padding:5px 12px;font-weight:700;color:var(--gold-deep)}
+.coin-pill svg{flex:none}
+.coin-fly{position:fixed;z-index:50;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#EFC35B,#B87F16);box-shadow:0 2px 6px rgba(154,110,18,.45);pointer-events:none;transition:transform .6s cubic-bezier(.3,.7,.4,1),opacity .6s;}
+@keyframes pillPop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.coin-pill.pop{animation:pillPop .45s ease}
+.ghost{background:none;border:none;padding:6px;cursor:pointer;color:var(--ink-soft);display:flex;align-items:center}
+.ghost:hover{color:var(--ink)}
+/* ===== 卡片与通用 ===== */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.card h2{margin:0 0 4px;font-size:16px;font-weight:700}
+.card .sub{margin:0 0 10px;font-size:12px;color:var(--ink-soft)}
+.row{display:flex;align-items:center;gap:8px}
+.grow{flex:1;min-width:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.ember{background:var(--ember);border-color:var(--ember);color:#fff}
+.btn.ghosty{background:none;border-color:transparent;color:var(--ink-soft)}
+.btn:active{transform:scale(.98)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.chip{display:inline-flex;align-items:center;min-height:34px;padding:4px 12px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12px;font-weight:700;color:var(--ink-soft);cursor:pointer}
+.chip.on{color:var(--gold-deep);border-color:var(--gold)}
+/* ===== 输入区 ===== */
+.console-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:12px}
+.console-box label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px}
+#cmdInput{width:100%;min-height:88px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 12px;font-size:15px;font-family:inherit;color:var(--ink);resize:vertical}
+#cmdInput:focus{outline:2px solid var(--gold);outline-offset:0}
+.qrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+/* ===== 回执 ===== */
+.receipt{position:relative;background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:14px;padding:14px;margin:14px 0}
+.rhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rhead span:first-child{font-size:11px;letter-spacing:3px;color:var(--ink-soft);font-weight:700}
+.chars{font-size:10px;color:#8a97;border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.rline{display:flex;gap:8px;padding:3px 0;font-size:15px}
+.rline .dot{color:var(--gold);font-weight:900;flex:none}
+.rline strong{color:var(--ink);font-weight:700}
+.ra{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.stamp{display:inline-block;border:2px solid var(--gold-deep);color:var(--gold-deep);border-radius:4px;padding:2px 12px;font-weight:900;font-size:13px;letter-spacing:2px;transform:rotate(-8deg);margin:2px 0 10px;animation:stampIn .4s cubic-bezier(.2,1.4,.4,1)}
+@keyframes stampIn{0%{transform:scale(1.9) rotate(-16deg);opacity:0}100%{transform:scale(1) rotate(-8deg);opacity:1}}
+/* ===== 金币页 ===== */
+.balance-card{background:var(--card);border:1px solid var(--gold);border-radius:16px;padding:20px 16px;margin-top:12px;text-align:center}
+.balance-num{font-family:'Noto Serif SC',serif;font-size:44px;font-weight:900;color:var(--gold-deep);line-height:1.1}
+.balance-label{font-size:12px;color:var(--ink-soft);margin-top:4px}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px}
+.rule b{color:var(--gold-deep);font-size:16px}
+.ledger{list-style:none;margin:0;padding:0}
+.ledger li{display:flex;justify-content:space-between;gap:10px;padding:10px 2px;border-bottom:1px dashed var(--line);font-size:14px}
+.ledger li:last-child{border-bottom:none}
+.ledger .why{color:var(--ink-soft);font-size:12px;margin-top:1px}
+.plus{color:var(--green);font-weight:700;white-space:nowrap}
+.minus{color:var(--gold-deep);font-weight:700;white-space:nowrap}
+/* ===== 心愿 / 商店 ===== */
+.w-card{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.w-info{flex:1;min-width:0}
+.w-info b{font-size:15px}
+.w-cost{font-size:12px;color:var(--ink-soft)}
+.pbar{height:7px;border-radius:999px;background:#E6DEC6;overflow:hidden;margin-top:6px}
+.pfill{height:100%;background:var(--gold);border-radius:999px;transition:width .4s}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.shop-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.shop-card b{font-size:14px;line-height:1.45}
+.shop-cost{color:var(--gold-deep);font-weight:900;font-size:16px}
+/* ===== 长效任务 ===== */
+.task-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.task-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.task-head b{font-size:16px;flex:1}
+.pct{font-family:'Noto Serif SC',serif;font-weight:900;color:var(--gold-deep);font-size:15px}
+.layers{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;display:none}
+.layers.open{display:block}
+.layers p{margin:4px 0;font-size:13px;color:var(--ink-soft)}
+.layers p b{color:var(--ink)}
+.ms-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.ms{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--ink-soft)}
+.ms.earned{border-color:var(--gold);color:var(--gold-deep);font-weight:700}
+/* ===== 设置 ===== */
+.set-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+.set-card h3{margin:0 0 10px;font-size:14px}
+.fld{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 10px;font-size:14px;font-family:inherit;color:var(--ink);margin:4px 0}
+textarea.fld{min-height:52px;resize:vertical}
+.srow{display:flex;gap:8px;align-items:center;margin:8px 0}
+.srow .fld{flex:1;margin:0}
+.del{background:none;border:none;color:#B4533A;font-size:13px;cursor:pointer;padding:8px 4px;font-weight:700}
+/* ===== 底栏 ===== */
+.tabbar{position:fixed;bottom:0;left:0;right:0;z-index:6;background:#FFFDF6;border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 9px;font-size:11px;color:var(--ink-soft);background:none;border:none;cursor:pointer;font-family:inherit}
+.tab.on{color:var(--gold-deep);font-weight:700}
+.tab svg{width:22px;height:22px}
+/* ===== 弹窗 ===== */
+.modal{position:fixed;inset:0;z-index:20;background:rgba(36,53,45,.4);display:flex;align-items:center;justify-content:center;padding:24px}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;width:100%;max-width:340px}
+.mcard h3{margin:0 0 10px;font-size:15px}
+.mrow{display:flex;gap:8px;margin-top:12px}
+.mrow .btn{flex:1}
+.empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:24px 0}
+h1{font-size:0;margin:0}
+</style>
+</head>
+<body>
+<h1>拖延干预工作台</h1>
+
+<header>
+  <div class="hbar">
+    <button class="logo" onclick="location.hash='#/console'" title="回到干活">拖延干预工作台<small>机制驱动 · 只奖不罚</small></button>
+    <div class="row">
+      <button class="coin-pill" onclick="location.hash='#/coins'" aria-label="金币余额">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/></svg>
+        <span id="coinBal">0</span>
+      </button>
+      <button class="ghost" onclick="location.hash='#/settings'" aria-label="设置">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="app">
+
+<!-- ===== 视图：干活 ===== -->
+<section data-route="console">
+  <div class="console-box">
+    <label>输入任务或指令</label>
+    <textarea id="cmdInput" placeholder="例：写周报　卡壳：周报　重启：周报　完成：周报&#10;今天：英语　查金币　查总进度　兑换自由活动15分钟&#10;心愿单：短途游 500　拆解：起床=放下手机　用5秒启动"></textarea>
+    <div class="qrow">
+      <button class="btn gold" id="btnSend" style="flex:1">输出动作</button>
+    </div>
+    <div class="qrow">
+      <button class="chip" data-quick="micro">微启动 +2</button>
+      <button class="chip" data-quick="box">时间盒 +12</button>
+      <button class="chip" data-quick="loop">闭环 +15</button>
+      <button class="chip" data-quick="rest">主动休息 +1</button>
+      <button class="chip" data-quick="count5">5秒倒计时</button>
+    </div>
+  </div>
+  <div class="receipt" id="receipt" hidden>
+    <div class="rhead"><span>控制台回执</span><span class="chars">≈0字</span></div>
+    <div class="rline"><span class="dot">●</span><span>输入任务文本，系统会按四步SOP生成可落地的动作。也可以试试上方快捷入账。</span></div>
+  </div>
+</section>
+
+<!-- ===== 视图：金币 ===== -->
+<section data-route="coins" hidden>
+  <div class="balance-card">
+    <div class="balance-num" id="balNum">0</div>
+    <div class="balance-label">当前金币余额 · 1金币≈1元愉悦价值</div>
+  </div>
+  <div class="card">
+    <h2>入账规则</h2>
+    <div class="sub">只奖不罚，漏做不后退</div>
+    <div class="rules">
+      <div class="rule"><b>+2</b><br>2分钟微启动</div>
+      <div class="rule"><b>+12</b><br>完成1个时间盒</div>
+      <div class="rule"><b>+15</b><br>整项闭环</div>
+      <div class="rule"><b>+1</b><br>主动休息</div>
+      <div class="rule"><b>+20</b><br>里程碑 25/50/75/100%</div>
+      <div class="rule" style="grid-column:1/-1">利润率 50%：工作收益＞兑换成本，保证动力</div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>账本流水</h2>
+    <ul class="ledger" id="ledger"></ul>
+  </div>
+</section>
+
+<!-- ===== 视图：心愿单 ===== -->
+<section data-route="wishlist" hidden>
+  <div class="card">
+    <h2>心愿单</h2>
+    <div class="sub">用金币兑换，攒够即兑</div>
+    <div id="wishList"></div>
+    <div class="qrow">
+      <input class="fld grow" id="wishName" placeholder="心愿名称，如：短途游">
+      <input class="fld" id="wishCost" type="number" inputmode="numeric" placeholder="金币数" style="width:86px">
+      <button class="btn gold" onclick="addWishFromForm()">加入</button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 视图：兑换商店 ===== -->
+<section data-route="shop" hidden>
+  <div class="card">
+    <h2>兑换商店</h2>
+    <div class="sub">点击即兑换，兑换后余额实时扣减</div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <p style="font-size:12px;color:var(--ink-soft);margin:14px 0 0">商店可在「设置」中增删改价格，也可自定义兑换项。</p>
+  </div>
+</section>
+
+<!-- ===== 视图：长效任务 ===== -->
+<section data-route="tasks" hidden>
+  <div class="card" style="border:none;background:none;padding:0;margin:12px 0 4px">
+    <h2>长效任务库</h2>
+    <div class="sub">阶段里程碑 → 周度核心 → 每日时间盒 → 2分钟微启动</div>
+  </div>
+  <div id="taskList"></div>
+</section>
+
+<!-- ===== 视图：设置 ===== -->
+<section data-route="settings" hidden>
+  <div class="set-card">
+    <h3>兑换商店管理</h3>
+    <div id="shopEdit"></div>
+    <button class="btn" onclick="addShopRow()" style="width:100%">+ 新增兑换项</button>
+  </div>
+  <div class="set-card">
+    <h3>拆解词典（自定义第一步）</h3>
+    <div id="userStepsEdit"></div>
+    <p style="font-size:12px;color:var(--ink-soft);margin:8px 0 0">也可在干活页输入「拆解：起床=放下手机坐起来」直接添加，输入对应任务时会优先用你的拆法。</p>
+  </div>
+  <div class="set-card">
+    <h3>意义词典（自定义小意义）</h3>
+    <div id="userMeaningsEdit"></div>
+    <p style="font-size:12px;color:var(--ink-soft);margin:8px 0 0">也可在干活页输入「意义：起床=闹钟响时我是坐着的」直接添加，输入对应任务时会优先用你的这句。</p>
+  </div>
+  <div class="set-card">
+    <h3>边界词典（时间盒分钟）</h3>
+    <div id="userBoundsEdit"></div>
+    <p style="font-size:12px;color:var(--ink-soft);margin:8px 0 0">输入「边界：英语=40」即可记住，输入对应任务时优先用这个时长。</p>
+  </div>
+  <div class="set-card">
+    <h3>环境词典（物理动作）</h3>
+    <div id="userEnvEdit"></div>
+    <p style="font-size:12px;color:var(--ink-soft);margin:8px 0 0">输入「环境：起床=睡前把手机放客厅」即可记住。</p>
+  </div>
+  <div class="set-card">
+    <h3>长效任务管理</h3>
+    <div id="taskEdit"></div>
+  </div>
+  <div class="set-card">
+    <h3>数据</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 10px">重置会清空金币、流水、心愿单与任务进度，恢复到初始状态。</p>
+    <button class="btn ember" onclick="confirmReset()" style="width:100%">重置全部数据</button>
+  </div>
+</section>
+
+</main>
+
+<nav class="tabbar">
+  <button class="tab on" data-route="console" onclick="location.hash='#/console'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h10"/><path d="M4 18h7"/><path d="M18 9l3 3-3 3"/></svg>
+    干活
+  </button>
+  <button class="tab" data-route="coins" onclick="location.hash='#/coins'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/></svg>
+    金币
+  </button>
+  <button class="tab" data-route="wishlist" onclick="location.hash='#/wishlist'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.9-5.4 2.9 1-6L3.2 9.4l6.1-.9z"/></svg>
+    心愿
+  </button>
+  <button class="tab" data-route="shop" onclick="location.hash='#/shop'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20l-2 5H4z"/><path d="M12 7v14"/></svg>
+    兑换
+  </button>
+  <button class="tab" data-route="tasks" onclick="location.hash='#/tasks'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+    任务
+  </button>
+</nav>
+
+<!-- ===== 弹窗 ===== -->
+<div class="modal" id="modal" hidden>
+  <div class="mcard">
+    <h3 id="mTitle"></h3>
+    <input class="fld" id="mInput" placeholder="">
+    <div class="mrow">
+      <button class="btn" id="mCancel">取消</button>
+      <button class="btn gold" id="mOk">确认</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 状态 ================= */
+var LS='pdConV1';
+var DEFAULTS={
+  coins:0,
+  ledger:[],
+  wishlist:[],
+  userSteps:{},
+  userMeanings:{},
+  userBounds:{},
+  userEnv:{},
+  shop:[
+    {name:'15分钟安心刷手机',cost:10},
+    {name:'一杯奶茶/小零食',cost:20},
+    {name:'提前1小时结束工作',cost:30},
+    {name:'完整追完一部电影/一集剧',cost:80},
+    {name:'半天完全属于自己的自由时间',cost:150},
+    {name:'一次短途周边游',cost:500}
+  ],
+  tasks:[
+    {id:'en',name:'3个月学英语',total:100,done:0,miles:{25:false,50:false,75:false,100:false},
+      layers:{stage:'阶段：第1-52天小猪佩奇精听+跟读；第53-100天开口日常对话',week:'周核心：看5集小猪佩奇，每集精听1遍+跟读3句',daily:'25分钟盒：听1集+跟读3句',micro:'2分钟微启动：打开播放器，播第1集前30秒'}},
+    {id:'bf',name:'3个月自己做早饭',total:90,done:0,miles:{25:false,50:false,75:false,100:false},
+      layers:{stage:'阶段：第1-30天学5个快手早餐；第31-60天解锁蒸烤花样；第61-90天稳定每周5天自制',week:'周核心：解锁1个新早餐配方',daily:'15分钟盒：实操一道早餐',micro:'2分钟微启动：昨晚把食材放灶台边'}},
+    {id:'sl',name:'1个月瘦6.8斤',total:30,done:0,miles:{25:false,50:false,75:false,100:false},
+      layers:{stage:'阶段：每周约1.7斤；第1周饮食记录；第2周控糖控油；第3周调整晚餐；第4周复测',week:'周核心：4次30分钟快走或跳操',daily:'30分钟盒：运动+晚餐拍照记录',micro:'2分钟微启动：换上运动鞋站到门口'}},
+    {id:'sc',name:'3个月装修小红书素材库',total:90,done:0,miles:{25:false,50:false,75:false,100:false},
+      layers:{stage:'阶段：第1个月定栏目+拍100条素材；第2个月剪50条+建选题库；第3个月发布排期+复盘迭代',week:'周核心：拍8条+剪3条',daily:'40分钟盒：拍摄或剪辑一段',micro:'2分钟微启动：打开相册挑3张候选'}}
+  ]
+};
+function loadState(){
+  try{var d=JSON.parse(localStorage.getItem(LS));if(d&&typeof d.coins==='number'){if(!d.userSteps)d.userSteps={};if(!d.userMeanings)d.userMeanings={};if(!d.userBounds)d.userBounds={};if(!d.userEnv)d.userEnv={};return d;}}catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+var S=loadState();
+function save(){localStorage.setItem(LS,JSON.stringify(S));}
+function credit(delta,reason){
+  S.coins+=delta;
+  S.ledger.unshift({time:Date.now(),delta:delta,reason:reason,bal:S.coins});
+  if(S.ledger.length>80)S.ledger.length=80;
+  save();syncHeader();
+}
+function pctOf(t){return Math.round(t.done/t.total*100);}
+function matchLongTask(name){
+  var map=[
+    {id:'en',keys:['英语','英文','佩奇','小猪']},
+    {id:'bf',keys:['早饭','早餐','做饭']},
+    {id:'sl',keys:['瘦','减重','减脂','体重','斤']},
+    {id:'sc',keys:['素材','小红书','账号','装修']}
+  ];
+  for(var i=0;i<map.length;i++){
+    for(var j=0;j<map[i].keys.length;j++){
+      if(name.indexOf(map[i].keys[j])>-1){
+        for(var k=0;k<S.tasks.length;k++){if(S.tasks[k].id===map[i].id)return S.tasks[k];}
+      }
+    }
+  }
+  return null;
+}
+function checkMilestones(lt){
+  var hit=null;
+  [25,50,75,100].forEach(function(th){
+    if(pctOf(lt)>=th&&!lt.miles[th]){lt.miles[th]=true;credit(20,'里程碑'+th+'%·'+lt.name);hit=th;}
+  });
+  save();
+  return hit;
+}
+/* ================= 工具 ================= */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(s){return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');}
+function charsOf(out){
+  var txt='';out.lines.forEach(function(l){txt+=l.t;});
+  return txt.replace(/\*\*/g,'').length;
+}
+function detectBox(t){
+  var m=t.match(/(\d{1,3})\s*分钟/);
+  if(m)return +m[1];
+  if(/整理|回消息|回复|填写|发消息|预约|转账|缴费|购买|寄|取|读|写|交/.test(t))return 15;
+  if(/报告|方案|复盘|学习|代码|数据|分析|拍摄|剪辑|研究|总结|计划/.test(t))return 45;
+  return 25;
+}
+var lastTask='';
+/* ---- 拆解词典：任务 → 2分钟第一步 ---- */
+var BUILTIN_STEPS={
+  '起床':'放下手机，坐起来',
+  '早起':'放下手机，坐起来',
+  '写周报':'打开文档，写下标题和第一行',
+  '周报':'打开文档，写下标题和第一行',
+  '写方案':'打开文档，写下第一行标题',
+  '写报告':'打开文档，写下第一行标题',
+  '写总结':'打开文档，写下第一行标题',
+  '读书':'翻开书，读到第一句',
+  '看书':'翻开书，读到第一句',
+  '打扫':'拿起抹布，擦第一格',
+  '收拾':'把台面上第一件东西放回原处',
+  '回复消息':'点开对话框，打出第一句',
+  '回消息':'点开对话框，打出第一句',
+  '锻炼':'换上运动鞋站到门口',
+  '运动':'换上运动鞋站到门口',
+  '健身':'换上运动鞋站到门口',
+  '冥想':'坐上垫子，闭眼',
+  '剪辑':'打开素材，切第一刀',
+  '拍摄':'拿出手机，拍第一条',
+  '拍素材':'打开相机，拍第一条',
+  '背单词':'打开App，点开第一个单词',
+  '做早饭':'把食材从冰箱拿出来放灶台',
+  '记账':'打开账本，记第一笔',
+  '整理':'把桌面上第一件东西归位'
+};
+function microStep(task){
+  var u=Object.keys(S.userSteps);
+  for(var i=0;i<u.length;i++){
+    var k=u[i];
+    if(k.indexOf(task)>-1||task.indexOf(k)>-1)return S.userSteps[k];
+  }
+  var lt=matchLongTask(task);
+  if(lt)return lt.layers.micro.replace('2分钟微启动：','');
+  for(var d in BUILTIN_STEPS){
+    if(task.indexOf(d)>-1||d.indexOf(task)>-1)return BUILTIN_STEPS[d];
+  }
+  if(/起|睡|出门|走|站|跑|运动|锻炼|健身/.test(task))return '先动身体：离开当前位置，站到任务现场';
+  if(/写|做|画|剪|拍|设计|制作|整理|填|改/.test(task))return '打开「'+task+'」的入口，落下第一笔';
+  if(/回|发|约|买|问|联系|沟通|消息/.test(task))return '打开对话框，发出第一句';
+  return '把「'+task+'」要用的东西摆到眼前，2分钟';
+}
+function envStep(task){
+  if(/起床|早起|睡觉|入睡|早睡/.test(task))return '睡前把手机放客厅充电，床头只留闹钟';
+  return '手机放到2米外充电，现在就去';
+}
+/* ---- 记住拆解 ---- */
+function teachStep(t){
+  var rest=t.replace(/^(拆解|拆分|记拆解)\s*[:：]?\s*/,'').trim();
+  var m=rest.match(/^(.+?)[=：:](.+)$/);
+  if(!m||!m[1].trim()||!m[2].trim())return {lines:[{t:'格式：**拆解：任务=第一步动作**，如「拆解：起床=放下手机坐起来」'}]};
+  var k=m[1].trim(),v=m[2].trim();
+  S.userSteps[k]=v;save();
+  return {lines:[
+    {t:'已记住：「'+k+'」的第一步 = **'+v+'**'},
+    {t:'下次输入「'+k+'」会直接用这个拆法'},
+    {t:'在设置页的「拆解词典」里可改或删'}
+  ]};
+}
+/* ---- 意义词典：任务 → 一句小意义 ---- */
+var LT_MEANING={
+  en:'这集佩奇看完，你能跟宝宝多冒一句英文',
+  bf:'热乎的早饭是你做的，不是外卖',
+  sl:'明早的体重数字，比昨天好看一点',
+  sc:'素材库多一块砖，离第一条爆款近一步'
+};
+function typeMeaning(task){
+  if(/起床|早起/.test(task))return '闹钟响时你是坐着的，不是躺着刷手机——一天从主动开始';
+  if(/睡|入睡|早睡/.test(task))return '放下手机那一刻，今晚的觉真的开始了';
+  if(/锻炼|运动|健身|跑步|跳操/.test(task))return '今晚睡前，身上有动过的痕迹，不是瘫了一整天';
+  if(/早饭|早餐|做饭|煮|炒/.test(task))return '今天的第一餐是自己做的，不是对付的';
+  if(/英语|英文|单词|学习|读书|看书|背/.test(task))return '今晚睡前能想起来今天见过的那一句，不是一片空白';
+  if(/素材|小红书|拍摄|剪辑|拍照|视频/.test(task))return '素材库多一块砖，离第一条爆款近一步';
+  if(/周报|报告|方案|总结|计划|复盘/.test(task))return '发出去那一刻，待办少一件，催你的人少一个';
+  if(/回|发消息|约|沟通|联系|消息/.test(task))return '对方收到消息，今晚双方都不用再惦记这事';
+  if(/打扫|收拾|整理|清洁/.test(task))return '走进房间第一眼是干净的，不是堆着的';
+  if(/记账|缴费|转账|还款/.test(task))return '账是实的，心不悬着';
+  return null;
+}
+function meaningCandidates(task){
+  var arr=[];
+  var u=Object.keys(S.userMeanings);
+  for(var i=0;i<u.length;i++){
+    var k=u[i];
+    if(k.indexOf(task)>-1||task.indexOf(k)>-1)arr.push(S.userMeanings[k]);
+  }
+  var lt=matchLongTask(task);
+  if(lt&&LT_MEANING[lt.id]&&arr.indexOf(LT_MEANING[lt.id])<0)arr.push(LT_MEANING[lt.id]);
+  var tm=typeMeaning(task);
+  if(tm&&arr.indexOf(tm)<0)arr.push(tm);
+  if(arr.indexOf('做完这2分钟，「'+task+'」就从没开始变成已开始——今晚回想，它是实的不是空的')<0){
+    arr.push('做完这2分钟，「'+task+'」就从没开始变成已开始——今晚回想，它是实的不是空的');
+  }
+  return arr;
+}
+/* ---- 拆解候选：一次给多个，可换 ---- */
+function microStepCandidates(task){
+  var arr=[];
+  var exact=microStep(task);
+  if(arr.indexOf(exact)<0)arr.push(exact);
+  if(/起|睡|出门|走|站|跑|运动|锻炼|健身/.test(task))arr.push('先动身体：离开当前位置，站到任务现场');
+  else if(/写|做|画|剪|拍|设计|制作|整理|填|改/.test(task))arr.push('打开「'+task+'」的入口，落下第一笔');
+  else if(/回|发|约|买|问|联系|沟通|消息/.test(task))arr.push('打开对话框，发出第一句');
+  else if(arr[0].indexOf('把「'+task+'」')<0)arr.push('把「'+task+'」要用的东西摆到眼前');
+  arr.push('只做「'+task+'」最开头的一小块，1分钟就停');
+  var seen={};
+  return arr.filter(function(s){if(seen[s])return false;seen[s]=true;return true;});
+}
+function teachMeaning(t){
+  var rest=t.replace(/^(意义|写意义|记意义)\s*[:：]?\s*/,'').trim();
+  var m=rest.match(/^(.+?)[=：:](.+)$/);
+  if(!m||!m[1].trim()||!m[2].trim())return {lines:[{t:'格式：**意义：任务=一句小意义**，如「意义：起床=闹钟响时我是坐着的」'}]};
+  var k=m[1].trim(),v=m[2].trim();
+  S.userMeanings[k]=v;save();
+  return {lines:[
+    {t:'已记住「'+k+'」的意义：**'+v+'**'},
+    {t:'下次输入「'+k+'」会优先用这一句'},
+    {t:'在设置页「意义词典」可改或删'}
+  ]};
+}
+/* ---- 边界词典：任务 → 时间盒分钟数 ---- */
+function boundMinutes(task){
+  var u=Object.keys(S.userBounds);
+  for(var i=0;i<u.length;i++){
+    var k=u[i];
+    if(k.indexOf(task)>-1||task.indexOf(k)>-1)return S.userBounds[k];
+  }
+  return detectBox(task);
+}
+function boundCandidates(task){
+  var arr=[boundMinutes(task)];
+  [15,25,45].forEach(function(m){if(arr.indexOf(m)<0)arr.push(m);});
+  return arr;
+}
+function teachBound(t){
+  var rest=t.replace(/^(边界|设边界|时间盒)\s*[:：]?\s*/,'').trim();
+  var m=rest.match(/^(.+?)[=：:]\s*(\d+)\s*分钟?$/);
+  if(!m)return {lines:[{t:'格式：**边界：任务=分钟数**，如「边界：英语=40」'}]};
+  var k=m[1].trim(),n=Math.max(5,+m[2]);
+  S.userBounds[k]=n;save();
+  return {lines:[
+    {t:'已记住「'+k+'」的边界：**'+n+'分钟**'},
+    {t:'下次输入「'+k+'」默认用这个时长'}
+  ]};
+}
+/* ---- 环境词典：任务 → 物理动作 ---- */
+function envCandidates(task){
+  var arr=[];
+  var u=Object.keys(S.userEnv);
+  for(var i=0;i<u.length;i++){
+    var k=u[i];
+    if(k.indexOf(task)>-1||task.indexOf(k)>-1)arr.push(S.userEnv[k]);
+  }
+  var lt=envStep(task);
+  if(arr.indexOf(lt)<0)arr.push(lt);
+  ['把手机放到另一个房间充电','关掉所有无关通知，只留这一件事','收拾出一块干净桌面'].forEach(function(e){
+    if(arr.indexOf(e)<0)arr.push(e);
+  });
+  return arr;
+}
+function teachEnv(t){
+  var rest=t.replace(/^(环境|调环境)\s*[:：]?\s*/,'').trim();
+  var m=rest.match(/^(.+?)[=：:](.+)$/);
+  if(!m||!m[1].trim()||!m[2].trim())return {lines:[{t:'格式：**环境：任务=物理动作**，如「环境：起床=睡前把手机放客厅」'}]};
+  var k=m[1].trim(),v=m[2].trim();
+  S.userEnv[k]=v;save();
+  return {lines:[
+    {t:'已记住「'+k+'」的环境动作：**'+v+'**'},
+    {t:'下次输入「'+k+'」会优先用这个'}
+  ]};
+}
+/* ================= 指令路由 ================= */
+function runConsole(raw){
+  var t=raw.trim();
+  if(!t){
+    showReceipt({lines:[{t:'● 输入任务文本或指令：\n● 写周报（SOP）　卡壳：周报　重启：周报　完成：周报\n● 今天：英语　查金币　查总进度\n● 兑换自由活动15分钟　心愿单：短途游 500　用5秒启动'}]});
+    return;
+  }
+  var out;
+  if(/^拆解|^拆分|^记拆解/.test(t))out=teachStep(t);
+  else if(/^意义|^写意义|^记意义/.test(t))out=teachMeaning(t);
+  else if(/^边界|^设边界|^时间盒/.test(t))out=teachBound(t);
+  else if(/^环境|^调环境/.test(t))out=teachEnv(t);
+  else if(/^卡壳/.test(t))out=intervene(t);
+  else if(/^完成时间盒|^完成时间块/.test(t))out=timeBox(t);
+  else if(/^(做完了|完成|完结)/.test(t))out=settle(t);
+  else if(/^今天[:：]?/.test(t))out=todayAct(t);
+  else if(/^(查金币|查仓库|查余额)/.test(t))out=checkCoins();
+  else if(/^(查总进度|总进度)/.test(t))out=checkProgress();
+  else if(/^兑换/.test(t))out=redeem(t);
+  else if(/^心愿单/.test(t))out=addWish(t);
+  else if(/^用/.test(t)&&getTool(t))out=useTool(t);
+  else if(/^重启/.test(t))out=resume(t);
+  else out=sop(t);
+  showReceipt(out);
+}
+/* ---- SOP 分步交互：先只出拆任务，逐条展开 ---- */
+var sopFlow=null;
+function sop(t){
+  var name=t;lastTask=name;
+  sopFlow={name:name,box:boundMinutes(name),steps:microStepCandidates(name),meanings:meaningCandidates(name),si:0,mi:0,bounds:boundCandidates(name),bi:0,envs:envCandidates(name),ei:0,stage:1,lines:[]};
+  sopFlow.lines.push({t:'【拆任务】只做「'+name+'」的第一步：**'+sopFlow.steps[0]+'**（2分钟，小到没理由拒绝）'});
+  return flowReceipt();
+}
+function flowReceipt(){
+  var f=sopFlow;
+  var out={lines:f.lines.slice()};
+  if(f.stage===1){out.chips=['step','teachStep'];out.flow=['done','next'];}
+  else if(f.stage===2){out.chips=['meaning','teachMeaning'];out.flow=['next'];out.nextLabel='下一条：设边界';}
+  else if(f.stage===3){out.chips=['bound','teachBound'];out.flow=['next'];out.nextLabel='下一条：调环境';}
+  else if(f.stage===4){out.chips=['env','teachEnv'];out.finale=true;}
+  return out;
+}
+function flowNext(){
+  var f=sopFlow;
+  if(f.stage===1){f.stage=2;f.lines.push({t:'【赋意义】'+f.meanings[f.mi]});}
+  else if(f.stage===2){f.stage=3;f.lines.push({t:'【设边界】'+f.bounds[f.bi]+'分钟时间盒，到点立刻停，不许延长'});}
+  else if(f.stage===3){f.stage=4;f.lines.push({t:'【调环境】'+f.envs[f.ei]});}
+  showReceipt(flowReceipt());
+}
+/* ---- 卡壳 ---- */
+function intervene(t){
+  var name=t.replace(/^卡壳\s*[:：]?\s*/,'').trim()||'当前任务';lastTask=name;
+  var box=detectBox(name);
+  return {lines:[
+    {t:'卡壳=任务块太大，**缩小一块就好**，不是你的问题'},
+    {t:'只做「'+name+'」里**最简单的那1块**：写下它是什么（2分钟）'},
+    {t:'**'+box+'分钟时间盒**，到点立刻停'},
+    {t:'物理动作：把卡住那份资料**关掉收起来**，只留简单那块'}
+  ],actions:['micro','rest']};
+}
+/* ---- 重启（蔡格尼克钩子）---- */
+function resume(t){
+  var name=t.replace(/^重启\s*[:：]?\s*/,'').trim()||'当前任务';lastTask=name;
+  var box=detectBox(name);
+  return {lines:[
+    {t:'从断点重启：「'+name+'」**只做停下的下一步**'},
+    {t:'到最顺处**留个尾巴**再停，大脑会替你惦记'},
+    {t:'**'+box+'分钟时间盒**，到点立刻停'},
+    {t:'物理动作：把「'+name+'」入口**留在桌面上**，别关'}
+  ],actions:['micro','rest']};
+}
+/* ---- 今天+长效任务 ---- */
+function todayAct(t){
+  var name=t.replace(/^今天\s*[:：]?\s*/,'').trim();
+  var lt=matchLongTask(name);lastTask=name;
+  if(lt){
+    return {lines:[
+      {t:'今日·'+lt.name+'：**'+lt.layers.daily+'**'},
+      {t:'微启动：'+lt.layers.micro},
+      {t:'到点立刻停，不留延；做完点「完成时间盒」+12'}
+    ]};
+  }
+  return {lines:[
+    {t:'今日·'+name+'：默认**25分钟盒**，到点立刻停'},
+    {t:'微启动：打开它，2分钟'},
+    {t:'物理动作：手机放2米外，现在就去'}
+  ]};
+}
+/* ---- 查金币 ---- */
+function checkCoins(){
+  var afford=S.wishlist.filter(function(w){return S.coins>=w.cost;}).length;
+  return {lines:[
+    {t:'当前余额：**'+S.coins+' 金币**'},
+    {t:'心愿单 '+S.wishlist.length+' 件，其中 **'+afford+' 件**当前余额已够兑'},
+    {t:'只奖不罚：微启动+2 / 时间盒+12 / 闭环+15 / 休息+1'}
+  ]};
+}
+/* ---- 查总进度 ---- */
+function checkProgress(){
+  var lines=S.tasks.map(function(t){
+    return {t:'「'+t.name+'」：已完成 **'+pctOf(t)+'%**'};
+  });
+  return {lines:lines};
+}
+/* ---- 完成/闭环 ---- */
+function settle(t){
+  var name=t.replace(/^(做完了|完成|完结)\s*[:：]?\s*/,'').trim()||'当前任务';
+  credit(15,'闭环完成·'+name);
+  var lt=matchLongTask(name);
+  var lines=[{t:'闭环入账 **+15**（当前余额 **'+S.coins+' 金币**）'}];
+  var stamp='入账 +15';
+  if(lt){
+    lt.done=Math.min(lt.total,lt.done+1);save();
+    var ms=checkMilestones(lt);if(ms)stamp='里程碑 '+ms+'%';
+    lines.push({t:'「'+lt.name+'」已完成 **'+pctOf(lt)+'%**'});
+  }else{
+    lines.push({t:'「'+name+'」收工，**不留尾巴**'});
+  }
+  return {lines:lines,stamp:stamp};
+}
+/* ---- 时间盒 ---- */
+function doBox(name,n){
+  name=name||'一个时间盒';n=n||1;
+  credit(12*n,'时间盒×'+n+'·'+name);
+  var lt=matchLongTask(name);
+  var lines=[{t:'时间盒入账 **+'+(12*n)+'**（当前余额 **'+S.coins+' 金币**）'}];
+  var stamp='入账 +'+(12*n);
+  if(lt){
+    lt.done=Math.min(lt.total,lt.done+1);save();
+    var ms=checkMilestones(lt);if(ms)stamp='里程碑 '+ms+'%';
+    lines.push({t:'「'+lt.name+'」已完成 **'+pctOf(lt)+'%**'});
+  }
+  return {lines:lines,stamp:stamp};
+}
+function timeBox(t){
+  var m=t.match(/(\d+)\s*个/);
+  var n=m?+m[1]:1;
+  var name=t.replace(/^完成时间盒|^完成时间块/,'').replace(/\d+\s*个/,'').replace(/[:：\s]/g,'').trim();
+  return doBox(name,n);
+}
+/* ---- 兑换 ---- */
+function redeem(t){
+  var name=t.replace(/^兑换\s*/,'').trim();
+  /* 口语别名：自由活动15分钟 = 15分钟安心刷手机 */
+  if(/自由活动/.test(name)&&/15/.test(name))name='15分钟安心刷手机';
+  var item=null;
+  for(var i=0;i<S.shop.length;i++){
+    if(S.shop[i].name.indexOf(name)>-1||name.indexOf(S.shop[i].name)>-1){item=S.shop[i];break;}
+  }
+  if(!item)return {lines:[{t:'商店没有「'+name+'」，去**兑换页**查看，或到设置里自定义'}]};
+  if(S.coins<item.cost)return {lines:[
+    {t:'余额不足：**'+S.coins+' / '+item.cost+' 金币**'},
+    {t:'缺口 '+(item.cost-S.coins)+' 金币：微启动+2、时间盒+12、闭环+15'},
+    {t:'可以先把它加进**心愿单**，攒够再兑'}
+  ]};
+  credit(-item.cost,'兑换·'+item.name);
+  return {lines:[
+    {t:'兑换许可发放：**「'+item.name+'」**'},
+    {t:'已扣除 **'+item.cost+' 金币**，当前余额 **'+S.coins+' 金币**'},
+    {t:'现在就去兑现，**不内疚**'}
+  ],stamp:'已兑换'};
+}
+/* ---- 心愿单 ---- */
+function addWish(t){
+  var rest=t.replace(/^心愿单\s*[:：]?\s*/,'').trim();
+  var m=rest.match(/^(.+?)[\s，,]+(\d+)\s*$/);
+  if(!m)return {lines:[{t:'格式：**心愿单+名称+金币数**，如「心愿单：短途游 500」'}]};
+  var nm=m[1].replace(/金币.*$/,'').trim();
+  var cost=+m[2];
+  S.wishlist.unshift({name:nm,cost:cost});save();
+  return {lines:[
+    {t:'心愿单 +1：「'+nm+'」**'+cost+' 金币**'},
+    {t:'当前余额 **'+S.coins+' 金币**，还差 '+(cost>S.coins?cost-S.coins:0)+' 金币'}
+  ]};
+}
+function addWishFromForm(){
+  var nm=document.getElementById('wishName').value.trim();
+  var c=document.getElementById('wishCost').value.trim();
+  if(!nm||!c||+c<=0){showReceipt({lines:[{t:'请填心愿名称和金币数（正整数）'}]});return;}
+  S.wishlist.unshift({name:nm,cost:+c});save();
+  document.getElementById('wishName').value='';document.getElementById('wishCost').value='';
+  renderRoute();
+  showReceipt({lines:[{t:'心愿单 +1：「'+nm+'」**'+c+' 金币**'}]});
+}
+/* ---- 备用工具库 ---- */
+var TOOLS=[
+  {keys:['5秒启动','5秒','倒数'],out:[
+    {t:'倒数 **5-4-3-2-1**，数到1身体先动'},
+    {t:'嘴不要给理由留时间'},
+    {t:'物理动作：站起来，手先碰任务的入口'}]},
+  {keys:['结构化拖延','逃避'],out:[
+    {t:'把目标任务设为**第二难**，先做比它更难的那件'},
+    {t:'用逃避心理驱动：想逃回来时顺手就做了'},
+    {t:'物理动作：把难任务清单贴在眼前'}]},
+  {keys:['蔡格尼克','钩子'],out:[
+    {t:'只做任务**开头1分钟**'},
+    {t:'在最顺处**停手留尾巴**，大脑会替你惦记'},
+    {t:'物理动作：把做一半的东西留在原处，不收'}]},
+  {keys:['单核'],out:[
+    {t:'只做**这一件事**，其他全关'},
+    {t:'到自然断点就休息，不硬撑'},
+    {t:'物理动作：关掉无关标签页和通知'}]},
+  {keys:['能量排查','状态差','能量'],out:[
+    {t:'先查三件事：**睡眠几小时、吃过什么、屏幕多久**'},
+    {t:'能量低→匹配15分钟轻任务；能量足→上主任务'},
+    {t:'物理动作：先喝杯水，再定任务'}]}
+];
+function getTool(t){
+  for(var i=0;i<TOOLS.length;i++){
+    for(var j=0;j<TOOLS[i].keys.length;j++){
+      if(t.indexOf(TOOLS[i].keys[j])>-1)return TOOLS[i];
+    }
+  }
+  return null;
+}
+function useTool(t){
+  var tool=getTool(t);lastTask=t;
+  var lines=tool.out.slice();
+  return {lines:lines};
+}
+/* ================= 回执渲染 ================= */
+function showReceipt(out){
+  var el=document.getElementById('receipt');
+  el.hidden=false;
+  var html='<div class="rhead"><span>控制台回执</span><span class="chars">≈'+charsOf(out)+'字</span></div>';
+  if(out.stamp)html+='<div class="stamp">'+esc(out.stamp)+'</div>';
+  out.lines.forEach(function(l){
+    html+='<div class="rline"><span class="dot">●</span><span>'+fmt(l.t)+'</span></div>';
+  });
+  if(out.chips){
+    html+='<div class="ra">';
+    out.chips.forEach(function(c){
+      if(c==='step')html+='<button class="chip" data-c="step">换拆法</button>';
+      else if(c==='teachStep')html+='<button class="chip" data-c="teachStep">我来拆</button>';
+      else if(c==='meaning')html+='<button class="chip" data-c="meaning">换意义</button>';
+      else if(c==='teachMeaning')html+='<button class="chip" data-c="teachMeaning">我来写意义</button>';
+      else if(c==='bound')html+='<button class="chip" data-c="bound">换边界</button>';
+      else if(c==='teachBound')html+='<button class="chip" data-c="teachBound">我来定边界</button>';
+      else if(c==='env')html+='<button class="chip" data-c="env">换环境</button>';
+      else if(c==='teachEnv')html+='<button class="chip" data-c="teachEnv">我来定环境</button>';
+    });
+    html+='</div>';
+  }
+  if(out.flow){
+    html+='<div class="ra">';
+    out.flow.forEach(function(fb){
+      if(fb==='done')html+='<button class="btn gold" style="flex:1" data-f="done"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>已完成微启动 +2</button>';
+      else if(fb==='next')html+='<button class="btn" style="flex:1" data-f="next">'+(out.nextLabel||'查看后续SOP')+'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>';
+    });
+    html+='</div>';
+  }
+  if(out.finale){
+    html+='<div class="ra">'+
+      '<button class="btn gold" style="flex:1" data-f="micro">精力尚可 · 微启动 +2</button>'+
+      '<button class="btn ember" style="flex:1" data-f="rest">身心疲惫 · 休息许可 +1</button>'+
+      '</div>';
+  }
+  if(out.actions){
+    html+='<div class="ra">'+
+      '<button class="btn gold" style="flex:1" data-a="micro">精力尚可 · 2分钟微启动 +2</button>'+
+      '<button class="btn" style="flex:1" data-a="rest">身心疲惫 · 休息许可 +1</button>'+
+      '</div>';
+  }
+  el.innerHTML=html;
+  el.querySelectorAll('[data-a]').forEach(function(b){
+    b.onclick=function(){
+      if(b.dataset.a==='micro'){
+        var r=doMicro(lastTask);showReceipt(r);
+      }else{
+        credit(1,'主动休息');
+        showReceipt({lines:[
+          {t:'主动休息入账 **+1**（当前余额 **'+S.coins+' 金币**）'},
+          {t:'彻底放松，**禁止一边躺平一边内疚**'},
+          {t:'想回来时点「干活」就行'}
+        ],stamp:'休息许可'});
+      }
+    };
+  });
+  el.querySelectorAll('[data-c]').forEach(function(b){
+    b.onclick=function(){
+      var c=b.dataset.c;
+      if(c==='step'){
+        sopFlow.si=(sopFlow.si+1)%sopFlow.steps.length;
+        sopFlow.lines[0]={t:'【拆任务】只做「'+sopFlow.name+'」的第一步：**'+sopFlow.steps[sopFlow.si]+'**（2分钟，小到没理由拒绝）'};
+        showReceipt(flowReceipt());
+      }else if(c==='meaning'){
+        sopFlow.mi=(sopFlow.mi+1)%sopFlow.meanings.length;
+        sopFlow.lines[1]={t:'【赋意义】'+sopFlow.meanings[sopFlow.mi]};
+        showReceipt(flowReceipt());
+      }else if(c==='teachStep'){
+        openModal({title:'把第一步换成你的',ph:'第一步动作？',prefill:sopFlow.steps[sopFlow.si],ok:'记住',cb:function(v){
+          if(!v.trim())return;
+          S.userSteps[sopFlow.name]=v.trim();save();
+          sopFlow.steps=microStepCandidates(sopFlow.name);sopFlow.si=0;
+          sopFlow.lines[0]={t:'【拆任务】只做「'+sopFlow.name+'」的第一步：**'+sopFlow.steps[0]+'**（2分钟，小到没理由拒绝）'};
+          showReceipt(flowReceipt());
+        }});
+      }else if(c==='teachMeaning'){
+        openModal({title:'写下对你真有意义的一句',ph:'要小、要具体、要有画面',prefill:'',ok:'记住',cb:function(v){
+          if(!v.trim())return;
+          S.userMeanings[sopFlow.name]=v.trim();save();
+          sopFlow.meanings=meaningCandidates(sopFlow.name);sopFlow.mi=0;
+          sopFlow.lines[1]={t:'【赋意义】'+sopFlow.meanings[0]};
+          showReceipt(flowReceipt());
+        }});
+      }else if(c==='bound'){
+        sopFlow.bi=(sopFlow.bi+1)%sopFlow.bounds.length;
+        sopFlow.lines[2]={t:'【设边界】'+sopFlow.bounds[sopFlow.bi]+'分钟时间盒，到点立刻停，不许延长'};
+        showReceipt(flowReceipt());
+      }else if(c==='env'){
+        sopFlow.ei=(sopFlow.ei+1)%sopFlow.envs.length;
+        sopFlow.lines[3]={t:'【调环境】'+sopFlow.envs[sopFlow.ei]};
+        showReceipt(flowReceipt());
+      }else if(c==='teachBound'){
+        openModal({title:'把时间盒换成你的',ph:'分钟数？如40',ok:'记住',cb:function(v){
+          var n=+v;if(!n||n<=0)return;
+          S.userBounds[sopFlow.name]=n;save();
+          sopFlow.bounds=boundCandidates(sopFlow.name);sopFlow.bi=0;
+          sopFlow.lines[2]={t:'【设边界】'+sopFlow.bounds[0]+'分钟时间盒，到点立刻停，不许延长'};
+          showReceipt(flowReceipt());
+        }});
+      }else if(c==='teachEnv'){
+        openModal({title:'写下你的物理环境动作',ph:'如：睡前把手机放客厅',ok:'记住',cb:function(v){
+          if(!v.trim())return;
+          S.userEnv[sopFlow.name]=v.trim();save();
+          sopFlow.envs=envCandidates(sopFlow.name);sopFlow.ei=0;
+          sopFlow.lines[3]={t:'【调环境】'+sopFlow.envs[0]};
+          showReceipt(flowReceipt());
+        }});
+      }
+    };
+  });
+  el.querySelectorAll('[data-f]').forEach(function(b){
+    b.onclick=function(){
+      var a=b.dataset.f;
+      if(a==='done'){
+        var r=doMicro(sopFlow.name);
+        r.lines.push({t:'本轮到此结束，**剩余步骤不再展开**；想走完整流程就重新输入任务'});
+        showReceipt(r);
+      }else if(a==='next'){
+        flowNext();
+      }else if(a==='micro'){
+        showReceipt(doMicro(sopFlow.name));
+      }else if(a==='rest'){
+        credit(1,'主动休息');
+        showReceipt({lines:[
+          {t:'【正式休息许可】主动休息不是浪费，**彻底放松**'},
+          {t:'禁止一边躺平一边内疚；想回来时点「干活」'},
+          {t:'休息入账 **+1**（当前余额 **'+S.coins+' 金币**）'}
+        ],stamp:'休息许可'});
+      }
+    };
+  });
+}
+function doMicro(name){
+  credit(2,'2分钟微启动·'+(name||'任务'));
+  return {lines:[
+    {t:'微启动入账 **+2**（当前余额 **'+S.coins+' 金币**）'},
+    {t:'做完即可停下，**不追求完成**'}
+  ],stamp:'入账 +2'};
+}
+/* ================= 视图渲染 ================= */
+function syncHeader(){document.getElementById('coinBal').textContent=S.coins;}
+function fmtTime(ts){
+  var d=new Date(ts);
+  function p(n){return n<10?'0'+n:''+n;}
+  return p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function renderCoins(){
+  document.getElementById('balNum').textContent=S.coins;
+  var ul=document.getElementById('ledger');
+  if(!S.ledger.length){ul.innerHTML='<li style="justify-content:center;color:var(--ink-soft)">还没有流水，去「干活」页做第一件事</li>';return;}
+  ul.innerHTML=S.ledger.map(function(e){
+    var cls=e.delta>0?'plus':'minus';
+    var sign=e.delta>0?'+':'';
+    return '<li><div><div>'+esc(e.reason)+'</div><div class="why">'+fmtTime(e.time)+' ｜ 余额 '+e.bal+'</div></div><div class="'+cls+'">'+sign+e.delta+'</div></li>';
+  }).join('');
+}
+function renderWishlist(){
+  var el=document.getElementById('wishList');
+  if(!S.wishlist.length){el.innerHTML='<div class="empty">心愿单是空的。攒金币，把想兑现的事写进来。</div>';return;}
+  el.innerHTML=S.wishlist.map(function(w,i){
+    var cov=Math.min(100,Math.round(S.coins/w.cost*100));
+    return '<div class="w-card">'+
+      '<div class="w-info"><b>'+esc(w.name)+'</b><div class="w-cost">'+w.cost+' 金币 ｜ 已攒 '+cov+'%</div>'+
+      '<div class="pbar"><div class="pfill" style="width:'+cov+'%"></div></div></div>'+
+      (S.coins>=w.cost?'<button class="btn gold" onclick="redeemWish('+i+',this)">兑</button>':'')+
+      '<button class="del" onclick="delWish('+i+')">删</button></div>';
+  }).join('');
+}
+function delWish(i){S.wishlist.splice(i,1);save();renderRoute();}
+function redeemWish(i,btn){
+  var w=S.wishlist[i];
+  flyCoins(btn);
+  if(btn)btn.disabled=true;
+  setTimeout(function(){
+    credit(-w.cost,'兑换·'+w.name);
+    S.wishlist.splice(i,1);save();
+    popPill();
+    renderRoute();
+    showReceipt({lines:[
+      {t:'兑换许可发放：**「'+w.name+'」**'},
+      {t:'已扣除 **'+w.cost+' 金币**，当前余额 **'+S.coins+' 金币**'},
+      {t:'现在就去兑现，**不内疚**'}
+    ],stamp:'已兑换'});
+  },620);
+}
+function flyCoins(fromEl){
+  var pill=document.getElementById('coinBal');
+  if(!pill||!fromEl)return;
+  var fr=fromEl.getBoundingClientRect();
+  var tr=pill.getBoundingClientRect();
+  var fx=fr.left+fr.width/2-9, fy=fr.top+fr.height/2-9;
+  var tx=tr.left+tr.width/2-9, ty=tr.top+tr.height/2-9;
+  for(var i=0;i<5;i++){
+    (function(idx){
+      var c=document.createElement('div');
+      c.className='coin-fly';
+      c.style.left=fx+'px';c.style.top=fy+'px';
+      document.body.appendChild(c);
+      setTimeout(function(){
+        var dx=tx-fx+(Math.random()*36-18);
+        var dy=ty-fy+(Math.random()*24-12);
+        c.style.transform='translate('+dx+'px,'+dy+'px) scale(.35)';
+        c.style.opacity='0';
+      },40+idx*80);
+      setTimeout(function(){c.remove();},950+idx*80);
+    })(i);
+  }
+}
+function popPill(){
+  var p=document.querySelector('.coin-pill');
+  if(!p)return;
+  p.classList.remove('pop');void p.offsetWidth;p.classList.add('pop');
+}
+function renderShop(){
+  var el=document.getElementById('shopGrid');
+  el.innerHTML=S.shop.map(function(s,i){
+    var ok=S.coins>=s.cost;
+    return '<div class="shop-card"><b>'+esc(s.name)+'</b><div class="shop-cost">'+s.cost+' 金币</div>'+
+      '<button class="btn '+(ok?'gold':'')+'" '+(ok?'':'disabled')+' onclick="redeemShop('+i+',this)">'+(ok?'立即兑换':'还差 '+(s.cost-S.coins)+' 金币')+'</button></div>';
+  }).join('');
+}
+function redeemShop(i,btn){
+  var s=S.shop[i];
+  flyCoins(btn);
+  if(btn)btn.disabled=true;
+  setTimeout(function(){
+    credit(-s.cost,'兑换·'+s.name);
+    popPill();
+    renderRoute();
+    showReceipt({lines:[
+      {t:'兑换许可发放：**「'+s.name+'」**'},
+      {t:'已扣除 **'+s.cost+' 金币**，当前余额 **'+S.coins+' 金币**'},
+      {t:'现在就去兑现，**不内疚**'}
+    ],stamp:'已兑换'});
+  },620);
+}
+function renderTasks(){
+  var el=document.getElementById('taskList');
+  el.innerHTML=S.tasks.map(function(t,i){
+    var p=pctOf(t);
+    var ms='<div class="ms-row">'+
+      [25,50,75,100].map(function(th){
+        var on=t.miles[th];
+        return '<span class="ms'+(on?' earned':'')+'">'+(on?'已领 ':'')+th+'% +20</span>';
+      }).join('')+'</div>';
+    return '<div class="task-card">'+
+      '<div class="task-head"><b>'+esc(t.name)+'</b><span class="pct">'+p+'%</span></div>'+
+      '<div class="pbar"><div class="pfill" style="width:'+p+'%"></div></div>'+
+      '<div class="qrow" style="margin-top:10px">'+
+      '<button class="btn green" style="flex:1" onclick="taskDone('+i+')">今日完成 +15</button>'+
+      '<button class="btn" onclick="toggleLayers('+i+',this)">四层拆解</button></div>'+
+      '<div class="layers" id="layers'+i+'">'+
+      '<p><b>阶段里程碑：</b>'+esc(t.layers.stage)+'</p>'+
+      '<p><b>周度核心：</b>'+esc(t.layers.week)+'</p>'+
+      '<p><b>每日时间盒：</b>'+esc(t.layers.daily)+'</p>'+
+      '<p><b>2分钟微启动：</b>'+esc(t.layers.micro)+'</p></div>'+
+      ms+'</div>';
+  }).join('');
+}
+function toggleLayers(i,btn){
+  var el=document.getElementById('layers'+i);
+  el.classList.toggle('open');
+  btn.textContent=el.classList.contains('open')?'收起':'四层拆解';
+}
+function taskDone(i){
+  var lt=S.tasks[i];
+  lt.done=Math.min(lt.total,lt.done+1);save();
+  credit(15,'闭环完成·'+lt.name);
+  var ms=checkMilestones(lt);
+  var lines=[{t:'「'+lt.name+'」今日完成，闭环入账 **+15**（当前余额 **'+S.coins+' 金币**）'},{t:'已完成 **'+pctOf(lt)+'%**'}];
+  renderRoute();
+  showReceipt({lines:lines,stamp:ms?('里程碑 '+ms+'%'):'入账 +15'});
+}
+function renderSettings(){
+  /* 商店编辑 */
+  var se=document.getElementById('shopEdit');
+  se.innerHTML=S.shop.map(function(s,i){
+    return '<div class="srow"><input class="fld" value="'+esc(s.name)+'" data-si="'+i+'" data-sf="name">'+
+      '<input class="fld" type="number" style="width:76px" value="'+s.cost+'" data-si="'+i+'" data-sf="cost">'+
+      '<button class="del" onclick="delShop('+i+')">删</button></div>';
+  }).join('');
+  se.querySelectorAll('input').forEach(function(inp){
+    inp.onchange=function(){
+      var i=+inp.dataset.si, f=inp.dataset.sf;
+      if(f==='cost'){S.shop[i].cost=Math.max(1,+inp.value||1);}
+      else{S.shop[i].name=inp.value.trim()||S.shop[i].name;}
+      save();renderRoute();
+    };
+  });
+  /* 拆解词典编辑 */
+  var us=document.getElementById('userStepsEdit');
+  var keys=Object.keys(S.userSteps);
+  if(!keys.length){us.innerHTML='<div class="empty">还没有自定义拆解。输入「拆解：起床=放下手机坐起来」即可添加。</div>';}
+  else{
+    us.innerHTML=keys.map(function(k,i){
+      return '<div class="srow"><input class="fld" value="'+esc(k)+'" data-ui="'+i+'">'+
+        '<input class="fld" value="'+esc(S.userSteps[k])+'" data-uv="'+i+'">'+
+        '<button class="del" onclick="delStep('+i+')">删</button></div>';
+    }).join('');
+    us.querySelectorAll('[data-ui]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.ui;
+        var ks=Object.keys(S.userSteps);
+        var nv=inp.value.trim();
+        if(nv&&nv!==ks[i]){S.userSteps[nv]=S.userSteps[ks[i]];delete S.userSteps[ks[i]];}
+        save();renderRoute();
+      };
+    });
+    us.querySelectorAll('[data-uv]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.uv;
+        var k=Object.keys(S.userSteps)[i];
+        S.userSteps[k]=inp.value.trim()||S.userSteps[k];
+        save();renderRoute();
+      };
+    });
+  }
+  /* 意义词典编辑 */
+  var um=document.getElementById('userMeaningsEdit');
+  var mks=Object.keys(S.userMeanings);
+  if(!mks.length){um.innerHTML='<div class="empty">还没有自定义意义。输入「意义：起床=闹钟响时我是坐着的」即可添加。</div>';}
+  else{
+    um.innerHTML=mks.map(function(k,i){
+      return '<div class="srow"><input class="fld" value="'+esc(k)+'" data-mi="'+i+'">'+
+        '<input class="fld" value="'+esc(S.userMeanings[k])+'" data-mv="'+i+'">'+
+        '<button class="del" onclick="delMeaning('+i+')">删</button></div>';
+    }).join('');
+    um.querySelectorAll('[data-mi]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.mi;
+        var ks=Object.keys(S.userMeanings);
+        var nv=inp.value.trim();
+        if(nv&&nv!==ks[i]){S.userMeanings[nv]=S.userMeanings[ks[i]];delete S.userMeanings[ks[i]];}
+        save();renderRoute();
+      };
+    });
+    um.querySelectorAll('[data-mv]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.mv;
+        var k=Object.keys(S.userMeanings)[i];
+        S.userMeanings[k]=inp.value.trim()||S.userMeanings[k];
+        save();renderRoute();
+      };
+    });
+  }
+  /* 边界词典编辑 */
+  var bu=document.getElementById('userBoundsEdit');
+  var bks=Object.keys(S.userBounds);
+  if(!bks.length){bu.innerHTML='<div class="empty">还没有自定义边界。输入「边界：英语=40」即可添加。</div>';}
+  else{
+    bu.innerHTML=bks.map(function(k,i){
+      return '<div class="srow"><input class="fld" value="'+esc(k)+'" data-bui="'+i+'">'+
+        '<input class="fld" type="number" style="width:80px" value="'+S.userBounds[k]+'" data-buv="'+i+'">'+
+        '<button class="del" onclick="delBounds('+i+')">删</button></div>';
+    }).join('');
+    bu.querySelectorAll('[data-bui]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.bui;
+        var ks=Object.keys(S.userBounds);
+        var nv=inp.value.trim();
+        if(nv&&nv!==ks[i]){S.userBounds[nv]=S.userBounds[ks[i]];delete S.userBounds[ks[i]];}
+        save();renderRoute();
+      };
+    });
+    bu.querySelectorAll('[data-buv]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.buv;
+        var k=Object.keys(S.userBounds)[i];
+        S.userBounds[k]=Math.max(5,+inp.value||5);
+        save();renderRoute();
+      };
+    });
+  }
+  /* 环境词典编辑 */
+  var en=document.getElementById('userEnvEdit');
+  var eks=Object.keys(S.userEnv);
+  if(!eks.length){en.innerHTML='<div class="empty">还没有自定义环境动作。输入「环境：起床=睡前把手机放客厅」即可添加。</div>';}
+  else{
+    en.innerHTML=eks.map(function(k,i){
+      return '<div class="srow"><input class="fld" value="'+esc(k)+'" data-eni="'+i+'">'+
+        '<input class="fld" value="'+esc(S.userEnv[k])+'" data-ev="'+i+'">'+
+        '<button class="del" onclick="delEnv('+i+')">删</button></div>';
+    }).join('');
+    en.querySelectorAll('[data-eni]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.eni;
+        var ks=Object.keys(S.userEnv);
+        var nv=inp.value.trim();
+        if(nv&&nv!==ks[i]){S.userEnv[nv]=S.userEnv[ks[i]];delete S.userEnv[ks[i]];}
+        save();renderRoute();
+      };
+    });
+    en.querySelectorAll('[data-ev]').forEach(function(inp){
+      inp.onchange=function(){
+        var i=+inp.dataset.ev;
+        var k=Object.keys(S.userEnv)[i];
+        S.userEnv[k]=inp.value.trim()||S.userEnv[k];
+        save();renderRoute();
+      };
+    });
+  }
+  /* 任务编辑 */
+  var te=document.getElementById('taskEdit');
+  te.innerHTML=S.tasks.map(function(t,i){
+    return '<div class="set-card" style="margin:10px 0;padding:12px">'+
+      '<div class="srow"><input class="fld" value="'+esc(t.name)+'" data-ti="'+i+'" data-tf="name" style="flex:2">'+
+      '<input class="fld" type="number" style="width:70px" value="'+t.total+'" data-ti="'+i+'" data-tf="total" title="总天数">'+
+      '<input class="fld" type="number" style="width:70px" value="'+t.done+'" data-ti="'+i+'" data-tf="done" title="已完成天数"></div>'+
+      '<textarea class="fld" data-ti="'+i+'" data-tf="stage">'+esc(t.layers.stage)+'</textarea>'+
+      '<textarea class="fld" data-ti="'+i+'" data-tf="week">'+esc(t.layers.week)+'</textarea>'+
+      '<textarea class="fld" data-ti="'+i+'" data-tf="daily">'+esc(t.layers.daily)+'</textarea>'+
+      '<textarea class="fld" data-ti="'+i+'" data-tf="micro">'+esc(t.layers.micro)+'</textarea>'+
+      '</div>';
+  }).join('');
+  te.querySelectorAll('input,textarea').forEach(function(inp){
+    inp.onchange=function(){
+      var i=+inp.dataset.ti, f=inp.dataset.tf;
+      if(f==='total'){S.tasks[i].total=Math.max(1,+inp.value||1);}
+      else if(f==='done'){S.tasks[i].done=Math.max(0,Math.min(S.tasks[i].total,+inp.value||0));}
+      else{S.tasks[i].layers[f]=inp.value;}
+      save();renderRoute();
+    };
+  });
+}
+function addShopRow(){
+  S.shop.push({name:'自定义兑换项',cost:10});save();renderRoute();
+}
+function delShop(i){
+  if(S.shop.length<=1)return;
+  S.shop.splice(i,1);save();renderRoute();
+}
+function delStep(i){
+  var ks=Object.keys(S.userSteps);
+  delete S.userSteps[ks[i]];save();renderRoute();
+}
+function delMeaning(i){
+  var ks=Object.keys(S.userMeanings);
+  delete S.userMeanings[ks[i]];save();renderRoute();
+}
+function delBounds(i){
+  var ks=Object.keys(S.userBounds);
+  delete S.userBounds[ks[i]];save();renderRoute();
+}
+function delEnv(i){
+  var ks=Object.keys(S.userEnv);
+  delete S.userEnv[ks[i]];save();renderRoute();
+}
+function confirmReset(){
+  openModal({title:'重置全部数据？',needInput:false,ok:'重置',cb:function(){
+    localStorage.removeItem(LS);
+    S=JSON.parse(JSON.stringify(DEFAULTS));save();
+    location.hash='#/console';
+    renderRoute();
+  }});
+}
+/* ================= 弹窗 ================= */
+var modalCb=null;
+function openModal(cfg){
+  document.getElementById('mTitle').textContent=cfg.title;
+  var inp=document.getElementById('mInput');
+  inp.hidden=cfg.needInput===false;
+  inp.value=cfg.prefill||'';
+  inp.placeholder=cfg.ph||'';
+  document.getElementById('mOk').textContent=cfg.ok||'确认';
+  modalCb=cfg.cb;
+  document.getElementById('modal').hidden=false;
+  if(cfg.needInput!==false)setTimeout(function(){inp.focus();},50);
+}
+function closeModal(){document.getElementById('modal').hidden=true;modalCb=null;}
+document.getElementById('mCancel').onclick=closeModal;
+document.getElementById('mOk').onclick=function(){
+  var cb=modalCb;var v=document.getElementById('mInput').value.trim();
+  closeModal();
+  if(cb)cb(v);
+};
+document.getElementById('modal').addEventListener('click',function(e){
+  if(e.target===this)closeModal();
+});
+/* 快捷入账 */
+function quick(kind){
+  if(kind==='rest'){
+    credit(1,'主动休息');
+    showReceipt({lines:[
+      {t:'主动休息入账 **+1**（当前余额 **'+S.coins+' 金币**）'},
+      {t:'彻底放松，**禁止一边躺平一边内疚**'},
+      {t:'想回来时点「干活」就行'}
+    ],stamp:'休息许可'});
+    return;
+  }
+  if(kind==='count5'){
+    var n=5;
+    function render(){
+      var ls=[{t:'倒数开始，**手离开手机，身体先动起来**'}];
+      if(n>0)ls.push({t:'**'+n+'**'});
+      else ls.push({t:'时间到——**现在就做第一步，别想结果**'});
+      showReceipt({lines:ls});
+    }
+    render();
+    var timer=setInterval(function(){
+      n--;render();
+      if(n<=0)clearInterval(timer);
+    },1000);
+    return;
+  }
+  if(kind==='micro'){
+    openModal({title:'2分钟微启动 +2',ph:'做什么的第一步？（不填用上次任务）',prefill:lastTask,ok:'入账 +2',cb:function(v){
+      showReceipt(doMicro(v||lastTask||'任务'));
+    }});
+  }else if(kind==='box'){
+    openModal({title:'完成时间盒 +12',ph:'做了什么？可写「2个 剪辑」算2个盒',ok:'入账',cb:function(v){
+      var m=v.match(/^(\d+)\s*个?[:：\s]*(.*)$/);
+      var n=m&&+m[1]>0?+m[1]:1;
+      var nm=(m&&m[2]?m[2]:v).trim()||'一个时间盒';
+      showReceipt(doBox(nm,n));
+    }});
+  }else if(kind==='loop'){
+    openModal({title:'整项完成 +15',ph:'任务名？（不填用上次任务）',prefill:lastTask,ok:'入账 +15',cb:function(v){
+      showReceipt(settle('完成：'+(v||lastTask||'当前任务')));
+    }});
+  }
+}
+document.querySelectorAll('[data-quick]').forEach(function(b){
+  b.onclick=function(){quick(b.dataset.quick);};
+});
+/* ================= 路由 ================= */
+function renderRoute(){
+  var h=(location.hash.replace(/^#\/?/,'')||'console');
+  syncHeader();
+  if(h==='console'){document.getElementById('receipt').hidden=false;}
+  if(h==='coins')renderCoins();
+  else if(h==='wishlist')renderWishlist();
+  else if(h==='shop')renderShop();
+  else if(h==='tasks')renderTasks();
+  else if(h==='settings')renderSettings();
+}
+function route(){
+  var h=(location.hash.replace(/^#\/?/,'')||'console');
+  document.querySelectorAll('main [data-route]').forEach(function(s){s.hidden=(s.dataset.route!==h);});
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('on',b.dataset.route===h);});
+  renderRoute();
+}
+window.addEventListener('hashchange',route);
+/* PWA：托管后可在安卓手机「安装」成App（需https环境，本地file://不生效） */
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+/* 输入提交 */
+document.getElementById('btnSend').onclick=function(){
+  var inp=document.getElementById('cmdInput');
+  runConsole(inp.value);inp.value='';
+};
+document.getElementById('cmdInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();runConsole(this.value);this.value='';}
+});
+route();
+</script>
+</body>
+</html>
