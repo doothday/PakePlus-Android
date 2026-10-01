@@ -1,0 +1,16 @@
+{
+  "name": "拖延干预工作台",
+  "short_name": "拖延工作台",
+  "description": "机制驱动、只奖不罚的拖延干预工作台",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F2EDDD",
+  "theme_color": "#C08A1E",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
