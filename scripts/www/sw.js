@@ -1,5 +1,5 @@
 /* 拖延干预工作台 · 离线缓存 Service Worker */
-var CACHE = 'pd-console-v16';
+var CACHE = 'pd-console-v29';
 var ASSETS = [
   './index.html',
   './manifest.webmanifest',
