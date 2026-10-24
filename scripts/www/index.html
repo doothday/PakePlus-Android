@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1A2B4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="沐婴爱作战台">
+<meta name="description" content="沐婴爱·选题作战指挥台 V4.0 — 小红书母婴消毒柜品牌选题作战系统，本地离线运行">
+<title>沐婴爱·选题作战指挥台 V4.0</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231A2B4A'/%3E%3Cpath d='M17 10v44' stroke='%23FFFFFF' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M21 12c10-4 14 6 27 0v20c-13 6-17-4-27 0z' fill='%23165DFF'/%3E%3C/svg%3E">
+<style>
+/* ================= 基础 ================= */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1A2B4A;--navy2:#24365C;--navy3:#12203A;
+  --blue:#165DFF;--blue-soft:#EAF1FF;
+  --bg:#F5F6F8;--card:#FFFFFF;--line:#E7EAF1;
+  --text:#1F2329;--sub:#646A73;--muted:#98A0AB;
+  --red:#E5484D;--red-soft:#FDECEC;--red-line:#F3C1C3;
+  --green:#30A46C;--green-soft:#E8F6EF;--green-line:#BFE3D1;
+  --orange:#F5A524;--orange-soft:#FEF3E2;--orange-line:#F6D9A8;
+  --r:12px;--shadow:0 1px 3px rgba(26,43,74,.06);
+}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;-webkit-tap-highlight-color:transparent}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--text);width:100%;min-height:44px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(22,93,255,.15)}
+textarea{min-height:72px;resize:vertical;line-height:1.5}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23646A73' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+label{font-size:13px;color:var(--sub);display:block;margin:0 0 5px}
+/* ================= 顶栏 ================= */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--navy);color:#fff;padding:0 14px;height:52px;display:flex;align-items:center;gap:9px;max-width:620px;margin:0 auto}
+#topbar .logo{width:26px;height:26px;border-radius:7px;background:var(--navy3);display:flex;align-items:center;justify-content:center;flex:none}
+#topbar .t1{font-size:15px;font-weight:700;letter-spacing:.5px}
+#topbar .t2{font-size:10.5px;color:#AFC0E6;margin-top:1px}
+#topbar .phase-chip{margin-left:auto;font-size:10.5px;background:var(--blue);color:#fff;padding:4px 9px;border-radius:20px;font-weight:600;white-space:nowrap}
+#topbar .gear{width:42px;height:44px;display:flex;align-items:center;justify-content:center;color:#AFC0E6;flex:none;background:transparent}
+#topbar .gear:active{color:#fff}
+/* 战区地图编辑 */
+.city-row{display:block;padding:5px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.cr-main{display:flex;gap:6px;align-items:center;padding:3px 0}
+.cr-main .grow{min-width:80px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cr-main select{min-height:38px;width:auto;flex:0 1 auto;padding:4px 26px 4px 8px;font-size:12.5px}
+.cr-sub{display:flex;gap:6px;padding:3px 0}
+.cr-sub select{flex:1;min-width:0;min-height:38px;font-size:12.5px}
+.del-btn{min-height:38px;padding:0 12px;font-size:12.5px;color:var(--red);border:1px solid var(--red-line);border-radius:8px;background:var(--red-soft);flex:none;font-weight:600}
+.del-btn:active{background:var(--red);color:#fff}
+.map-add{display:flex;gap:5px;align-items:center;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+.map-add input{min-height:36px;flex:1;min-width:90px;font-size:13.5px}
+.map-add select{min-height:36px;width:auto;flex:0 1 auto;padding:4px 26px 4px 8px;font-size:12.5px}
+.map-add .btn{min-height:36px;padding:0 10px;font-size:12.5px;flex:0 1 auto}
+.row.click{cursor:pointer;padding:8px 2px}
+.flash-in{border-color:var(--blue)!important;box-shadow:0 0 0 2px rgba(22,93,255,.28);background:#fff}
+/* AI 折叠行 */
+.ai-fold{display:flex;align-items:center;gap:7px;cursor:pointer;padding:7px 0}
+.ai-fold b{font-size:13.5px}
+/* ================= 主区与底栏 ================= */
+main{position:relative;padding:62px 12px 96px;max-width:620px;margin:0 auto}
+#tabbar{position:fixed;bottom:0;left:0;right:0;z-index:60;background:#fff;border-top:1px solid var(--line);display:flex;max-width:620px;margin:0 auto;padding-bottom:env(safe-area-inset-bottom)}
+.tab-btn{flex:1;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--sub);border-top:2px solid transparent}
+.tab-btn svg{width:22px;height:22px}
+.tab-btn.active{color:var(--blue);border-top-color:var(--blue);font-weight:600}
+.tab-view{display:none}
+/* ================= 卡片 ================= */
+.card{background:var(--card);border-radius:var(--r);padding:14px 14px 12px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-title{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:700;margin-bottom:10px}
+.card-title .bar{width:4px;height:16px;border-radius:2px;background:var(--blue);flex:none}
+.card-title .sub{margin-left:auto;font-size:11.5px;font-weight:400;color:var(--muted);white-space:nowrap}
+.section-tag{font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:2px 8px;border-radius:20px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap}
+.chip.g{background:var(--green-soft);color:var(--green)}
+.chip.r{background:var(--red-soft);color:var(--red)}
+.chip.o{background:var(--orange-soft);color:#B87208}
+.chip.b{background:var(--blue-soft);color:var(--blue)}
+.chip.n{background:#F0F2F6;color:var(--sub)}
+.chip.navy{background:var(--navy);color:#fff}
+.dim{color:var(--muted)}
+.danger{color:var(--red);font-weight:600}
+.ok{color:var(--green);font-weight:600}
+.warn{color:#B87208;font-weight:600}
+.strong{font-weight:700}
+/* ================= 按钮 ================= */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border-radius:9px;font-size:14.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--text)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.green{background:var(--green);border-color:var(--green);color:#fff}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--blue)}
+.btn.mini{min-height:36px;padding:0 11px;font-size:12.5px;border-radius:7px}
+.btn:active{opacity:.82}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.btn-row .btn{flex:1;min-width:0}
+.btn-row.tight .btn{flex:0 1 auto}
+/* ================= 表单 ================= */
+.field{margin-bottom:9px}
+.field .lbl{display:block;font-size:12.5px;color:var(--sub);margin-bottom:4px;font-weight:500}
+.field .lbl b{color:var(--text)}
+.hint{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+.hint.ok{color:var(--green)}
+.hint.r{color:var(--red)}
+/* ================= 分段选择 ================= */
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg-btn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--line);background:#fff;font-size:13px;color:var(--sub);font-weight:500}
+.seg-btn.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+/* ================= 勾选行 ================= */
+.chk{display:flex;align-items:flex-start;gap:9px;min-height:44px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;margin-bottom:7px;cursor:pointer}
+.chk input{width:20px;height:20px;min-height:20px;margin-top:3px;flex:none;accent-color:var(--blue)}
+.chk .ct{font-size:13.5px;line-height:1.45}
+.chk .ct small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.chk.pass{border-color:var(--green-line);background:var(--green-soft)}
+.chk.fail{border-color:var(--red-line);background:var(--red-soft)}
+/* ================= 列表行 ================= */
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #F1F3F8;font-size:14px}
+.row:last-child{border-bottom:none}
+.row .grow{flex:1;min-width:0}
+.row .grow .t1{font-weight:600;font-size:14px}
+.row .grow .t2{font-size:11.5px;color:var(--muted);margin-top:1px}
+.row.click{cursor:pointer}
+.arrow.up{color:var(--green);font-weight:700}
+.arrow.down{color:var(--red);font-weight:700}
+.arrow.flat{color:var(--muted)}
+/* ================= 折叠原理 ================= */
+details.why{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+details.why summary{list-style:none;font-size:12px;color:var(--muted);cursor:pointer;padding:6px 0;user-select:none;display:flex;align-items:center;gap:5px}
+details.why summary::before{content:"＋";color:var(--blue);font-weight:700;font-size:13px}
+details.why[open] summary::before{content:"－"}
+details.why summary::-webkit-details-marker{display:none}
+details.why .why-body{font-size:12.5px;color:var(--sub);line-height:1.65;background:var(--bg);border-radius:8px;padding:9px 11px;margin-bottom:4px}
+/* ================= 阶段条 ================= */
+.phase-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.phase-box{border:1.5px solid var(--line);border-radius:10px;padding:9px 8px;background:#fff;text-align:center;cursor:pointer}
+.phase-box .pn{font-size:10px;color:var(--muted);letter-spacing:.5px}
+.phase-box .pn2{font-size:13px;font-weight:700;margin-top:2px;line-height:1.3}
+.phase-box .pd{font-size:10px;color:var(--sub);margin-top:3px;line-height:1.35}
+.phase-box.cur{border-color:var(--blue);background:var(--blue-soft)}
+.phase-box.cur .pn2{color:var(--blue)}
+.phase-box.lock{opacity:.55}
+.phase-box .done-tag{display:inline-block;font-size:9px;color:var(--green);margin-top:3px;font-weight:700}
+/* ================= 立旗三波 ================= */
+.wave-box{border:1.5px solid var(--line);border-radius:10px;padding:11px;margin-bottom:9px;background:#fff}
+.wave-box.cur{border-color:var(--blue);background:var(--blue-soft)}
+.wave-box.done{border-color:var(--green-line);background:var(--green-soft)}
+.wave-box.locked{opacity:.55}
+.wave-head{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px}
+.wave-head .wn{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:1px}
+.wave-tip{font-size:12px;color:var(--sub);margin:5px 0 8px;line-height:1.5}
+.wave-tip.iron{color:#B87208;background:var(--orange-soft);border-radius:7px;padding:7px 9px;font-weight:600}
+/* ================= 战区地图 ================= */
+.zone{border:1.5px solid var(--line);border-radius:10px;margin-bottom:8px;background:#fff;overflow:hidden}
+.zone .zh{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;min-height:52px}
+.zone .zh .zn{font-weight:700;font-size:13.5px}
+.zone .zh .zd{font-size:10.5px;color:var(--muted)}
+.zone .zh .meta{margin-left:auto;text-align:right;flex:none}
+.zone .zh .meta .n{font-size:14px;font-weight:700}
+.zone .zh .meta .m2{font-size:10px;color:var(--muted)}
+.zone .zh .chv{width:20px;height:20px;flex:none;color:var(--muted);display:flex;align-items:center;justify-content:center}
+.zone .zbody{display:none;padding:4px 12px 10px;border-top:1px solid var(--line)}
+.zone.open .zbody{display:block}
+.zone.open .chv{transform:rotate(180deg)}
+.zone.s-green{border-left:4px solid var(--green)}
+.zone.s-blue{border-left:4px solid var(--blue)}
+.zone.s-orange{border-left:4px solid var(--orange)}
+.zone.s-red{border-left:4px solid var(--red)}
+.zone.s-navy{border-left:4px solid var(--navy)}
+.city-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg);border-radius:7px;padding:6px 9px;margin:0 6px 6px 0;font-size:12.5px}
+.city-chip .rk{font-size:10.5px;color:var(--sub)}
+/* ================= 今日/倒计时 ================= */
+.day-card{display:flex;align-items:center;gap:10px;background:var(--navy);color:#fff;border-radius:10px;padding:12px 14px}
+.day-card .d1{font-size:13px;font-weight:700;flex:none}
+.day-card .d2{font-size:12.5px;line-height:1.5}
+.mantra{font-size:12px;color:#C9D5F2;margin-top:4px}
+.cd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cd-box{border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-align:center;background:#fff}
+.cd-box .dn{font-size:18px;font-weight:700;color:var(--navy)}
+.cd-box .dl{font-size:10.5px;color:var(--sub);margin-top:2px;line-height:1.4}
+.cd-box.over{border-color:var(--orange-line);background:var(--orange-soft)}
+.cd-box.over .dn{color:#B87208}
+/* ================= 数据表 ================= */
+.tbl-wrap{overflow-x:auto;margin-top:8px}
+table.tbl{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12.5px}
+table.tbl th{background:var(--navy);color:#fff;font-weight:600;padding:7px 6px;text-align:left;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.tbl td{padding:7px 6px;border-bottom:1px solid #F1F3F8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+table.tbl tr:nth-child(even) td{background:#FAFBFC}
+/* ================= 迷你趋势 ================= */
+.mini-chart{display:flex;align-items:flex-end;gap:6px;height:56px;padding:6px 4px 0}
+.mini-chart .mc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.mini-chart .mcv{font-size:9.5px;color:var(--muted);white-space:nowrap}
+.mini-chart .bar{width:100%;max-width:34px;border-radius:3px 3px 0 0;background:var(--blue);min-height:3px}
+.mini-chart .bar.late{background:var(--muted)}
+/* ================= 步骤指示 ================= */
+.steps{display:flex;gap:5px;margin:8px 0 10px}
+.step-dot{flex:1;text-align:center;font-size:10.5px;color:var(--muted);padding:5px 2px;border-radius:7px;background:var(--bg);font-weight:600}
+.step-dot.cur{background:var(--blue);color:#fff}
+.step-dot.done{background:var(--green-soft);color:var(--green)}
+/* ================= 作战令 ================= */
+.order-card{background:var(--navy);color:#fff;border-radius:10px;padding:13px 14px}
+.order-card .ot{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.order-card .ov{font-size:12.5px;line-height:1.85}
+.order-card .ov b{color:#9BC0FF}
+.order-card .o-date{font-size:10.5px;color:#AFC0E6;margin-top:6px}
+/* ================= 弹窗/提示 ================= */
+#modal-root{display:none;position:fixed;inset:0;z-index:90}
+.mask{position:absolute;inset:0;background:rgba(15,28,58,.55);display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:440px;max-height:82vh;overflow-y:auto;padding:18px 16px}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:12px}
+.modal .m-body{font-size:13.5px}
+.toast{position:fixed;top:64px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:120;background:var(--navy);color:#fff;font-size:13px;padding:10px 18px;border-radius:9px;opacity:0;transition:opacity .18s;max-width:86%;text-align:center;box-shadow:0 4px 14px rgba(15,28,58,.3);pointer-events:none}
+.toast.show{opacity:1}
+.toast.te{background:var(--red)}
+.toast.tw{background:#B87208}
+/* ================= 信号台 ================= */
+.sig{border-radius:10px;padding:11px 12px;margin-bottom:8px;border:1px solid var(--line);background:#fff}
+.sig.red{border-color:var(--red-line);background:var(--red-soft)}
+.sig.green{border-color:var(--green-line);background:var(--green-soft)}
+.sig .sg-t{display:flex;align-items:center;gap:7px;font-weight:700;font-size:14px}
+.sig .sg-r{font-size:11.5px;color:var(--sub);margin-top:5px;line-height:1.6}
+.sig .sg-r li{margin-left:14px}
+/* ================= 兵器库 ================= */
+details.ars{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:9px;overflow:hidden}
+details.ars>summary{list-style:none;cursor:pointer;padding:13px 14px;font-size:14px;font-weight:700;display:flex;align-items:center;gap:9px;min-height:48px;user-select:none}
+details.ars>summary::-webkit-details-marker{display:none}
+details.ars>summary .anum{width:22px;height:22px;border-radius:6px;background:var(--navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+details.ars>summary .caret{margin-left:auto;color:var(--muted);font-size:12px}
+details.ars[open]>summary{border-bottom:1px solid var(--line)}
+details.ars[open]>summary .caret{transform:rotate(180deg)}
+.ars-body{padding:12px 14px 14px;font-size:13.5px}
+.ars-body p{margin-bottom:8px;line-height:1.7}
+.ars-body .kw{color:var(--blue);font-weight:600}
+.ars-body ul{margin:0 0 8px 16px}
+.ars-body li{margin-bottom:5px;line-height:1.6}
+.ars-body .note{font-size:11.5px;color:var(--muted);margin-top:6px}
+.ars-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ars-cell{border:1px solid var(--line);border-radius:8px;padding:8px 9px;font-size:12px;line-height:1.5;background:var(--bg)}
+.ars-cell b{display:block;font-size:12.5px;color:var(--navy);margin-bottom:2px}
+.ars-cell.full{grid-column:1/-1}
+/* ================= 修边 ================= */
+.medal{padding:8px 10px;border-radius:8px;background:var(--bg);font-size:12.5px;color:var(--sub);line-height:1.6;margin-top:8px}
+.medal b{color:var(--text)}
+.amber{color:#B87208;font-weight:600}
+.sep{height:1px;background:var(--line);margin:11px 0}
+.foot-note{text-align:center;font-size:11px;color:var(--muted);padding:14px 0 4px}
+/* ================= 宽屏适配 ================= */
+@media (min-width:768px){
+  main{padding-top:70px}
+  .card{padding:17px 18px 15px}
+  .phase-box .pn2{font-size:14px}
+}
+</style>
+</head>
+<body>
+
+<header id="topbar">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7EA6FF" stroke-width="2" stroke-linecap="round"><path d="M4 3v18"/><path d="M6 4c5-2 7 3 14 0v11c-7 3-9-2-14 0z"/></svg>
+  </div>
+  <div>
+    <div class="t1">沐婴爱·选题作战指挥台</div>
+    <div class="t2">V4.0 · 本地离线 · 数据自动保存</div>
+  </div>
+  <span class="phase-chip" id="topPhase">阶段一</span>
+  <button class="gear" onclick="openSettings()" aria-label="设置">
+    <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg>
+  </button>
+</header>
+
+<main>
+  <!-- ===== 视图：沙盘 ===== -->
+  <section id="tab-map" class="tab-view"></section>
+
+  <!-- ===== 视图：行动 ===== -->
+  <section id="tab-action" class="tab-view"></section>
+
+  <!-- ===== 视图：复盘 ===== -->
+  <section id="tab-review" class="tab-view"></section>
+
+  <!-- ===== 视图：兵器库 ===== -->
+  <section id="tab-arsenal" class="tab-view">
+
+    <div class="card">
+      <div class="card-title"><span class="bar"></span>作战总纲 <span class="sub">方法论手册 · 全部可折叠</span></div>
+      <p style="font-size:12.5px;color:var(--sub)">小红书营销是一场争夺用户决策时刻信任的战争，争的是交易分配权。<b style="color:var(--navy)">城</b>＝搜索结果页前排，<b style="color:var(--navy)">地</b>＝心智等式「烘干快＝好消毒柜」。本库是打法与兵器的全部家底。</p>
+    </div>
+
+    <details class="ars">
+      <summary><span class="anum">1</span>两套已验证公式卡<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p><b style="color:var(--navy)">公式一 · 场景反转＋技术实证</b>（适用：交易型顾虑）</p>
+        <p>开头误解钩子（先讲用户以为的、或踩过的坑）→ 中段精确参数（让数字开口）→ 结尾判断标准＋轻 CTA（把决策权交还用户）。</p>
+        <div class="sep"></div>
+        <p><b style="color:var(--navy)">公式二 · 信息差／内幕框架</b>（适用：导航型＋交易型）</p>
+        <p>编号选购标准，每条给出「商家怎么说 / 怎么验证」双栏，用户照着逐条核验即可决策。</p>
+        <div class="ars-grid">
+          <div class="ars-cell full"><b>内置弹药（实证类直接引用）</b>满载烘干实测 8 分钟 ／ 臭氧浓度实测 0.000mg/m³ ／ 304 不锈钢 ／ 崔玉涛公开观点「干燥是最好的消毒」。</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">2</span>六容器表<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <div class="tbl-wrap"><table class="tbl">
+          <colgroup><col style="width:16%"><col style="width:30%"><col style="width:12%"><col style="width:22%"><col style="width:20%"></colgroup>
+          <thead><tr><th>容器</th><th>用户心理</th><th>级别</th><th>主打时机</th><th>一句话</th></tr></thead>
+          <tbody>
+            <tr><td>焦虑</td><td>怕买错</td><td>S级</td><td>启动期主力</td><td>把恐惧说破</td></tr>
+            <tr><td>结果</td><td>想知道最后选了什么</td><td>S级</td><td>转化期主力</td><td>直接给答案</td></tr>
+            <tr><td>利益</td><td>省时省钱省事</td><td>—</td><td>全期</td><td>算账给他看</td></tr>
+            <tr><td>身份</td><td>找同类人经验</td><td>—</td><td>翻译波</td><td>我们一样</td></tr>
+            <tr><td>认知</td><td>原来我一直错了</td><td>—</td><td>破局立标最好</td><td>重构常识</td></tr>
+            <tr><td>场景</td><td>我也遇到过</td><td>—</td><td>翻译波</td><td>夜奶／梅雨季／二胎</td></tr>
+          </tbody>
+        </table></div>
+        <p class="note">核心规律：<b style="color:var(--blue)">优先做双容器叠加</b>（如 焦虑＋结果、认知＋场景），单容器只是及格。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">3</span>检验官五问表（修正版六行）<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <div class="tbl-wrap"><table class="tbl">
+          <colgroup><col style="width:26%"><col style="width:74%"></colgroup>
+          <thead><tr><th>用户疑问</th><th>对应打法</th></tr></thead>
+          <tbody>
+            <tr><td>杂牌疑虑</td><td>诚实劣势框架（先认短板再给证据）</td></tr>
+            <tr><td>值不值</td><td>成本拆解（按年摊到每天几分钱）</td></tr>
+            <tr><td>效果</td><td>长期实测（非开箱，是用了三个月）</td></tr>
+            <tr><td>安全</td><td>参数实证（臭氧残留、材质、执行标准）</td></tr>
+            <tr><td>售后</td><td>质保白纸黑字（条款截图，不是客服嘴说）</td></tr>
+            <tr><td>踩坑核验</td><td>优缺点清单（标注：最后一行是核验动作，不是卡点）</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">4</span>判决书五段结构<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p>案由（用户来搜什么）→ <b>达标项宣判</b>（先讲竞品真实优势，交客观性押金）→ <b>亮旗</b>（引入新标准「先问满载烘干多久」）→ <b>证据陈列</b>（让数字开口，判词闭嘴）→ <b>判词最小化</b>（「自己掂量」，不替用户做决定）。</p>
+        <p class="note">原则：我们不赢在嘴，赢在用户拿着我们的标准去别家问了一遍。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">5</span>竞品描述贬义词黑名单<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p><span class="chip r">慢</span> <span class="chip r">差</span> <span class="chip r">坑</span> <span class="chip r">别买</span> <span class="chip r">不推荐</span> <span class="chip r">智商税</span></p>
+        <p class="note">只管竞品描述，泛选题避坑类照用。踩线即改：说「对比实测数据」不说「X牌慢」，让数字说话。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">6</span>信号对照表<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p><b class="danger">真死五信号</b>（看到即启动三验）</p>
+        <ul>
+          <li>① 连攻两期排名 50 名外</li>
+          <li>② 第二期数据差于第一期</li>
+          <li>③ 下拉框联想消失</li>
+          <li>④ 蓝海变红海（笔记量暴涨＋前排千赞）</li>
+          <li>⑤ 供养失衡（维持排名所需加更频率超出产能）</li>
+        </ul>
+        <p><b class="ok">假死四信号</b>（不撤，继续打）</p>
+        <ul>
+          <li>① 缓慢爬坡（如 50→38→25）</li>
+          <li>② 发布不足两期，考察中</li>
+          <li>③ 互动好但排名差（换博主，不撤内容）</li>
+          <li>④ 季节性词淡季</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">7</span>撤退五级<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p>L1 <b>换弹</b>（撤角度留词——八成撤退止步于此）→ L2 <b>撤词</b> → L3 <b>撤区</b> → L4 <b>换武器</b> → L5 <b>战略重估</b>。</p>
+        <p class="note">L5 动旗门槛（三条件<b>同时满足</b>）：所有战区连续一季萎缩 ＋ 语言渗透三期为零 ＋ 竞品抹平差异。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">8</span>兵种配置表<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <div class="tbl-wrap"><table class="tbl">
+          <colgroup><col style="width:20%"><col style="width:44%"><col style="width:36%"></colgroup>
+          <thead><tr><th>兵种</th><th>装备</th><th>战区</th></tr></thead>
+          <tbody>
+            <tr><td>立旗兵</td><td>认知容器</td><td>第一梯队</td></tr>
+            <tr><td>翻译兵</td><td>场景＋身份容器</td><td>第二梯队</td></tr>
+            <tr><td>执法官</td><td>结果容器＋横测</td><td>第三梯队</td></tr>
+            <tr><td>护旗兵</td><td>答疑评论区</td><td>评论区</td></tr>
+            <tr><td>卫戍部队</td><td>素人感口碑</td><td>品牌词</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">9</span>三役接口图<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <div class="ars-grid">
+          <div class="ars-cell"><b>空城战</b>＝证据库＋练兵场<br><span style="color:var(--muted)">低风险练手，攒实测弹药</span></div>
+          <div class="ars-cell"><b>立旗战</b>＝立法权<br><span style="color:var(--muted)">定标准者得心智</span></div>
+          <div class="ars-cell"><b>卫戍战</b>＝收银台＋最高法院<br><span style="color:var(--muted)">品牌词承接转化</span></div>
+          <div class="ars-cell"><b>执法战</b>＝开庭<br><span style="color:var(--muted)">横测出庭，证据说话</span></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">10</span>行为链路法卡<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p>靠脑袋想（只能想出见过的类目）和依赖热搜词工具（只收录已有量的词）是<b>同一个病</b>。</p>
+        <p>方法：AI 拆行为链要<b>动作不要结论</b> → 逐动作三问（麻烦／担心／省） → 三级分诊 → A 验城 ／ B 种词 ／ C 丢弃。</p>
+        <p class="note">铁律：不在自己的判断里闭环，去市场信号里闭环。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">11</span>词是被种出来的卡<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <p>搜索流吃词，推荐流吃场景。<b>没人搜 ≠ 没用</b>，是内容要先去见人。</p>
+        <p>「早C晚A」就是内容种出来的词。工具永远只收录已发生的搜索，没发生的那一半，只有发出去的内容能看见。</p>
+        <p class="note">对应作战令里的 B 类留种配额：A 类是主粮，B 类是留种。没人靠吃种子过冬，但断了种的人活不过下一个春天。</p>
+      </div>
+    </details>
+
+    <details class="ars">
+      <summary><span class="anum">12</span>八条心法<span class="caret">▾</span></summary>
+      <div class="ars-body">
+        <ul>
+          <li>① 争的是用户决策时刻的信任。</li>
+          <li>② 双周庙算，兵力随敌情民情我情而动。</li>
+          <li>③ 先打空城攒实力，别硬攻坚城。</li>
+          <li>④ 品牌词是收银台，前排 100% 好评＝0% 信任。</li>
+          <li>⑤ 旗说「怎么判断谁最好」，不说「我最好」。</li>
+          <li>⑥ 客观性是弹药不是美德，让数字开口。</li>
+          <li>⑦ 撤退线写在庙算里，善败者不亡。</li>
+          <li>⑧ 流量思维看多少人搜，信任思维看多少人正在经历——需求本体在人身上，不在词表里。</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="card">
+      <div class="btn-row tight">
+        <button class="btn ghost mini" onclick="resetData()">重置示例数据</button>
+        <button class="btn ghost mini" onclick="exportAllCSV()">导出全部选题 CSV</button>
+      </div>
+      <div class="hint">数据仅存本机浏览器 localStorage，清除浏览器数据前请先导出备份。</div>
+    </div>
+
+    <div class="foot-note">沐婴爱·选题作战指挥台 V4.0 · 把「选题是创意题」变成「选题是填空题」</div>
+  </section>
+</main>
+
+<nav id="tabbar">
+  <button class="tab-btn" data-tab="map" onclick="switchTab('map')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+    沙盘
+  </button>
+  <button class="tab-btn" data-tab="action" onclick="switchTab('action')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
+    行动
+  </button>
+  <button class="tab-btn" data-tab="review" onclick="switchTab('review')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1"/><path d="M9 10h6M9 14h6M9 18h4"/></svg>
+    复盘
+  </button>
+  <button class="tab-btn" data-tab="arsenal" onclick="switchTab('arsenal')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20"/></svg>
+    兵器库
+  </button>
+</nav>
+
+<div id="modal-root"></div>
+
+<script>
+'use strict';
+/* ================= 常量与阶段定义 ================= */
+const STORE = 'muyingai_warroom_v4';
+const PHASES = {
+  1:{name:'占山为王',short:'占山',zones:{4:'50%',2:'30%',5:'20%'},
+    cond:[{k:'t4top',t:'第四梯队 3~5 个词稳定前 20'},{k:'brand',t:'品牌词前排有 4~6 篇占位'}],
+    main:'第四梯队蓝海词',aux:'第二梯队',guard:'品牌词'},
+  2:{name:'立旗定标',short:'立旗',zones:{1:'50%',2:'30%',5:'20%'},
+    cond:[{k:'t1top40',t:'第一梯队有笔记进前 40'},{k:'lang',t:'语言渗透表已有读数'}],
+    main:'第一梯队「怎么选」类词',aux:'第二梯队',guard:'品牌词'},
+  3:{name:'抢收转化',short:'抢收',zones:{3:'40%',5:'30%',1:'20%',4:'10%'},
+    cond:[{k:'verify',t:'红色信号词已走三验或完成撤退'},{k:'lang2',t:'语言渗透两期以上有读数'}],
+    main:'竞品词拦截',aux:'品牌词收割',guard:'第一梯队'}
+};
+const ZONES = [
+  {t:1,name:'第一梯队 · 立旗区',desc:'「怎么选」类 · 立标准'},
+  {t:2,name:'第二梯队 · 唤醒区',desc:'科普唤醒 · 铺垫认知'},
+  {t:3,name:'第三梯队 · 执法区',desc:'竞品测评词 · 开庭'},
+  {t:4,name:'第四梯队 · 空城区',desc:'蓝海词 · 攒实力'},
+  {t:5,name:'品牌词 · 卫戍区',desc:'收银台 · 承接转化'}
+];
+const TIER_NAMES = {1:'一梯队',2:'二梯队',3:'三梯队',4:'四梯队',5:'品牌词'};
+const STATUS_FLOW = ['待写','已写','已过审','已排','已发','已复盘'];
+const CONTAINERS = [
+  {v:'焦虑',l:'焦虑容器（怕买错）'},{v:'结果',l:'结果容器（最后选了什么）'},
+  {v:'利益',l:'利益容器（省时省钱）'},{v:'身份',l:'身份容器（同类人）'},
+  {v:'认知',l:'认知容器（原来我一直错了）'},{v:'场景',l:'场景容器（我也遇到过）'}
+];
+const FORMULAS = ['场景反转+技术实证','信息差/内幕框架'];
+const CTAS = ['认知期不推产品','认可期中度引导','认购期闭环引导'];
+const MANTRAS = [
+  '争的是用户决策时刻的信任，不是点赞数。',
+  '双周庙算，兵力随敌情民情我情而动。',
+  '先打空城攒实力，别硬攻坚城。',
+  '品牌词是收银台，前排 100% 好评＝0% 信任。',
+  '旗说「怎么判断谁最好」，不说「我最好」。',
+  '客观性是弹药不是美德，让数字开口。',
+  '撤退线写在庙算里，善败者不亡。',
+  '流量思维看多少人搜，信任思维看多少人正在经历——需求本体在人身上，不在词表里。'
+];
+const DAY_PLAN = {
+  1:['拆链+验城日','走向导 0 拆行为链，向导 1 侦察新词',0],
+  2:['拆题日','五问法拆处境，走「行动」向导 2',2],
+  3:['成稿日','过自查军规，走「行动」向导 3',3],
+  4:['成稿日','过自查军规，走「行动」向导 3',3],
+  5:['分发+排名检查日','走「行动」向导 4 ＋ 复盘第 1 步',4],
+  6:['复盘整理日','整理本周排名，备军情会材料',0],
+  0:['数据回填日','回填数据＋爆款拆解，走复盘第 7 步',0]
+};
+
+/* ================= 示例数据 ================= */
+function seedData(){
+  const today = fmtDate(new Date());
+  return {
+    ver:4, phase:1,
+    waves:{1:{a:false,b:false},2:{ask:false},3:{up:false}},
+    order:null, meetings:[], firstMeeting:'', lastMeeting:'', garrisonDate:'', quarterlyDate:'',
+    weeklyStep:1,
+    cities:[
+      {id:1,word:'消毒柜怎么选',tier:1,judge:'A级',date:'2026-10-10',rank:42,trend:'→',notes:0,likes:0,cards:0},
+      {id:2,word:'奶瓶消毒柜怎么选',tier:1,judge:'A级',date:'2026-10-10',rank:38,trend:'↑',notes:0,likes:0,cards:0},
+      {id:3,word:'奶瓶消毒柜有必要吗',tier:2,judge:'待侦察',date:'2026-10-08',rank:0,trend:'→',notes:0,likes:0,cards:0},
+      {id:4,word:'消毒柜烘干',tier:2,judge:'A级',date:'2026-10-12',rank:31,trend:'↑',notes:0,likes:0,cards:0},
+      {id:5,word:'波洛洛消毒柜测评',tier:3,judge:'待侦察',date:'2026-10-09',rank:0,trend:'→',notes:0,likes:0,cards:0},
+      {id:6,word:'小白熊消毒柜测评',tier:3,judge:'待侦察',date:'2026-10-09',rank:0,trend:'→',notes:0,likes:0,cards:0},
+      {id:7,word:'烘干速度',tier:4,judge:'S级空城',date:'2026-10-14',rank:18,trend:'↑',notes:3.2,likes:320,cards:1},
+      {id:8,word:'臭氧',tier:4,judge:'S级空城',date:'2026-10-14',rank:15,trend:'↑',notes:1.8,likes:260,cards:0},
+      {id:9,word:'304不锈钢',tier:4,judge:'A级',date:'2026-10-14',rank:22,trend:'→',notes:6,likes:450,cards:2},
+      {id:10,word:'烘干要多久',tier:4,judge:'S级空城',date:'2026-10-14',rank:19,trend:'↑',notes:2.6,likes:380,cards:1},
+      {id:11,word:'噪音',tier:4,judge:'待侦察',date:'2026-10-14',rank:0,trend:'→',notes:0,likes:0,cards:0},
+      {id:12,word:'异味',tier:4,judge:'待侦察',date:'2026-10-14',rank:0,trend:'→',notes:0,likes:0,cards:0},
+      {id:13,word:'沐婴爱消毒柜',tier:5,judge:'卫戍',date:'2026-10-12',rank:8,trend:'↑',notes:0,likes:0,cards:0},
+      {id:14,word:'沐婴爱怎么样',tier:5,judge:'卫戍',date:'2026-10-12',rank:15,trend:'→',notes:0,likes:0,cards:0},
+      {id:15,word:'沐婴爱测评',tier:5,judge:'卫戍',date:'2026-10-12',rank:0,trend:'→',notes:0,likes:0,cards:0}
+    ],
+    _cid:16,
+    journeys:[
+      {id:1,name:'宝妈奶瓶流程',actions:[
+        {id:1,act:'拿奶瓶',bother:'',worry:'',save:''},
+        {id:2,act:'倒奶粉',bother:'',worry:'',save:''},
+        {id:3,act:'加水',bother:'',worry:'',save:''},
+        {id:4,act:'摇匀',bother:'',worry:'',save:''},
+        {id:5,act:'喂奶',bother:'',worry:'',save:''},
+        {id:6,act:'拆奶嘴',bother:'',worry:'',save:''},
+        {id:7,act:'洗奶瓶',bother:'',worry:'',save:''},
+        {id:8,act:'冲清洁剂',bother:'',worry:'',save:''},
+        {id:9,act:'涮干净',bother:'',worry:'',save:''},
+        {id:10,act:'放消毒柜',bother:'',worry:'',save:''},
+        {id:11,act:'按启动',bother:'',worry:'',save:''},
+        {id:12,act:'等消毒烘干',bother:'睡前最后一瓶洗完，要不要等烘干完才睡',worry:'等太久宝宝半夜要用',save:'少等几分钟'},
+        {id:13,act:'取出存放',bother:'烘干完能直接用吗，还是要等凉',worry:'烫到手',save:'即取即用'},
+        {id:14,act:'半夜冲奶拿取',bother:'',worry:'',save:''}
+      ]},
+    ],
+    _jid:2,
+    observations:[
+      {id:1,pain:'等消毒烘干：睡前最后一瓶洗完，要不要等烘干完才睡',scene:'夜奶妈妈，睡前最后一瓶刚洗好放进去，纠结要不要等',date:'2026-10-20',checks:[{date:'2026-10-20',link:'无'}],sprout:false},
+      {id:2,pain:'取出存放：烘干完能直接用吗，还是要等凉',scene:'消毒烘干结束后马上要用奶瓶，怕烫又怕不卫生',date:'2026-10-20',checks:[{date:'2026-10-20',link:'无'}],sprout:false}
+    ],
+    _oid:3,
+    supplyOverload:[],
+    topics:[
+      {id:1,title:'消毒柜烘干要多久？满载实测 8 分钟，别再花冤枉钱',kw:'烘干要多久',tier:4,angle:'满载实测打脸慢烘干',container:'焦虑',formula:'场景反转+技术实证',cta:'认可期中度引导',widget:true,type:'A',status:'已排',blogger:'小沐妈妈',date:'2026-10-26',periods:2},
+      {id:2,title:'烘干快的消毒柜怎么选？先问满载烘干多久',kw:'消毒柜怎么选',tier:1,angle:'立标准：先问满载烘干多久',container:'认知',formula:'信息差/内幕框架',cta:'认知期不推产品',widget:false,type:'A',status:'已过审',blogger:'',date:'',periods:1},
+      {id:3,title:'消毒柜臭氧浓度实测 0.000mg/m³，宝妈放心了',kw:'臭氧',tier:4,angle:'参数实证打消安全顾虑',container:'焦虑',formula:'场景反转+技术实证',cta:'认可期中度引导',widget:true,type:'A',status:'待写',blogger:'',date:'',periods:0}
+    ],
+    _tid:4,
+    bloggers:[
+      {id:1,name:'小沐妈妈',score:8,home:'小红书@小沐妈妈',perf:'母婴囤货笔记稳定，素人感强',avail:'下周有空'},
+      {id:2,name:'二宝的日常',score:9,home:'小红书@二宝的日常',perf:'二胎生活记录，真实生活痕迹多',avail:'两周后有空'},
+      {id:3,name:'家电功课君',score:6,home:'小红书@家电功课君',perf:'功课研究型人设，测评专业',avail:'随时'}
+    ],
+    _bid:4,
+    rankings:[
+      {id:1,topicId:1,word:'烘干要多久',title:'消毒柜烘干要多久？满载实测 8 分钟',blogger:'小沐妈妈',period:1,rank:'前20',type:'A',searchPct:38,colRate:12,interact:9,shop:31},
+      {id:2,topicId:1,word:'烘干要多久',title:'消毒柜烘干要多久？满载实测 8 分钟',blogger:'小沐妈妈',period:2,rank:'前20',type:'A',searchPct:41,colRate:15,interact:12,shop:47},
+      {id:3,topicId:2,word:'消毒柜怎么选',title:'烘干快的消毒柜怎么选？',blogger:'小沐妈妈',period:1,rank:'前40',type:'A',searchPct:22,colRate:8,interact:6,shop:12}
+    ],
+    _rid:4,
+    schedule:[],
+    fallen:[
+      {id:1,word:'消毒柜有必要买吗',angle:'避坑劝退',persona:'避雷吐槽号',cause:'L2撤词：词本身搜索需求弱，是幻影城',cost:0,lesson:'先验城再写稿，幻影城写得再好也是空转'}
+    ],
+    _fid:2,
+    viral:[
+      {id:1,title:'满载实测 8 分钟，烘干快的消毒柜怎么选',container:'焦虑+结果',hook:'先讲自己买贵后悔的坑',structure:'误解→实测→标准→轻引导',cover:'大字关键词＋实测数字',angle:'满载烘干时长实测',reuse:'可复用到噪音／异味词'}
+    ],
+    _vid:2,
+    infiltration:[],
+    garrisonLast:null, signalOverride:{}, seasonal:[],
+    mtgLog:[],
+    verifyFlow:null,
+    account:{nick:'',home:'',fans:''},
+    ai:{provider:'zhipu',key:'',base:'https://open.bigmodel.cn/api/paas/v4/chat/completions',model:'glm-4.7'},
+    aiSync:{url:'https://dav.jianguoyun.com/dav/',user:'',apppass:'',path:'/doubao/muyingai_warroom_v4.json',auto:false,last:''},
+    feishuSync:{appId:'',appSecret:'',folder:'',fileToken:'',fileName:'muyingai_warroom_v4.json',auto:false,last:''},
+    ui:{wiz0Open:false,mapEdit:false,aiRankOpen:false,aiViralOpen:false,zoneOpen:{}}
+  };
+}
+
+/* ================= 状态 ================= */
+let S = null;
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE);
+    if(raw){
+      const d = JSON.parse(raw);
+      if(d && d.ver === 4){
+        if(!d.ui) d.ui={wiz0Open:false,mapEdit:false,aiRankOpen:false,aiViralOpen:false,zoneOpen:{}};
+        if(!d.ui.zoneOpen) d.ui.zoneOpen={};
+        if(!d.account) d.account={nick:'',home:'',fans:''};
+        if(!d.ai) d.ai={provider:'zhipu',key:'',base:'https://open.bigmodel.cn/api/paas/v4/chat/completions',model:'glm-4.7'};
+        if(!d.aiSync) d.aiSync={url:'https://dav.jianguoyun.com/dav/',user:'',apppass:'',path:'/doubao/muyingai_warroom_v4.json',auto:false,last:''};
+        if(!d.feishuSync) d.feishuSync={appId:'',appSecret:'',folder:'',fileToken:'',fileName:'muyingai_warroom_v4.json',auto:false,last:''};
+        if(!d.mtgLog) d.mtgLog=[];
+        return d;
+      }
+    }
+  }catch(e){}
+  const s = seedData(); saveState(s); return s;
+}
+function saveState(s){ try{ localStorage.setItem(STORE, JSON.stringify(s||S)); }catch(e){ toast('保存失败：存储空间不足','err'); } }
+function commit(noAuto){ saveState(S); if(!noAuto) maybeAutoPush(); }
+
+/* ================= 工具 ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDate(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+dd; }
+function todayISO(){ return fmtDate(new Date()); }
+function addDays(iso,n){ const d=new Date(iso+'T00:00:00'); d.setDate(d.getDate()+n); return fmtDate(d); }
+function dayDiff(iso){ if(!iso) return null; const t=new Date(iso+'T00:00:00').getTime(); const n=new Date(todayISO()+'T00:00:00').getTime(); return Math.round((t-n)/86400000); }
+function weekNum(d){ const date=new Date(d+'T00:00:00'); const t=new Date(date.getFullYear(),0,1); return Math.ceil((((date-t)/86400000)+t.getDay()+1)/7); }
+function rankIdx(r){ return r==='前10'?1:r==='前20'?2:r==='前40'?3:4; }
+function todayPlan(){ const w=new Date().getDay(); return DAY_PLAN[w]; }
+function toast(msg,type){ const t=document.createElement('div'); t.className='toast'+(type==='err'?' te':type==='warn'?' tw':''); t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show')); setTimeout(()=>{ t.classList.remove('show'); setTimeout(()=>t.remove(),200); },2300); }
+function why(t){ return '<details class="why"><summary>为什么这么打</summary><div class="why-body">'+t+'</div></details>'; }
+function openModal(html){ const r=$('#modal-root'); r.style.display='block'; r.innerHTML='<div class="mask" onclick="closeModal()"><div class="modal" onclick="event.stopPropagation()">'+html+'</div></div>'; }
+function closeModal(){ const r=$('#modal-root'); r.style.display='none'; r.innerHTML=''; }
+function copyText(txt,ok){
+  ok = ok || '已复制';
+  function fb(){ const ta=document.createElement('textarea'); ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{ document.execCommand('copy'); toast(ok); }catch(e){ toast('复制失败','err'); } ta.remove(); }
+  if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(txt).then(()=>toast(ok)).catch(fb); } else fb();
+}
+function exportCSV(headers, rows, file){
+  const q = c => { c=String(c==null?'':c); return /[",\n]/.test(c) ? '"'+c.replace(/"/g,'""')+'"' : c; };
+  let csv = headers.map(q).join(',')+'\n';
+  rows.forEach(r=>{ csv += r.map(q).join(',')+'\n'; });
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=file; a.click(); URL.revokeObjectURL(a.href);
+  toast('已导出 CSV');
+}
+/* ================= AI（多服务商 · OpenAI 兼容格式） ================= */
+const AI_PROVIDERS = [
+  {id:'zhipu', name:'智谱 GLM（国内 bigmodel）', base:'https://open.bigmodel.cn/api/paas/v4/chat/completions', models:['glm-4.7','glm-4.7-flash','glm-4.6','glm-4.5','glm-4.5-air','glm-4-flash']},
+  {id:'zai', name:'智谱 Z.ai（国际版）', base:'https://api.z.ai/api/paas/v4/chat/completions', models:['glm-4.7','glm-4.7-flash']},
+  {id:'deepseek', name:'DeepSeek', base:'https://api.deepseek.com/chat/completions', models:['deepseek-chat','deepseek-reasoner']},
+  {id:'qwen', name:'通义千问（阿里）', base:'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', models:['qwen-max','qwen-plus','qwen-turbo','qwen-long']},
+  {id:'kimi', name:'Moonshot Kimi', base:'https://api.moonshot.cn/v1/chat/completions', models:['moonshot-v1-8k','moonshot-v1-32k','kimi-latest']},
+  {id:'openai', name:'OpenAI', base:'https://api.openai.com/v1/chat/completions', models:['gpt-4o-mini','gpt-4o']},
+  {id:'custom', name:'自定义（兼容 OpenAI 格式）', base:'https://你的代理地址/v1/chat/completions', models:[]}
+];
+function aiCfg(){
+  const a=S.ai||{};
+  const p=AI_PROVIDERS.find(x=>x.id===a.provider)||AI_PROVIDERS[0];
+  return {key:a.key||'', base:a.base||p.base, model:a.model||p.models[0]||'glm-4.7'};
+}
+function hasAI(){ return !!(aiCfg().key); }
+function stripCode(t){ return String(t||'').replace(/```[a-zA-Z]*/g,'').trim(); }
+async function aiChat(messages){
+  const a=aiCfg();
+  const res=await fetch(a.base,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+a.key},
+    body:JSON.stringify({model:a.model, messages:messages, temperature:0.3})
+  });
+  if(!res.ok){
+    let m='HTTP '+res.status;
+    try{ const e=await res.json(); m=(e&&(e.error&&(e.error.message||e.error.code)||e.message))||m; }catch(_){}
+    throw new Error(m);
+  }
+  const j=await res.json();
+  return (j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+}
+function openSettings(){
+  const acc=S.account||{}, ai=S.ai||{}, sy=S.aiSync||{};
+  const cur=AI_PROVIDERS.find(p=>p.id===ai.provider)||AI_PROVIDERS[0];
+  openModal('<h3>设置</h3><div class="m-body">'
+    + '<div class="lbl" style="margin:2px 0 6px"><b style="color:var(--navy)">账号信息</b></div>'
+    + '<div class="field"><div class="lbl">小红书运营账号昵称</div><input id="set_nick" value="'+esc(acc.nick)+'" placeholder="如：沐婴爱母婴"></div>'
+    + '<div class="field"><div class="lbl">主页链接（可选）</div><input id="set_home" value="'+esc(acc.home)+'" placeholder="https://…"></div>'
+    + '<div class="field"><div class="lbl">粉丝量（可选）</div><input id="set_fans" value="'+esc(acc.fans)+'" placeholder="如 1200"></div>'
+    + '<div class="sep"></div><div class="lbl" style="margin:2px 0 6px"><b style="color:var(--navy)">AI 服务</b></div>'
+    + '<div class="field"><div class="lbl">服务商</div><select id="set_provider" onchange="pickProvider()">'+AI_PROVIDERS.map(p=>'<option value="'+p.id+'"'+(ai.provider===p.id?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></div>'
+    + '<div class="field"><div class="lbl">API Key</div><input id="set_key" type="password" value="'+esc(ai.key)+'" placeholder="对应服务商的 API Key"></div>'
+    + '<div class="field"><div class="lbl">接口地址（可改，OpenAI 兼容格式）</div><input id="set_base" value="'+esc(ai.base||cur.base)+'"></div>'
+    + '<div class="field"><div class="lbl">模型名（可从下方建议选，也可自由输入）</div><input id="set_model" list="aiModels" value="'+esc(ai.model||cur.models[0]||'')+'"><datalist id="aiModels">'+cur.models.map(m=>'<option value="'+esc(m)+'">').join('')+'</datalist></div>'
+    + '<div class="hint">AI 用于：复盘批量识别填充、爆款拆解、向导 0 生成痛点、向导 2 拆处境与选题方向。Key 仅存本机，坚果云同步时不含密钥。<br><b>智谱 Key 三不通用</b>：bigmodel.cn（国内）与 Z.ai（国际）与 Coding Plan 的 Key 互不通用；请选对应服务商，Key 在 bigmodel.cn「个人套餐/标准 API」下创建。<br>若测试报「Failed to fetch」，是浏览器跨域拦截而非 Key 错误——见下方测试结果提示。</div>'
+    + '<div class="btn-row tight"><button class="btn ghost mini" onclick="testAI()">测试连接</button><button class="btn ghost mini" onclick="closeModal()">取消</button><button class="btn primary mini" onclick="saveSettings()">保存</button></div>'
+    + '<div id="aiTestResult" class="hint" style="margin-top:8px"></div>'
+    + '<div class="sep"></div><div class="lbl" style="margin:2px 0 6px"><b style="color:var(--navy)">坚果云同步（WebDAV）</b></div>'
+    + '<div class="field"><div class="lbl">WebDAV 地址</div><input id="sy_url" value="'+esc(sy.url||'https://dav.jianguoyun.com/dav/')+'" placeholder="https://dav.jianguoyun.com/dav/"></div>'
+    + '<div class="field"><div class="lbl">坚果云账号（邮箱）</div><input id="sy_user" value="'+esc(sy.user)+'" placeholder="you@example.com"></div>'
+    + '<div class="field"><div class="lbl">应用密码（坚果云设置→安全选项→应用密码，非登录密码）</div><input id="sy_pass" type="password" value="'+esc(sy.apppass)+'" placeholder="生成的应用密码"></div>'
+    + '<div class="field"><div class="lbl">同步文件路径</div><input id="sy_path" value="'+esc(sy.path||'/doubao/muyingai_warroom_v4.json')+'"></div>'
+    + '<div class="field"><label class="chk" style="padding:6px 2px"><input type="checkbox" id="sy_auto"'+(sy.auto?' checked':'')+'><span class="ct">自动同步（每次改动后约 4 秒自动上传）</span></label></div>'
+    + '<div class="btn-row tight"><button class="btn mini" onclick="syncPush()">立即上传</button><button class="btn mini" onclick="syncPull()">立即下载</button><button class="btn mini ghost" onclick="closeModal()">关闭</button></div>'
+    + '<div class="hint" id="syncStatus" style="margin-top:6px">'+esc(sy.last||'尚未同步。点「立即上传」把数据备份到坚果云，换设备后点「立即下载」恢复。')+'</div>'
+    + '<div class="sep"></div><div class="lbl" style="margin:2px 0 6px"><b style="color:var(--navy)">飞书云同步（自建应用 · 云空间）</b></div>'
+    + '<div class="field"><div class="lbl">App ID</div><input id="fs_id" value="'+esc((S.feishuSync||{}).appId||'')+'" placeholder="飞书开放平台自建应用的 App ID"></div>'
+    + '<div class="field"><div class="lbl">App Secret</div><input id="fs_secret" type="password" value="'+esc((S.feishuSync||{}).appSecret||'')+'" placeholder="对应 App Secret"></div>'
+    + '<div class="field"><div class="lbl">文件夹 Token（可选，留空＝云空间根目录）</div><input id="fs_folder" value="'+esc((S.feishuSync||{}).folder||'')+'" placeholder="如 fldxxxxx（云空间文件夹链接里那段）"></div>'
+    + '<div class="field"><label class="chk" style="padding:6px 2px"><input type="checkbox" id="fs_auto"'+(S.feishuSync&&S.feishuSync.auto?' checked':'')+'><span class="ct">自动同步（每次改动后约 4 秒自动上传）</span></label></div>'
+    + '<div class="btn-row tight"><button class="btn mini" onclick="feishuTest()">测试连接</button><button class="btn mini" onclick="feishuPush()">立即上传</button><button class="btn mini" onclick="feishuPull()">立即下载</button></div>'
+    + '<div class="hint" id="fsStatus" style="margin-top:6px">'+esc((S.feishuSync&&S.feishuSync.last)||'尚未同步。配置后点「立即上传」备份到你的飞书云空间，换设备点「立即下载」恢复。')+'</div>'
+    + '<div class="hint" style="margin-top:6px">配置步骤：飞书开放平台（open.feishu.cn）→ 创建企业自建应用 → 「权限管理」开通云空间任一权限（上传、下载文件到云空间，或查看、评论、编辑和管理云空间中所有文件）→ 「凭证与基础信息」复制 App ID / App Secret 填入。App Secret 仅存本机，同步文件不含密钥。若报跨域拦截，请「添加到主屏幕」后使用。</div>'
+    + '</div>');
+}
+function pickProvider(){
+  const p=AI_PROVIDERS.find(x=>x.id===$('#set_provider').value)||AI_PROVIDERS[0];
+  $('#set_base').value=p.base;
+  $('#set_model').value=p.models[0]||'';
+  const dl=$('#aiModels'); if(dl) dl.innerHTML=p.models.map(m=>'<option value="'+esc(m)+'">').join('');
+}
+function saveSettings(){
+  S.account={nick:$('#set_nick').value.trim(), home:$('#set_home').value.trim(), fans:$('#set_fans').value.trim()};
+  const p=AI_PROVIDERS.find(x=>x.id===$('#set_provider').value)||AI_PROVIDERS[0];
+  S.ai={provider:p.id, key:$('#set_key').value.trim(), base:$('#set_base').value.trim()||p.base, model:$('#set_model').value.trim()||p.models[0]||''};
+  S.aiSync=collectSyncInputs();
+  S.feishuSync=collectFeishuInputs();
+  commit(false); closeModal(); toast('设置已保存');
+}
+function testAI(){
+  const key=$('#set_key').value.trim(), base=$('#set_base').value.trim(), model=$('#set_model').value.trim();
+  const out=$('#aiTestResult');
+  if(!key){ if(out) out.textContent='请先填 API Key'; toast('请先填 API Key','warn'); return; }
+  if(out) out.textContent='测试中…（'+model+'）';
+  toast('测试连接中…');
+  (async()=>{
+    try{
+      const res=await fetch(base,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:model,messages:[{role:'user',content:'请只回复：OK'}]})});
+      if(!res.ok){ let m='HTTP '+res.status; let biz=''; try{ const e=await res.json(); biz=(e&&(e.error&&(e.error.message||e.error.code)||e.message))||''; if(biz) m=biz; }catch(_){} 
+        let tip='';
+        if(res.status===401||res.status===403) tip='——Key 无效或类型不对：确认是所选服务商的 Key；智谱请用 bigmodel.cn（国内）标准 API Key，Z.ai/Coding Plan 的 Key 不通用';
+        if(res.status===404) tip='——模型名不存在：确认格式（智谱示例：glm-4.7-flash，带 glm- 前缀），或该账号未开通此模型';
+        throw new Error(m+tip);
+      }
+      const j=await res.json();
+      const t=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'OK';
+      if(out) out.textContent='连接成功：'+String(t).slice(0,60);
+      toast('连接成功');
+    }catch(e){
+      const msg=(e.message||e);
+      const isCors = /Failed to fetch|NetworkError|load failed|Network request failed/i.test(msg);
+      if(out){
+        if(isCors) out.textContent='连接失败：浏览器跨域拦截（CORS）。API 只允许服务器调用，网页直连被浏览器拦截——这通常不是 Key 或模型名的问题。解决：① 手机浏览器打开本页→「添加到主屏幕」→从桌面图标进入后再测；② 或自定义服务商填支持 CORS 的代理地址；③ 或电脑端用支持跨域的本地小工具转发。';
+        else out.textContent='连接失败：'+msg;
+      }
+      toast('连接失败'+(isCors?'（跨域拦截）':''),'err');
+    }
+  })();
+}
+/* ================= 坚果云同步 ================= */
+function collectSyncInputs(){
+  return {url:($('#sy_url').value||'https://dav.jianguoyun.com/dav/').trim(), user:$('#sy_user').value.trim(), apppass:$('#sy_pass').value.trim(), path:($('#sy_path').value||'/doubao/muyingai_warroom_v4.json').trim(), auto:!!($('#sy_auto')&&$('#sy_auto').checked), last:(S.aiSync&&S.aiSync.last)||''};
+}
+function webdavBase(){ const c=S.aiSync||{}; return (c.url||'https://dav.jianguoyun.com/dav/').replace(/\/+$/,''); }
+function webdavPath(){ const c=S.aiSync||{}; let p=c.path||'/doubao/muyingai_warroom_v4.json'; return p.startsWith('/')?p:'/'+p; }
+function webdavAuth(){ const c=S.aiSync||{}; return 'Basic '+btoa(unescape(encodeURIComponent((c.user||'')+':'+(c.apppass||'')))); }
+function sanitizeForSync(s){
+  const c=JSON.parse(JSON.stringify(s));
+  c.ai={provider:s.ai&&s.ai.provider, base:(s.ai&&s.ai.base)||'', model:(s.ai&&s.ai.model)||''};
+  if(c.aiSync){ c.aiSync.apppass=''; }
+  if(c.feishuSync){ c.feishuSync={appId:(s.feishuSync&&s.feishuSync.appId)||'', folder:'', fileToken:'', fileName:'', auto:false, last:(s.feishuSync&&s.feishuSync.last)||''}; }
+  return c;
+}
+let __syncTimer=null;
+function maybeAutoPush(){
+  const fs=S.feishuSync||{}, sy=S.aiSync||{};
+  const feishuOn=!!(fs.auto&&fs.appId&&fs.appSecret);
+  const jgyOn=!!(sy.auto&&sy.user&&sy.apppass);
+  if(!feishuOn&&!jgyOn) return;
+  if(__syncTimer) clearTimeout(__syncTimer);
+  __syncTimer=setTimeout(()=>{
+    __syncTimer=null;
+    const payload=JSON.stringify(sanitizeForSync(S));
+    if(jgyOn){ fetch(webdavBase()+webdavPath(),{method:'PUT',headers:{'Authorization':webdavAuth(),'Content-Type':'application/json'},body:payload}).catch(()=>{}); }
+    if(feishuOn){ feishuPush(true); }
+  },4000);
+}
+function syncPush(){
+  S.aiSync=collectSyncInputs();
+  if(!S.aiSync.user||!S.aiSync.apppass){ toast('请先填坚果云账号与应用密码','warn'); return; }
+  const payload=JSON.stringify(sanitizeForSync(S));
+  toast('正在上传到坚果云…');
+  (async()=>{
+    try{
+      const res=await fetch(webdavBase()+webdavPath(),{method:'PUT',headers:{'Authorization':webdavAuth(),'Content-Type':'application/json'},body:payload});
+      if(!res.ok && res.status!==201 && res.status!==204){ let m='HTTP '+res.status; try{ const t=await res.text(); if(t) m+=' '+t.slice(0,80); }catch(_){} throw new Error(m); }
+      S.aiSync.last='上传 '+new Date().toLocaleString(); commit(false);
+      const st=$('#syncStatus'); if(st) st.textContent=S.aiSync.last;
+      toast('已上传到坚果云');
+    }catch(e){ toast('上传失败：'+(e.message||e),'err'); }
+  })();
+}
+function syncPull(){
+  S.aiSync=collectSyncInputs();
+  if(!S.aiSync.user||!S.aiSync.apppass){ toast('请先填坚果云账号与应用密码','warn'); return; }
+  toast('正在从坚果云下载…');
+  (async()=>{
+    try{
+      const res=await fetch(webdavBase()+webdavPath(),{method:'GET',headers:{'Authorization':webdavAuth()}});
+      if(!res.ok){ if(res.status===404){ throw new Error('云端还没有该文件，请先点「立即上传」'); } throw new Error('HTTP '+res.status); }
+      const d=JSON.parse(await res.text());
+      if(!d || d.ver!==4) throw new Error('云端文件版本不匹配或损坏');
+      const keepAI=S.ai||{}, keepSync=S.aiSync||{};
+      S=Object.assign({}, d, {ai:keepAI, aiSync:keepSync});
+      D.chain.journeyId = S.journeys&&S.journeys[0]?S.journeys[0].id:null;
+      S.aiSync.last='下载 '+new Date().toLocaleString();
+      commit(false); renderAll();
+      const st=$('#syncStatus'); if(st) st.textContent=S.aiSync.last;
+      toast('已从坚果云恢复数据');
+    }catch(e){ toast('下载失败：'+(e.message||e),'err'); }
+  })();
+}
+function toggleAI(k){ S.ui[k]=!S.ui[k]; commit(); renderAll(); }
+/* ================= 飞书云同步（自建应用 · 云空间） ================= */
+function collectFeishuInputs(){
+  const f=S.feishuSync||{};
+  return {appId:($('#fs_id').value||'').trim(), appSecret:($('#fs_secret').value||'').trim(), folder:($('#fs_folder').value||'').trim(), fileToken:f.fileToken||'', fileName:f.fileName||'muyingai_warroom_v4.json', auto:!!($('#fs_auto')&&$('#fs_auto').checked), last:f.last||''};
+}
+async function feishuToken(){
+  const fs=S.feishuSync||{};
+  const res=await fetch('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({app_id:fs.appId, app_secret:fs.appSecret})});
+  const j=await res.json().catch(()=>({code:-1,msg:'响应解析失败'}));
+  if(j.code!==0) throw new Error(j.msg||('错误码 '+j.code));
+  return j.tenant_access_token;
+}
+function mkFsForm(payload, fileName){
+  const fs=S.feishuSync||{};
+  const name=fileName||fs.fileName||'muyingai_warroom_v4.json';
+  const blob=new Blob([payload],{type:'application/json'});
+  const fd=new FormData();
+  fd.append('file_name',name);
+  fd.append('parent_type','explorer');
+  fd.append('parent_node',fs.folder||'');
+  fd.append('size',String(blob.size));
+  fd.append('file',blob,name);
+  return fd;
+}
+async function feishuUpload(tk, payload, silent){
+  const fs=S.feishuSync||{};
+  let url='https://open.feishu.cn/open-apis/drive/v1/files/upload_all';
+  if(fs.fileToken) url='https://open.feishu.cn/open-apis/drive/v1/files/'+fs.fileToken+'/upload_all';
+  let fd=mkFsForm(payload);
+  let res;
+  try{
+    res=await fetch(url,{method:'POST',headers:{'Authorization':'Bearer '+tk},body:fd});
+    if(!res.ok && fs.fileToken && /404|405/.test(String(res.status))){
+      fs.fileToken=''; fd=mkFsForm(payload);
+      res=await fetch('https://open.feishu.cn/open-apis/drive/v1/files/upload_all',{method:'POST',headers:{'Authorization':'Bearer '+tk},body:fd});
+    }
+  }catch(e){
+    if(fs.fileToken){ fs.fileToken=''; fd=mkFsForm(payload); res=await fetch('https://open.feishu.cn/open-apis/drive/v1/files/upload_all',{method:'POST',headers:{'Authorization':'Bearer '+tk},body:fd}); }
+    else throw e;
+  }
+  if(!res.ok){ let msg='HTTP '+res.status; try{ const j=await res.json(); msg=(j&&(j.msg||('错误码 '+j.code)))||msg; }catch(_){} throw new Error(msg); }
+  const j=await res.json().catch(()=>({code:-1,msg:'响应解析失败'}));
+  if(j.code!==0) throw new Error(j.msg||('错误码 '+j.code));
+  if(j.data&&j.data.file_token) fs.fileToken=j.data.file_token;
+  fs.last='上传 '+new Date().toLocaleString();
+  commit(false);
+  return true;
+}
+function feishuPush(silent){
+  S.feishuSync=collectFeishuInputs();
+  if(!S.feishuSync.appId||!S.feishuSync.appSecret){ if(!silent) toast('请先填飞书 App ID 与 App Secret','warn'); return; }
+  const payload=JSON.stringify(sanitizeForSync(S));
+  if(!silent) toast('正在上传到飞书云空间…');
+  (async()=>{
+    try{
+      const tk=await feishuToken();
+      await feishuUpload(tk,payload,silent);
+      if(!silent){ toast('已上传到飞书云空间'); const st=$('#fsStatus'); if(st) st.textContent=S.feishuSync.last; }
+    }catch(e){
+      const msg=(e.message||e);
+      if(!silent){ toast('飞书上传失败','err'); const st=$('#fsStatus'); if(st) st.textContent='上传失败：'+msg+(/Failed to fetch|NetworkError/i.test(msg)?'——浏览器跨域拦截，建议「添加到主屏幕」后使用':'（'+msg+'）'); }
+    }
+  })();
+}
+function feishuPull(){
+  S.feishuSync=collectFeishuInputs();
+  if(!S.feishuSync.appId||!S.feishuSync.appSecret){ toast('请先填飞书 App ID 与 App Secret','warn'); return; }
+  if(!S.feishuSync.fileToken){ toast('本机还没有飞书文件记录，请先在原设备点「立即上传」','warn'); return; }
+  toast('正在从飞书云空间下载…');
+  (async()=>{
+    try{
+      const tk=await feishuToken();
+      const res=await fetch('https://open.feishu.cn/open-apis/drive/v1/files/'+S.feishuSync.fileToken+'/content',{method:'GET',headers:{'Authorization':'Bearer '+tk}});
+      if(!res.ok){ let msg='HTTP '+res.status; try{ const j=await res.json(); msg=(j&&(j.msg||('错误码 '+j.code)))||msg; }catch(_){} throw new Error(msg); }
+      const d=JSON.parse(await res.text());
+      if(!d||d.ver!==4) throw new Error('云端文件版本不匹配或损坏');
+      const keepAI=S.ai||{}, keepSync=S.aiSync||{}, keepFs=S.feishuSync||{};
+      S=Object.assign({}, d, {ai:keepAI, aiSync:keepSync, feishuSync:keepFs});
+      D.chain.journeyId=S.journeys&&S.journeys[0]?S.journeys[0].id:null;
+      S.feishuSync.last='下载 '+new Date().toLocaleString();
+      commit(false); renderAll();
+      const st=$('#fsStatus'); if(st) st.textContent=S.feishuSync.last;
+      toast('已从飞书云空间恢复数据');
+    }catch(e){ toast('下载失败：'+(e.message||e),'err'); }
+  })();
+}
+function feishuTest(){
+  S.feishuSync=collectFeishuInputs();
+  if(!S.feishuSync.appId||!S.feishuSync.appSecret){ toast('请先填飞书 App ID 与 App Secret','warn'); return; }
+  const out=$('#fsStatus');
+  if(out) out.textContent='连接中…';
+  (async()=>{
+    try{
+      const tk=await feishuToken();
+      if(out) out.textContent='连接成功：已获取访问凭证（有效期内可用），可点「立即上传」';
+      toast('飞书连接成功');
+    }catch(e){
+      const msg=(e.message||e);
+      if(out) out.textContent='连接失败：'+msg+(/Failed to fetch|NetworkError/i.test(msg)?'——浏览器跨域拦截，建议「添加到主屏幕」后使用':'');
+      toast('连接失败','err');
+    }
+  })();
+}
+function setS(path, val){
+  const keys = path.split('.'); let o = S;
+  for(let i=0;i<keys.length-1;i++){ o = o[keys[i]]; if(o==null) return; }
+  o[keys[keys.length-1]] = val;
+  commit(); renderAll();
+}
+function segHTML(name, opts, val){
+  return '<div class="seg" data-name="'+name+'">'+opts.map(o=>'<button type="button" class="seg-btn'+(o.v===val?' on':'')+'" data-val="'+o.v+'" onclick="segClick(this)">'+o.l+'</button>').join('')+'</div>';
+}
+function segClick(el){
+  const g = el.parentNode; g.querySelectorAll('.seg-btn').forEach(b=>b.classList.remove('on')); el.classList.add('on');
+  const name = g.dataset.name;
+  if(name && name.startsWith('S.')){ setS(name.slice(2), el.dataset.val); }
+  else if(name && name.startsWith('C.')){ setD(name.slice(2), el.dataset.val); chainLive(); }
+  else if(name && name.startsWith('D.')){
+    const card = g.closest('.card'); const cid = card ? card.id : '';
+    _keepY = false;
+    setD(name.slice(2), el.dataset.val); renderAll();
+    if(cid){ const el2 = document.getElementById(cid); if(el2) el2.scrollIntoView({behavior:'auto',block:'start'}); }
+  }
+}
+function readSeg(name){
+  const g = document.querySelector('.seg[data-name="'+name+'"]'); if(!g) return '';
+  const on = g.querySelector('.seg-btn.on'); return on ? on.dataset.val : '';
+}
+/* 草稿（不随渲染丢失的输入） */
+const D = {
+  recon:{word:'',link:'无',ask:'无',complain:'无',notes:'',likes:'',cards:'',depth:'浅',follow:'少',tier:'4'},
+  five:{word:'',q1:'',q2:'',q3:'',q4:'',q5:'',sitEdit:'',sits:[]},
+  check:{topic:'',title:'',body:'',tags:'',emoji:true,arrow:true,sensitive:true,compTitle:false,component:false},
+  schedule:{topic:'',blogger:'',date:''},
+  blogger:{name:'',score:'7',home:'',perf:'',avail:''},
+  rank:{topic:'',word:'',title:'',blogger:'',period:'',rank:'前20',searchPct:'',colRate:'',interact:'',shop:''},
+  t_dirs:[],
+  bf:{topic:'',rank:'前20',colRate:'',interact:'',shop:''},
+  verify:{w1:{},w2:{angle:'',collide:'无'},w3:{}},
+  garrison:{occ:'',q1:false,q2:false,q3:false,q4:false,q5:false,q6:false,neg:'无',ratio:'',obs:false},
+  viral:{title:'',type:'A',container:'',hook:'',structure:'',cover:'',angle:'',scene:'',toA:'',text:''},
+  order:{main:'4',mainPct:'50',aux:'2',auxPct:'30',garrison:'',bQuota:'',retreat:[],check:''},
+  mtg:{step:1,enemy:'',complaints:'',dry:'无',ask:'',big:'',confirm:false},
+  chain:{journeyId:null,cands:[]},
+  obsCheck:{},
+  aiRank:'',
+  mapAdd:{}
+};
+function setD(path, val){
+  const keys = path.split('.'); let o = D;
+  for(let i=0;i<keys.length-1;i++){ if(o[keys[i]]==null) o[keys[i]]={}; o = o[keys[i]]; }
+  o[keys[keys.length-1]] = val;
+}
+
+/* ================= 导航 ================= */
+function switchTab(t){
+  location.hash = t;
+  renderAll();
+}
+function currentTab(){
+  const h = (location.hash||'').replace('#','');
+  return ['map','action','review','arsenal'].indexOf(h)>=0 ? h : 'map';
+}
+let _keepY = true;
+function renderAll(){
+  clearMvTimers();
+  const prevY = window.scrollY || document.documentElement.scrollTop || 0;
+  const keep = _keepY; _keepY = true;
+  const t = currentTab();
+  $$('.tab-view').forEach(s=>s.style.display='none');
+  document.getElementById('tab-'+t).style.display='block';
+  $$('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===t));
+  const ph = $('#topPhase');
+  if(ph) ph.textContent = '阶段'+PHASES[S.phase].short;
+  if(t==='map') renderMap();
+  else if(t==='action') renderAction();
+  else if(t==='review') renderReview();
+  if(keep) requestAnimationFrame(()=>{ window.scrollTo(0, prevY); });
+  else window.scrollTo(0,0);
+}
+
+/* ================= 沙盘 ================= */
+function phaseBarHTML(){
+  let h = '<div class="phase-bar">';
+  [1,2,3].forEach(p=>{
+    const ph = PHASES[p]; const cur = S.phase===p;
+    h += '<div class="phase-box'+(cur?' cur':'')+'" onclick="openPhaseModal('+p+')">'
+      + '<div class="pn">阶段'+p+'</div><div class="pn2">'+ph.name+'</div>'
+      + '<div class="pd">主力：'+ph.main+'</div>'
+      + (cur?'<div class="done-tag">当前阶段</div>':'<div class="done-tag dim">点击查看推进条件</div>')
+      + '</div>';
+  });
+  return h + '</div>';
+}
+let PENDING_PHASE = 0;
+function openPhaseModal(p){
+  PENDING_PHASE = p;
+  const ph = PHASES[p];
+  let items = '';
+  ph.cond.forEach((c,i)=>{
+    items += '<label class="chk"><input type="checkbox" id="pc-'+i+'" onchange="pcCheck()"><span class="ct">'+esc(c.t)+'</span></label>';
+  });
+  openModal(
+    '<h3>推进至阶段'+p+'「'+ph.name+'」</h3><div class="m-body">'
+    + '<p style="margin-bottom:9px">切换前逐项确认推进条件：</p>' + items
+    + '<p class="hint" id="pcHint">全部勾选后方可切换</p>'
+    + '<div class="btn-row"><button class="btn" onclick="closeModal()">取消</button>'
+    + '<button class="btn primary" id="pcOk" disabled onclick="doPhaseSwitch('+p+')">确认切换</button></div></div>'
+  );
+}
+function pcCheck(){
+  const ph = PHASES[PENDING_PHASE]; const ok = ph.cond.every((c,i)=>$('#pc-'+i) && $('#pc-'+i).checked);
+  const btn = $('#pcOk');
+  if(btn){ btn.disabled = !ok; $('#pcHint').textContent = ok ? '条件已确认，可切换' : '全部勾选后方可切换'; }
+}
+function doPhaseSwitch(p){
+  S.phase = p; commit(); closeModal();
+  toast('已切换至阶段'+p+'「'+PHASES[p].name+'」'); renderAll();
+}
+function waveHTML(){
+  const w = S.waves;
+  const w1ok = w[1].a && w[1].b, w2ok = w[1].a && w[1].b && w[2].ask;
+  const waves = [
+    {n:'第一波',name:'立论',desc:'产品隐身，纯立标准「选消毒柜先问满载烘干多久」',active:true,done:w1ok,state:w[1],
+      sigs:[{k:'a',l:'收藏率达标',p:'S.waves.1.a'},{k:'b',l:'评论区出现「有道理」',p:'S.waves.1.b'}]},
+    {n:'第二波',name:'翻译',desc:'场景化：夜奶／梅雨季／二胎，把标准翻译进生活',active:w1ok,done:w2ok,state:w[2],
+      sigs:[{k:'ask',l:'评论区主动问「怎么判断烘干快」',p:'S.waves.2.ask'}]},
+    {n:'第三波',name:'执法',desc:'横测对比出场，拿实测开庭',active:w2ok,done:w[3].up,state:w[3],
+      sigs:[{k:'up',l:'品牌词搜索上涨',p:'S.waves.3.up'}]}
+  ];
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>立旗三波推进<span class="sub">阶段二专属</span></div>';
+  h += '<div class="medal" style="margin-top:0;margin-bottom:10px"><b>铁律：</b>第二波内容备稿但不排期，等信号。</div>';
+  waves.forEach((wv,i)=>{
+    const cls = wv.done?' done':(wv.active?' cur':' locked');
+    h += '<div class="wave-box'+cls+'"><div class="wave-head"><span class="wn">'+wv.n+'</span>'+wv.name
+      + (wv.done?'<span class="chip g">信号达成</span>':(wv.active?'<span class="chip b">推进中</span>':'<span class="chip n">等前波信号</span>'))
+      + '</div><div class="wave-tip">'+wv.desc+'</div>';
+    wv.sigs.forEach(sg=>{
+      h += '<div class="field" style="margin-bottom:6px"><div class="lbl">推进信号 · '+sg.l+'</div>'
+        + segHTML('S.'+sg.p, [{v:'no',l:'未达'},{v:'yes',l:'已达成'}], wv.state[sg.k]===true?'yes':'no')+'</div>';
+    });
+    if(i===1 && !w2ok) h += '<div class="wave-tip iron">铁律：备稿不排期，等「评论区主动问」这个信号出现再上。</div>';
+    if(i===2 && !w[3].up) h += '<div class="hint">执法波信号：品牌词搜索上涨（可在复盘·语言渗透里观测）。</div>';
+    h += '</div>';
+  });
+  return h + '</div>';
+}
+function orderCardHTML(){
+  const o = S.order;
+  if(!o){
+    return '<div class="card"><div class="card-title"><span class="bar"></span>当前作战令<span class="sub">军情会输出</span></div>'
+      + '<div class="medal">尚未召开军情会，去<b>复盘 Tab 第 5 步</b>「双周军情会」生成作战令。</div>'
+      + '<div class="btn-row tight"><button class="btn ghost mini" onclick="switchTab(\'review\')">去复盘·军情会</button></div></div>';
+  }
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>当前作战令<span class="sub">第 '+o.no+' 期 · '+esc(o.date)+'</span></div>';
+  h += '<div class="order-card"><div class="ot"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7EA6FF" stroke-width="2" stroke-linecap="round"><path d="M4 3v18"/><path d="M6 4c5-2 7 3 14 0v11c-7 3-9-2-14 0z"/></svg>本期作战令</div>';
+  h += '<div class="ov">主力战区：<b>'+esc(o.mainName)+'</b> 兵力 <b>'+esc(o.mainPct)+'%</b><br>辅助战区：<b>'+esc(o.auxName)+'</b> 兵力 <b>'+esc(o.auxPct)+'%</b><br>卫戍任务：<b>品牌词补位 '+esc(o.garrison)+' 篇</b><br>B 类留种配额：<b>'+esc(o.bQuota||'0')+' 篇</b><br>撤退名单：<b>'+esc(o.retreatTxt||'无')+'</b><br>下期校验点：<b>'+esc(o.check)+'</b></div>';
+  h += '<div class="o-date">'+esc(o.note||'')+'</div></div>';
+  h += '<div class="btn-row tight"><button class="btn ghost mini" onclick="copyOrder()">一键复制</button></div></div>';
+  return h;
+}
+function copyOrder(){
+  const o = S.order; if(!o){ toast('尚无作战令'); return; }
+  const txt = '【第'+o.no+'期作战令】'+o.date+'\n主力战区：'+o.mainName+' · 兵力'+o.mainPct+'%\n辅助战区：'+o.auxName+' · 兵力'+o.auxPct+'%\n卫戍任务：品牌词补位'+(o.garrison||0)+'篇\nB类留种配额：'+(o.bQuota||0)+'篇\n撤退名单：'+(o.retreatTxt||'无')+'\n下期校验点：'+o.check;
+  copyText(txt,'作战令已复制');
+}
+function zonePct(t){
+  const o = S.order;
+  if(o){
+    if(o.mainZone==t) return o.mainPct+'%';
+    if(o.auxZone==t) return o.auxPct+'%';
+    if(t===5) return '卫戍';
+  }
+  const z = PHASES[S.phase].zones[t]; return z||'—';
+}
+function zoneStatus(t){
+  const cs = S.cities.filter(c=>c.tier===t);
+  if(cs.some(c=>c.judge==='死城'||c.judge==='军管城')) return 's-red';
+  if(cs.some(c=>c.judge&&c.judge.indexOf('S级')===0)) return 's-green';
+  if(cs.some(c=>c.judge==='待侦察')) return 's-orange';
+  return t===5?'s-navy':'s-blue';
+}
+function rankOptions(v){ return ['前10','前20','前40','50外'].map(x=>'<option'+(x===v?' selected':'')+'>'+x+'</option>').join(''); }
+function numToRank(n){ n=Number(n)||0; return n>0&&n<=10?'前10':n>10&&n<=20?'前20':n>20&&n<=40?'前40':n>0?'50外':'前20'; }
+function rankToNum(r){ return r==='前10'?8:r==='前20'?18:r==='前40'?38:55; }
+function zoneMapHTML(){
+  const edit = !!(S.ui&&S.ui.mapEdit);
+  const isOpen = t => !!(S.ui&&S.ui.zoneOpen&&S.ui.zoneOpen[t]);
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>战区地图<span class="sub">词会变动 · 随时可改</span>'
+    + '<button class="btn mini'+(edit?' primary':' ghost')+'" style="margin-left:auto" onclick="toggleMapEdit()">'+(edit?'完成编辑':'编辑地图')+'</button></div>';
+  ZONES.forEach(z=>{
+    const cs = S.cities.filter(c=>c.tier===z.t);
+    const pct = zonePct(z.t);
+    h += '<div class="zone '+zoneStatus(z.t)+(isOpen(z.t)?' open':'')+'" id="zone-'+z.t+'">'
+      + '<div class="zh" onclick="zoneExpand('+z.t+')">'
+      + '<div><div class="zn">'+z.name+'</div><div class="zd">'+z.desc+'</div></div>'
+      + '<div class="meta"><div class="n">'+cs.length+' 城</div><div class="m2">本期兵力 '+pct+'</div></div>'
+      + '<span class="chv"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>'
+      + '</div><div class="zbody">';
+    if(edit){
+      const ad = D.mapAdd[z.t] || (D.mapAdd[z.t]={word:'',rank:'前20',trend:'→'});
+      h += '<div class="map-add">'
+        + '<input placeholder="新词，如：烘干速度" value="'+esc(ad.word)+'" oninput="setMapAdd('+z.t+',\'word\',this.value)">'
+        + '<select onchange="setMapAdd('+z.t+',\'rank\',this.value)">'+rankOptions(ad.rank)+'</select>'
+        + '<select onchange="setMapAdd('+z.t+',\'trend\',this.value)"><option value="→"'+(ad.trend==='→'?' selected':'')+'>→</option><option value="↑"'+(ad.trend==='↑'?' selected':'')+'>↑</option><option value="↓"'+(ad.trend==='↓'?' selected':'')+'>↓</option></select>'
+        + '<button class="btn mini primary" onclick="addCity('+z.t+')">加入</button></div>';
+    }
+    if(!cs.length){ h += '<div class="hint" style="padding:8px 0">该战区暂无城池档案'+(edit?'，在上方输入新词加入。':'，走「行动·向导 1」验城入档。')+'</div>'; }
+    cs.forEach(c=>{
+      if(edit){
+        h += '<div class="city-row" data-cid="'+c.id+'"><div class="cr-main"><span class="grow">'+esc(c.word)+'</span>'
+          + '<select onchange="setCityField('+c.id+',\'tier\',this.value)">'+[1,2,3,4,5].map(t=>'<option value="'+t+'"'+(c.tier===t?' selected':'')+'>'+TIER_NAMES[t]+'</option>').join('')+'</select>'
+          + '<button class="del-btn" onclick="delCity('+c.id+',\''+esc(c.word)+'\')">删除</button></div>'
+          + '<div class="cr-sub">'
+          + '<select onchange="setCityField('+c.id+',\'rank\',this.value)">'+rankOptions(numToRank(c.rank))+'</select>'
+          + '<select onchange="setCityField('+c.id+',\'trend\',this.value)"><option value="→"'+(c.trend==='→'?' selected':'')+'>→ 平稳</option><option value="↑"'+(c.trend==='↑'?' selected':'')+'>↑ 上升</option><option value="↓"'+(c.trend==='↓'?' selected':'')+'>↓ 下降</option></select>'
+          + '</div></div>';
+      } else {
+        const arrow = c.trend==='↑'?'<span class="arrow up">↑</span>':c.trend==='↓'?'<span class="arrow down">↓</span>':'<span class="arrow flat">→</span>';
+        const jc = c.judge.indexOf('S级')===0?'g':c.judge==='死城'||c.judge==='军管城'?'r':c.judge==='A级'?'b':'o';
+        h += '<span class="city-chip">'+esc(c.word)+' <span class="rk">'+(c.rank?'R'+c.rank:'未查')+' '+arrow+'</span><span class="chip '+jc+'">'+esc(c.judge)+'</span></span>';
+      }
+    });
+    h += '</div></div>';
+  });
+  return h + '</div>';
+}
+function zoneExpand(t){
+  S.ui=S.ui||{}; if(!S.ui.zoneOpen) S.ui.zoneOpen={};
+  S.ui.zoneOpen[t]=!S.ui.zoneOpen[t];
+  commit();
+  const el=$('#zone-'+t); if(el) el.classList.toggle('open', S.ui.zoneOpen[t]);
+}
+function toggleMapEdit(){ S.ui=S.ui||{}; S.ui.mapEdit=!S.ui.mapEdit; commit(); renderAll(); }
+function setMapAdd(t,k,v){ if(!D.mapAdd[t]) D.mapAdd[t]={word:'',rank:'前20',trend:'→'}; D.mapAdd[t][k]=v; }
+function addCity(t){
+  const a=D.mapAdd[t]||{}; const w=(a.word||'').trim();
+  if(!w){ toast('请输入新词','warn'); return; }
+  if(S.cities.some(c=>c.word===w)){ toast('该词已在城池档案中','warn'); return; }
+  S.cities.push({id:S._cid++, word:w, tier:t, judge:'手动录入', date:todayISO(), rank:rankToNum(a.rank||'前20'), trend:a.trend||'→', notes:0, likes:0, cards:0});
+  D.mapAdd[t]={word:'',rank:'前20',trend:'→'};
+  if(!S.ui.zoneOpen) S.ui.zoneOpen={};
+  S.ui.zoneOpen[t]=true;
+  commit(); toast('已加入战区：'+w);
+  _keepY=false; renderAll();
+  const el=$('#zone-'+t); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+}
+const _mvTimers = {};
+function setCityField(id,k,v){
+  const c=S.cities.find(x=>x.id===id); if(!c) return;
+  if(k==='rank') c.rank = rankToNum(v);
+  else if(k==='tier') c.tier = Number(v);
+  else c[k]=v;
+  commit();
+  if(k==='tier'){
+    // 延迟移动：等 select 的系统点击事件流完全结束，避免残点穿透到删除按钮
+    clearTimeout(_mvTimers[id]);
+    _mvTimers[id] = setTimeout(()=>{
+      delete _mvTimers[id];
+      S.ui.zoneOpen[c.tier]=true;
+      const row = document.querySelector('[data-cid="'+id+'"]');
+      const nz = $('#zone-'+c.tier);
+      if(row && nz && nz.querySelector('.zbody')){
+        nz.classList.add('open');
+        nz.querySelector('.zbody').appendChild(row);
+      }
+      refreshZoneCounts();
+      toast('「'+c.word+'」已移动到'+TIER_NAMES[c.tier]);
+    }, 380);
+  }
+}
+function clearMvTimers(){ Object.keys(_mvTimers).forEach(k=>{ clearTimeout(_mvTimers[k]); delete _mvTimers[k]; }); }
+function refreshZoneCounts(){
+  ZONES.forEach(z=>{
+    const el = $('#zone-'+z.t); if(!el) return;
+    const n = S.cities.filter(c=>c.tier===z.t).length;
+    const nEl = el.querySelector('.meta .n');
+    if(nEl) nEl.textContent = n+' 城';
+    const pEl = el.querySelector('.meta .m2');
+    if(pEl) pEl.textContent = '本期兵力 '+zonePct(z.t);
+  });
+}
+function delCity(id,w){
+  openModal('<h3>删除城池</h3><div class="m-body"><p><b style="color:var(--red)">确定删除「'+esc(w)+'」？</b>此操作不可撤销。仅删除城池档案，选题库与排名记录不受影响。</p><div class="btn-row"><button class="btn" onclick="closeModal()">取消</button><button class="btn red" onclick="doDelCity('+id+')">确认删除</button></div></div>');
+}
+function doDelCity(id){ clearTimeout(_mvTimers[id]); delete _mvTimers[id]; S.cities=S.cities.filter(c=>c.id!==id); commit(); closeModal(); renderAll(); toast('城池已删除'); }
+function todayHTML(){
+  const p = todayPlan(); const wk = weekNum(todayISO());
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>今日行动建议</div>';
+  h += '<div class="day-card"><div class="d1">'+p[0]+'</div><div class="d2">'+p[1]+'<div class="mantra">本周心法：'+MANTRAS[wk%7]+'</div></div></div>';
+  h += '<div class="btn-row tight">';
+  if(p[2]===1) h += '<button class="btn ghost mini" onclick="switchTab(\'action\')">去验城</button>';
+  else if(p[2]===2) h += '<button class="btn ghost mini" onclick="switchTab(\'action\')">去拆题</button>';
+  else if(p[2]===3) h += '<button class="btn ghost mini" onclick="switchTab(\'action\')">去自查</button>';
+  else if(p[2]===4) h += '<button class="btn ghost mini" onclick="switchTab(\'action\')">去排期</button>';
+  else h += '<button class="btn ghost mini" onclick="switchTab(\'review\')">去复盘</button>';
+  h += '</div></div>';
+  return h;
+}
+function countdownHTML(){
+  const nextMtg = S.lastMeeting ? addDays(S.lastMeeting,14) : (S.firstMeeting||'');
+  let items = [
+    {l:'距下次军情会',iso:nextMtg},
+    {l:'距月度卫戍检查',iso:S.garrisonDate||''},
+    {l:'距季度战略校准',iso:S.quarterlyDate||''}
+  ];
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>倒计时区<span class="sub">到期橙色高亮</span></div>';
+  h += '<div class="cd-grid">';
+  items.forEach(it=>{
+    const d = dayDiff(it.iso);
+    const over = d!==null && d<=0;
+    h += '<div class="cd-box'+(over?' over':'')+'"><div class="dn">'+(d===null?'—':(d<=0?'已到期':d+' 天'))+'</div><div class="dl">'+it.l+'<br><span>'+esc(it.iso||'未设定')+'</span></div></div>';
+  });
+  h += '</div>';
+  h += '<div class="field" style="margin-top:10px"><div class="lbl">设定首期军情会日期（此后每次记录军情自动 +14 天）</div>'
+    + '<input type="date" value="'+esc(S.firstMeeting||'')+'" onchange="setFirstMeeting(this.value)"></div>';
+  h += '<div class="hint">卫戍检查每 30 天、战略校准每 90 天，随首期日期自动排定，也可在军情会／卫戍月检提交时顺延。</div>';
+  return h + '</div>';
+}
+function setFirstMeeting(v){
+  if(!v) return;
+  S.firstMeeting = v;
+  if(!S.garrisonDate) S.garrisonDate = addDays(v,30);
+  if(!S.quarterlyDate) S.quarterlyDate = addDays(v,90);
+  commit(); toast('首期军情会日期已设定'); renderAll();
+}
+function infiltrationHTML(){
+  const inf = S.infiltration.slice(-8);
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>语言渗透监测<span class="sub">每期军情会录入 · 近 4 期趋势</span></div>';
+  h += '<div class="field"><div class="lbl">① 大词评论区「烘干」类提问占比 %</div><input type="number" min="0" max="100" placeholder="如 12" value="'+esc(D.inf_ratio||'')+'" oninput="D.inf_ratio=this.value"></div>';
+  h += '<div class="field"><div class="lbl">② 竞品词评论区「满载烘干」提问数</div><input type="number" min="0" placeholder="如 5" value="'+esc(D.inf_count||'')+'" oninput="D.inf_count=this.value"></div>';
+  h += '<div class="field"><div class="lbl">③ 品牌词下拉框有无「沐婴爱烘干」联想</div>' + segHTML('inf_sug',[{v:'no',l:'无'},{v:'yes',l:'有'}], D.inf_sug||'no') + '</div>';
+  h += '<div class="btn-row"><button class="btn primary" onclick="addInfiltration()">录入本期读数</button></div>';
+  if(inf.length){
+    h += '<div class="sep"></div><div class="lbl" style="margin-bottom:6px"><b>近 4 期趋势</b></div>';
+    const last4 = inf.slice(-4);
+    const mk = (key,unit)=>{
+      let mx = Math.max(1,...last4.map(x=>Number(x[key])||0));
+      let bars = last4.map(x=>'<div class="mc"><div class="mcv">'+esc(x.date.slice(5))+'</div><div class="bar" style="height:'+Math.round((Number(x[key])||0)/mx*44)+'px"></div><div class="mcv">'+(x[key]??0)+'</div></div>').join('');
+      return '<div class="mini-chart">'+bars+'</div>';
+    };
+    h += '<div class="lbl" style="margin-bottom:2px">① 提问占比 %（'+unit_ratio(last4)+'）</div>'+mk('ratio')+'<div class="lbl" style="margin:8px 0 2px">② 满载烘干提问数</div>'+mk('count');
+    const sugHist = last4.map(x=>x.suggest===true?'有':'无');
+    h += '<div class="lbl" style="margin:8px 0 2px">③ 下拉联想（有/无）</div><div class="row" style="flex-wrap:wrap">'+last4.map((x,i)=>'<span class="chip '+(x.suggest?'g':'n')+'">'+esc(x.date.slice(5))+'：'+(x.suggest?'有':'无')+'</span>').join('')+'</div>';
+  } else {
+    h += '<div class="medal">尚无读数。每期军情会录入一次，满 2 期即构成「语言渗透有读数」，可支撑阶段二推进条件。</div>';
+  }
+  function unit_ratio(arr){ const v=arr[arr.length-1]; return v? String(v.ratio)+'%':'—'; }
+  return h + why('语言渗透是立旗战的生命线：用户开始问「怎么选、怎么判断烘干快」，说明标准正在进入他们的决策语言；下拉联想出现，说明平台已把你的词和品牌绑在一起。三期为零＝心智未动。') + '</div>';
+}
+function addInfiltration(){
+  const ratio = Number(D.inf_ratio); const count = Number(D.inf_count); const sug = readSeg('inf_sug')==='yes';
+  if(isNaN(ratio)||ratio<0||ratio>100){ toast('请填写 ① 占比（0-100）','warn'); return; }
+  S.infiltration.push({date:todayISO(),ratio:ratio||0,count:isNaN(count)?0:count,suggest:sug});
+  D.inf_ratio=''; D.inf_count=''; D.inf_sug='no';
+  commit(); toast('渗透读数已录入'); renderAll();
+}
+function renderMap(){
+  $('#tab-map').innerHTML =
+    '<div class="card"><div class="card-title"><span class="bar"></span>战争阶段条<span class="sub">点击阶段查看推进条件</span></div>' + phaseBarHTML()
+    + '<div class="hint">阶段一「占山为王」：主力 50% 打第四梯队蓝海词，辅 30% 第二梯队，20% 卫戍品牌词。</div></div>'
+    + (S.phase===2?waveHTML():'')
+    + orderCardHTML()
+    + zoneMapHTML()
+    + todayHTML()
+    + countdownHTML()
+    + infiltrationHTML();
+}
+/* ================= 行动：本周流程条 ================= */
+function flowBarHTML(){
+  const steps = ['拆链','验城','拆题','自查','分发'];
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>本周流程条<span class="sub">点击手动推进</span></div><div class="steps">';
+  steps.forEach((s,i)=>{
+    const n=i+1;
+    h += '<div class="step-dot'+(S.weeklyStep===n?' cur':(S.weeklyStep>n?' done':''))+' onclick="setWeeklyStep('+n+')">'+s+'</div>';
+  });
+  return h + '</div></div>';
+}
+function setWeeklyStep(n){ S.weeklyStep=n; commit(); renderAll(); }
+
+/* ================= 行动：向导0 行为链路拆解 ================= */
+function chainJourney(){
+  const jid = Number(D.chain.journeyId) || (S.journeys[0] && S.journeys[0].id);
+  D.chain.journeyId = jid;
+  return S.journeys.find(j=>j.id===jid) || S.journeys[0];
+}
+function renderWizard0(){
+  const j = chainJourney();
+  const open = !!(S.ui && S.ui.wiz0Open);
+  let h = '<div class="card" id="wiz0"><div class="card-title"><span class="bar"></span>向导 0 · 行为链路拆解<span class="sub">词的生产车间</span>'
+    + '<button class="btn mini'+(open?'':' ghost')+'" style="margin-left:auto" onclick="toggleWiz0()">'+(open?'收起 ▲':'展开 ▼')+'</button></div>';
+  if(!open){
+    h += '<div class="hint">已折叠：旅程「'+esc(j?j.name:'')+'」（'+((j&&j.actions)||[]).length+' 个动作）。展开后可拆行为链、逐动作三问、生成候选痛点、三级分诊 A/B/C。</div>';
+    return h + '</div>';
+  }
+  h += '<div class="medal" style="background:var(--orange-soft);border:1px solid var(--orange-line);margin-top:0;margin-bottom:10px"><b style="color:#B87208">固定提示：</b>AI 生成的链路不一定对，要的是里面的动作。AI 是脚手架，判断永远是人做。</div>';
+  h += '<div class="lbl" style="margin-bottom:5px"><b>第 1 步 · 选旅程</b></div>';
+  h += '<div class="btn-row tight" style="gap:6px;align-items:center"><div style="flex:2"><select onchange="D.chain.journeyId=this.value;renderAll()">'+S.journeys.map(x=>'<option value="'+x.id+'"'+(j&&j.id===x.id?' selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select></div>'
+    + '<button class="btn mini" onclick="addJourney()">新建旅程</button>'
+    + (S.journeys.length>1?'<button class="btn mini red" onclick="delJourney()">删</button>':'')+'</div>';
+  h += '<div class="lbl" style="margin:10px 0 5px"><b>第 2 步 · 逐动作三问</b>（动作可编辑增删，麻烦／担心／想省可留空）</div>';
+  j.actions.forEach((a,ai)=>{
+    h += '<div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px;background:#fff">'
+      + '<div class="btn-row tight" style="gap:6px;margin:0;align-items:center"><div style="flex:2"><input value="'+esc(a.act)+'" placeholder="动作" oninput="S.journeys.find(j=>j.id==='+j.id+').actions['+ai+'].act=this.value;commit()"></div>'
+      + '<button class="btn mini" onclick="addAction('+j.id+','+ai+')">＋</button><button class="btn mini red" onclick="delAction('+j.id+','+ai+')">－</button></div>'
+      + '<div class="btn-row tight" style="gap:6px;margin:6px 0 0">'
+      + '<div style="flex:1"><input value="'+esc(a.bother)+'" placeholder="遇到什么麻烦" oninput="S.journeys.find(j=>j.id==='+j.id+').actions['+ai+'].bother=this.value;commit()"></div>'
+      + '<div style="flex:1"><input value="'+esc(a.worry)+'" placeholder="担心什么结果" oninput="S.journeys.find(j=>j.id==='+j.id+').actions['+ai+'].worry=this.value;commit()"></div>'
+      + '<div style="flex:1"><input value="'+esc(a.save)+'" placeholder="想省什么" oninput="S.journeys.find(j=>j.id==='+j.id+').actions['+ai+'].save=this.value;commit()"></div>'
+      + '</div></div>';
+  });
+  h += '<div class="btn-row"><button class="btn primary" onclick="genChainCands()">第 3 步 · 生成候选痛点</button><button class="btn ghost" onclick="aiChainCands()">AI 生成痛点</button></div>';
+  h += '<div id="chainCands">'+chainCandsHTML()+'</div>';
+  h += '<div class="lbl" style="margin:10px 0 4px"><b>第 4 步 · 分诊</b>：A 类有人搜（任一「有」）／ B 类没人搜但场景真实（三勾全中）／ C 类都不满足。</div>';
+  h += why('你以为你在想选题，其实只是在回忆自己见过的东西——能想到的＝几万人想到的。词库新词不从词根拼，从用户的一天里捡。靠脑袋想（只能想出见过的类目）和依赖热搜词工具（只收录已有量的词）是同一个病。');
+  return h + '</div>';
+}
+function toggleWiz0(){ S.ui=S.ui||{}; S.ui.wiz0Open=!S.ui.wiz0Open; commit(); renderAll(); }
+function aiChainCands(){
+  if(!hasAI()){ toast('未配置 AI：点顶栏齿轮进设置，填入智谱 API Key','warn'); return; }
+  const j=chainJourney(); if(!j){ return; }
+  const acts=j.actions.map(a=>a.act+'｜麻烦:'+(a.bother||'无')+'｜担心:'+(a.worry||'无')+'｜想省:'+(a.save||'无')).join('\n');
+  toast('AI 生成候选痛点中…');
+  (async()=>{
+    try{
+      const out=await aiChat([
+        {role:'system',content:'你是母婴品类洞察助手。基于行为链路动作与三问，输出候选痛点 JSON 数组，每项 {action:对应动作名, pain:"动作：一句话痛点"}。痛点要具体、有画面、是用户会说的话（10-30 字）。合并相近痛点，只输出最有价值的 3-8 条，只输出 JSON。'},
+        {role:'user',content:acts}
+      ]);
+      const list=JSON.parse(stripCode(out));
+      if(!Array.isArray(list)) throw new Error('返回格式错误');
+      const cands=list.filter(x=>x&&x.action&&x.pain).map(x=>({id:Math.random().toString(36).slice(2,8), action:x.action, pain:x.pain, aLink:'无', aAsk:'无', b1:false, b2:false, b3:false, grey:false}));
+      if(!cands.length) throw new Error('未生成出有效痛点');
+      D.chain.cands=cands; commit(); renderAll();
+      toast('AI 已生成 '+cands.length+' 个候选痛点，逐条分诊');
+    }catch(e){ toast('AI 生成失败：'+(e.message||e),'err'); }
+  })();
+}
+function chainCandsHTML(){
+  const cs = D.chain.cands||[];
+  if(!cs.length) return '<div class="medal" style="margin-top:10px">候选痛点列表会显示在这里。生成后逐条做三级分诊。</div>';
+  let h='';
+  cs.forEach((c,i)=>{
+    const isA = c.aLink==='有'||c.aAsk==='有';
+    const isB = c.b1&&c.b2&&c.b3;
+    const color = isA?'var(--green)':isB?'var(--blue)':'var(--muted)';
+    h += '<div class="sig" style="border-left:4px solid '+color+'">';
+    h += '<div class="sg-t"><span style="font-size:13px;line-height:1.5">'+esc(c.pain)+'</span>'+(isA?'<span class="chip g">A类·有人搜</span>':isB?'<span class="chip b">B类·场景真实</span>':'<span class="chip n">C类·待定</span>')+'</div>';
+    h += '<div class="field" style="margin:8px 0 0"><div class="lbl">A 类判定 · 去小红书查两项（任一「有」即 A 类）</div>'
+      + segHTML('C.chain.cands.'+i+'.aLink',[{v:'无',l:'下拉框联想·无'},{v:'有',l:'下拉框联想·有'}],c.aLink)
+      + '</div>';
+    h += '<div class="field" style="margin:6px 0 0">'+segHTML('C.chain.cands.'+i+'.aAsk',[{v:'无',l:'大词评论区追问·无'},{v:'有',l:'大词评论区追问·有'}],c.aAsk)+'</div>';
+    h += '<div class="field" style="margin:8px 0 0"><div class="lbl">B 类判定 · 三条全勾</div>'
+      + '<label class="chk" style="min-height:38px;padding:7px 9px"><input type="checkbox" '+(c.b1?'checked':'')+' onchange="D.chain.cands['+i+'].b1=this.checked;chainLive()"><span class="ct">场景高频（天天发生，非一年一次）</span></label>'
+      + '<label class="chk" style="min-height:38px;padding:7px 9px"><input type="checkbox" '+(c.b2?'checked':'')+' onchange="D.chain.cands['+i+'].b2=this.checked;chainLive()"><span class="ct">场景真实（能看见具体画面）</span></label>'
+      + '<label class="chk" style="min-height:38px;padding:7px 9px"><input type="checkbox" '+(c.b3?'checked':'')+' onchange="D.chain.cands['+i+'].b3=this.checked;chainLive()"><span class="ct">能引发「我也是」</span></label></div>';
+    h += '<div class="btn-row tight" style="margin-top:8px">';
+    if(isA) h += '<button class="btn mini green" onclick="sendToRecon('+i+')">送入验城向导 1</button>';
+    if(isB) h += '<button class="btn mini" onclick="obsFromChain('+i+')">进观察名单</button>';
+    h += '<button class="btn mini ghost" onclick="discardCand('+i+')">'+(c.grey?'已丢弃':'标灰丢弃')+'</button></div></div>';
+  });
+  return h;
+}
+function chainLive(){ const el=$('#chainCands'); if(el) el.innerHTML=chainCandsHTML(); }
+function genChainCands(){
+  const j = chainJourney(); const cands = [];
+  j.actions.forEach(a=>{
+    const bits=[a.bother,a.worry,a.save].filter(Boolean);
+    if(!bits.length) return;
+    cands.push({id:Math.random().toString(36).slice(2,8), action:a.act, pain:a.act+'：'+bits.join('；'), aLink:'无', aAsk:'无', b1:false,b2:false,b3:false, grey:false});
+  });
+  if(!cands.length){ toast('动作的三问都为空，先填「麻烦／担心／想省」','warn'); return; }
+  D.chain.cands=cands; commit(); renderAll();
+  toast('已生成 '+cands.length+' 个候选痛点，逐条分诊');
+}
+function sendToRecon(i){
+  const c=D.chain.cands[i]; if(!c) return;
+  D.recon.word=c.action; D.five.entry='a'; D.five.word=c.action; D.five.q1=c.pain;
+  _keepY=false; commit(); renderAll();
+  const el=$('#wiz1'); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+  toast('已带入向导 1 验城：'+c.action);
+}
+function obsFromChain(i){
+  const c=D.chain.cands[i]; if(!c) return;
+  const j=chainJourney(); const act=j.actions.find(a=>a.act===c.action);
+  S.observations.push({id:S._oid++, pain:c.pain, scene:(act&&(act.worry||act.bother))||c.pain, date:todayISO(), checks:[], sprout:false});
+  c.grey=true; commit(); renderAll();
+  toast('已进观察名单：'+c.pain.slice(0,18));
+}
+function discardCand(i){ D.chain.cands[i].grey=true; commit(); renderAll(); }
+function addJourney(){
+  openModal('<h3>新建旅程</h3><div class="m-body"><div class="field"><div class="lbl">旅程名称（如：背奶妈妈／二胎家庭／老人带娃）</div><input id="newJName" placeholder="如：背奶妈妈的一天"></div><div class="btn-row"><button class="btn" onclick="closeModal()">取消</button><button class="btn primary" onclick="createJourney()">创建</button></div></div>');
+}
+function createJourney(){
+  const v=($('#newJName').value||'').trim(); if(!v){ toast('请填名称','warn'); return; }
+  const j={id:S._jid++, name:v, actions:[{id:S._jid*100+1,act:'新动作',bother:'',worry:'',save:''}]};
+  S.journeys.push(j); D.chain.journeyId=j.id; commit(); closeModal(); renderAll(); toast('旅程已创建');
+}
+function delJourney(){
+  if(S.journeys.length<=1){ toast('至少保留一条旅程','warn'); return; }
+  const j=chainJourney();
+  S.journeys=S.journeys.filter(x=>x.id!==j.id); D.chain.journeyId=S.journeys[0].id; commit(); renderAll();
+}
+function addAction(jid,ai){
+  const j=S.journeys.find(x=>x.id===jid); if(!j) return;
+  j.actions.splice(ai+1,0,{id:S._jid*100+Math.random().toString(36).slice(2,6),act:'新动作',bother:'',worry:'',save:''});
+  commit(); renderAll();
+}
+function delAction(jid,ai){
+  const j=S.journeys.find(x=>x.id===jid); if(!j||j.actions.length<=1) return;
+  j.actions.splice(ai,1); commit(); renderAll();
+}
+
+/* ================= 行动：观察名单 ================= */
+function renderObsList(){
+  const obs=S.observations;
+  let h='<div class="card" id="obsList"><div class="card-title"><span class="bar" style="background:var(--green)"></span>观察名单<span class="sub">'+obs.length+' 条 · 每月复查十秒</span></div>';
+  if(!obs.length){ h+='<div class="medal">观察名单为空。B 类痛点（没人搜但场景真实）从这里种词。</div>'; }
+  obs.forEach(o=>{
+    h += '<div class="sig'+(o.sprout?' green':'')+'"'+(o.sprout?' style="border-color:var(--green-line);background:var(--green-soft)"':'')+'>';
+    h += '<div class="sg-t"><span style="font-size:13.5px;line-height:1.5">'+esc(o.pain)+'</span>'+(o.sprout?'<span class="chip g">已发芽</span>':'<span class="chip n">留种中</span>')+'</div>';
+    h += '<div class="sg-r">场景：'+esc(o.scene)+'<br>首测：'+esc(o.date)+'</div>';
+    h += '<div class="sg-r" style="margin-top:5px">复查记录：'+(o.checks.length?o.checks.map(c=>'<span class="chip '+(c.link==='有'?'g':'n')+'" style="margin-right:4px">'+esc(c.date.slice(5))+'·'+(c.link==='有'?'有联想':'无联想')+'</span>').join(''):'<span class="dim">尚无</span>')+'</div>';
+    h += '<div class="btn-row tight" style="gap:6px;margin-top:8px;align-items:center">'
+      + '<input type="date" style="flex:1;min-height:40px" id="obsDate-'+o.id+'" value="'+esc(todayISO())+'">'
+      + '<select style="flex:1;min-height:40px" onchange="D.obsCheck['+o.id+']=this.value"><option value="无">下拉框·无联想</option><option value="有"'+(D.obsCheck[o.id]==='有'?' selected':'')+'>下拉框·有联想</option></select>'
+      + '<button class="btn mini" onclick="addObsCheck('+o.id+')">复查</button></div>';
+    h += '<div class="btn-row tight" style="margin-top:6px">'
+      + '<button class="btn mini" onclick="genBTopic('+o.id+')">一键生成 B 类选题</button>'
+      + '<button class="btn mini ghost" onclick="delObs('+o.id+')">移除</button></div>';
+    if(o.sprout) h += '<div class="hint ok" style="margin-top:6px">词发芽了——第一个看到的人就是第一个占城的人，立即送入验城。</div>';
+    h += '</div>';
+  });
+  h += why('B 类是留种：没人搜 ≠ 没用，是内容要先去见人。推荐流是搜索流的实验室——互动最高的场景，回头就是 A 类搜索内容的最佳切入角度。');
+  return h+'</div>';
+}
+function addObsCheck(id){
+  const o=S.observations.find(x=>x.id===id); if(!o) return;
+  const link=D.obsCheck[id]||'无';
+  const date=($('#obsDate-'+id).value)||todayISO();
+  o.checks.push({date:date,link:link});
+  if(link==='有'){ o.sprout=true; commit(); toast('词发芽了——第一个看到的人就是第一个占城的人，立即送入验城'); renderAll(); return; }
+  commit(); toast('复查已记录：'+date+' · 无联想'); renderAll();
+}
+function obsToRecon(id){
+  const o=S.observations.find(x=>x.id===id); if(!o) return;
+  const kw=o.pain.split('：')[0];
+  D.recon.word=kw; D.five.entry='a'; D.five.word=kw;
+  _keepY=false; commit(); renderAll();
+  const el=$('#wiz1'); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+  toast('已带入验城：'+kw);
+}
+function genBTopic(id){
+  const o=S.observations.find(x=>x.id===id); if(!o) return;
+  S.topics.push({id:S._tid++, title:o.pain, kw:o.pain.split('：')[0], tier:2, angle:o.pain, container:'场景', formula:'场景反转+技术实证', cta:'认可期中度引导', widget:false, type:'B', status:'待写', blogger:'', date:'', periods:0});
+  commit(); openBCard(); renderAll();
+}
+function openBCard(){
+  openModal('<h3>B 类打法卡</h3><div class="m-body">'
+    + '<div class="medal" style="margin-top:0"><b>内容形态：</b>场景容器，标题写画面不写词。<br>示例：「半夜洗完最后一瓶奶，谁懂等它烘干的崩溃」</div>'
+    + '<div class="medal"><b>KPI 不是排名，是两条：</b>互动率（共鸣证明）＋标题里埋下未来搜索的种子。</div>'
+    + '<div class="medal"><b>推荐流是搜索流的实验室：</b>互动最高的场景，回头就是 A 类搜索内容的最佳切入角度。</div>'
+    + '<div class="medal"><b>B 类内容不做标题关键词强制检查</b>（吃推荐流不吃搜索），自查军规自动豁免※两项。</div>'
+    + '<div class="btn-row"><button class="btn primary" onclick="closeModal()">明白</button></div></div>');
+}
+function delObs(id){ S.observations=S.observations.filter(x=>x.id!==id); commit(); renderAll(); }
+
+/* ================= 行动：向导1 验城 ================= */
+function reconJudge(){
+  const r = D.recon;
+  const has = [r.link, r.ask, r.complain].filter(v=>v==='有').length;
+  const demand = has>=2;
+  const notes = Number(r.notes)||0, likes = Number(r.likes)||0, cards = Number(r.cards)||0;
+  const military = cards>15;
+  const redsea = notes>20 || likes>=1000;
+  const empty = notes<5 && likes<500 && cards<=3;
+  const depthDeep = r.depth==='深';
+  let judge, rec;
+  if(!demand){ judge='死城'; rec='疑似死城或幻影城：需求未被验证，放弃或降级侦察。'; }
+  else if(military){ judge='军管城'; rec='军管城：付费位垄断，绕行。除非有强差异化角度，否则不投。'; }
+  else if(redsea){ judge='红海'; rec='红海：笔记量暴涨或前排千赞，绕行；若要打，只做差异化角度并接受慢。'; }
+  else if(empty && depthDeep){ judge='待侦察'; rec='空城但供给不浅：先发一篇，两周看数据再定。'; }
+  else if(empty){ judge='S级空城'; rec='S级空城：需求真实 × 供给很浅 × 无付费位垄断，全力进攻。'; }
+  else if(notes<5 && likes<500){ judge='待侦察'; rec='需求真实但数据模糊：先发一篇，两周看数据。'; }
+  else { judge='A级'; rec='A级：可打，需优化角度避开强敌。'; }
+  return {demand, has, notes, likes, cards, military, redsea, empty, judge, rec};
+}
+function reconResultHTML(){
+  const j = reconJudge();
+  const jc = j.judge.indexOf('S级')===0?'g':(j.judge==='死城'||j.judge==='军管城'||j.judge==='红海')?'r':'o';
+  let h = '<div class="row"><span class="chip '+jc+'">'+j.judge+'</span><span class="grow" style="font-size:13px">'+j.rec+'</span></div>';
+  h += '<div class="sep" style="margin:8px 0"></div>';
+  h += '<div class="lbl" style="margin-bottom:3px"><b>需求验证（前三项 ≥2 个「有」才真实）</b></div>';
+  const r=D.recon;
+  const mk=(l,v)=>'<div class="row" style="padding:3px 0"><span class="grow" style="font-size:12.5px">'+l+'</span><span class="chip '+(v==='有'?'g':'n')+'" style="font-size:11px">'+esc(v)+'</span></div>';
+  h += mk('① 下拉框有联想',r.link)+mk('② 大词评论区有人问相关',r.ask)+mk('③ 竞品差评区有人抱怨相关',r.complain);
+  h += '<div class="hint" style="margin-top:3px">「有」='+j.has+' 个 '+(j.demand?'→ 需求真实':'→ 需求未验证，判死城／幻影城——先翻小红书下拉框与评论区再回来填，别急着写稿')+'</div>';
+  h += '<div class="sep" style="margin:8px 0"></div>';
+  h += '<div class="lbl" style="margin-bottom:3px"><b>供给判断</b></div>';
+  h += '<div class="hint">笔记总量 '+j.notes+' 万 '+(j.notes<5?'（<5万 浅）':j.notes>20?'（>20万 红海）':'')+' ／ 前排最高赞 '+j.likes+' '+(j.likes<500?'（<500 浅）':j.likes>=1000?'（≥1000 红海）':'')+' ／ 商品卡 '+j.cards+' 张 '+(j.cards<=3?'（≤3 无垄断）':j.cards>15?'（>15 军管）':'')+'</div>';
+  return h;
+}
+function reconLive(){
+  const el = $('#reconResult'); if(!el) return;
+  el.innerHTML = reconResultHTML();
+}
+function reconSave(){
+  const w = (D.recon.word||'').trim();
+  if(!w){ toast('请先输入关键词','warn'); return; }
+  const j = reconJudge();
+  const tier = Number(D.recon.tier)||4;
+  const old = S.cities.find(c=>c.word===w);
+  const city = old || {id:S._cid++, word:w, rank:0, trend:'→', notes:0, likes:0, cards:0};
+  city.tier=tier; city.judge=j.judge; city.date=todayISO();
+  city.notes=Number(D.recon.notes)||0; city.likes=Number(D.recon.likes)||0; city.cards=Number(D.recon.cards)||0;
+  if(!old) S.cities.push(city);
+  commit();
+  toast('已写入城池档案：'+w+' → '+j.judge);
+  renderAll();
+}
+function renderWizard1(){
+  const r = D.recon;
+  let h = '<div class="card" id="wiz1"><div class="card-title"><span class="bar"></span>向导 1 · 验城（城池侦察）<span class="sub">输入即出判定</span></div>';
+  h += '<div class="medal" style="background:var(--orange-soft);border:1px solid var(--orange-line);margin-top:0;margin-bottom:10px"><b style="color:#B87208">先侦察再填：</b>前三项（下拉联想／大词追问／竞品吐槽）至少两项选「有」需求才真实，否则会判<b>死城</b>——先翻小红书下拉框和评论区再回来填。</div>';
+  h += '<div class="field"><div class="lbl">侦察关键词</div><input placeholder="如：烘干速度、臭氧" value="'+esc(r.word)+'" oninput="D.recon.word=this.value;reconLive()"></div>';
+  h += '<div class="field"><div class="lbl">① 下拉框有联想</div>'+segHTML('D.recon.link',[{v:'无',l:'无'},{v:'有',l:'有'}],r.link)+'</div>';
+  h += '<div class="field"><div class="lbl">② 大词评论区有人问相关</div>'+segHTML('D.recon.ask',[{v:'无',l:'无'},{v:'有',l:'有'}],r.ask)+'</div>';
+  h += '<div class="field"><div class="lbl">③ 竞品差评区有人抱怨相关</div>'+segHTML('D.recon.complain',[{v:'无',l:'无'},{v:'有',l:'有'}],r.complain)+'</div>';
+  h += '<div class="btn-row tight" style="gap:6px">'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">笔记总量（万）</div><input type="number" min="0" step="0.1" value="'+esc(r.notes)+'" oninput="D.recon.notes=this.value;reconLive()"></div>'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">前排最高赞</div><input type="number" min="0" value="'+esc(r.likes)+'" oninput="D.recon.likes=this.value;reconLive()"></div>'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">前排商品卡数</div><input type="number" min="0" value="'+esc(r.cards)+'" oninput="D.recon.cards=this.value;reconLive()"></div></div>';
+  h += '<div class="btn-row tight" style="gap:6px">'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">前排内容深度</div>'+segHTML('D.recon.depth',[{v:'浅',l:'浅'},{v:'深',l:'深'}],r.depth)+'</div>'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">评论区未接追问</div>'+segHTML('D.recon.follow',[{v:'少',l:'少'},{v:'多',l:'多'}],r.follow)+'</div>'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">梯队归属</div><select onchange="D.recon.tier=this.value"><option value="1"'+(r.tier==='1'?' selected':'')+'>一梯队</option><option value="2"'+(r.tier==='2'?' selected':'')+'>二梯队</option><option value="3"'+(r.tier==='3'?' selected':'')+'>三梯队</option><option value="4"'+(r.tier==='4'?' selected':'')+'>四梯队</option><option value="5"'+(r.tier==='5'?' selected':'')+'>品牌词</option></select></div></div>';
+  h += '<div id="reconResult">'+reconResultHTML()+'</div>';
+  h += '<div class="btn-row"><button class="btn primary" onclick="reconSave()">写入城池档案</button><button class="btn ghost" onclick="reconClear()">清空</button></div>';
+  h += why('笔记少的词≠空城：可能是死城（没人搜）、幻影城（需求不稳）、军管城（被投流占据）。真·空城＝需求真实存在 × 供给普遍很浅 × 无付费位垄断。S/A 级词自动进入待拆题列表。');
+  return h + '</div>';
+}
+function reconClear(){
+  Object.assign(D.recon,{word:'',link:'无',ask:'无',complain:'无',notes:'',likes:'',cards:'',depth:'浅',follow:'少',tier:'4'});
+  renderAll();
+}
+
+/* ================= 行动：向导2 拆题 ================= */
+function pendingWords(){
+  const set = [];
+  S.cities.forEach(c=>{ if(c.judge&&(c.judge.indexOf('S级')===0||c.judge==='A级')&&!set.includes(c.word)) set.push(c.word); });
+  S.topics.forEach(t=>{ if(!set.includes(t.kw)) set.push(t.kw); });
+  return set;
+}
+function chainDataFor(word){
+  for(const j of S.journeys){ const a=j.actions.find(x=>x.act===word); if(a) return {pain:(a.act+'：'+[a.bother,a.worry,a.save].filter(Boolean).join('；')), scene:a.bother, fear:a.worry, save:a.save}; }
+  return null;
+}
+function renderWizard2(){
+  const pw = pendingWords();
+  const f = D.five;
+  const isA = f.entry!=='m';
+  if(isA && f.word){
+    const cd0 = chainDataFor(f.word);
+    if(cd0){ f.q1 = cd0.pain||f.q1; f.q2 = cd0.scene||''; f.q3 = cd0.fear||''; }
+  }
+  let h = '<div class="card" id="wiz2"><div class="card-title"><span class="bar"></span>向导 2 · 拆题（五问法＋弹药匹配）<span class="sub">每个处境＝一个攻击角度</span></div>';
+  h += '<div class="field"><div class="lbl">入口</div>' + segHTML('D.five.entry',[{v:'a',l:'A 类入口（链路带入三问）'},{v:'m',l:'手动入口（五问全填）'}], f.entry||'a') + '</div>';
+  h += '<div class="field"><div class="lbl">选择待拆关键词（验城 S/A 级自动进池，或从向导 0 A 类痛点带入）</div><select onchange="D.five.word=this.value;renderAll()">';
+  h += '<option value="">— 选择或手输 —</option>' + pw.map(w=>'<option value="'+esc(w)+'"'+(f.word===w?' selected':'')+'>'+esc(w)+'</option>').join('');
+  h += '</select></div>';
+  h += '<div class="field"><div class="lbl">或手输关键词</div><input value="'+esc(f.word)+'" placeholder="与上方二选一" oninput="D.five.word=this.value;renderAll()"></div>';
+  if(isA){
+    const cd2 = chainDataFor(f.word);
+    h += '<div class="medal" style="margin-bottom:8px"><b>链路带入（只读 · 来源：向导 0 行为链）</b><br>'
+      + '为什么搜这个词：<b>'+esc(cd2?(cd2.pain||'—'):'—')+'</b><br>处在什么场景：<b>'+esc(cd2?(cd2.scene||'—'):'—')+'</b><br>最怕什么：<b>'+esc(cd2?(cd2.fear||'—'):'—')+'</b></div>';
+    h += '<div class="field"><div class="lbl">在比较什么 <span class="dim">（提示：翻验城时看的前排内容都在讲什么，你的角度有没有撞车）</span></div><textarea placeholder="前排都在讲什么？我的角度会不会撞车？" oninput="D.five.q4=this.value">'+esc(f.q4)+'</textarea></div>';
+    h += '<div class="field"><div class="lbl">想安全完成什么决策 <span class="dim">（唯一需要真想的一问）</span></div><textarea placeholder="用户想在不犯错的前提下完成什么决定？" oninput="D.five.q5=this.value">'+esc(f.q5)+'</textarea></div>';
+  } else {
+    const qs = [
+      ['q1','为什么搜这个词（搜索意图）'],
+      ['q2','他处在什么场景'],
+      ['q3','最怕什么'],
+      ['q4','在比较什么'],
+      ['q5','想安全完成什么决策']
+    ];
+    qs.forEach(q=>{
+      h += '<div class="field"><div class="lbl">'+(q[0]==='q1'?'五问 · ':'')+q[1]+'</div><textarea placeholder="一句话即可，留空则该问不参与处境生成" oninput="D.five.'+q[0]+'=this.value">'+esc(f[q[0]])+'</textarea></div>';
+    });
+  }
+  h += '<div class="btn-row"><button class="btn primary" onclick="genSituations()">生成处境列表</button><button class="btn ghost" onclick="aiSituations()">AI 处境辅助</button></div>';
+  h += '<div id="sitArea">'+sitAreaHTML()+'</div>';
+  h += '<div id="sitSuggest"></div>';
+  h += '<div class="sep"></div><div class="lbl" style="margin:2px 0 4px"><b>自动生成选题方向</b><span class="dim" style="margin-left:6px;font-weight:400">基于上方五问＋处境拆解生成，点「选用」自动填入下方标题栏</span></div>';
+  h += '<div class="btn-row tight"><button class="btn mini" onclick="genTopicDirections(\'rule\')">规则生成</button><button class="btn mini" onclick="genTopicDirections(\'ai\')">AI 生成</button></div>';
+  h += '<div id="dirArea">'+dirAreaHTML()+'</div>';
+  h += '<div class="sep"></div><div class="lbl" style="margin-bottom:4px"><b>内置弹药（实证类直接引用）</b></div><div class="row" style="flex-wrap:wrap"><span class="chip b">满载烘干实测 8 分钟</span><span class="chip b">臭氧浓度实测 0.000mg/m³</span><span class="chip b">304 不锈钢</span><span class="chip b">崔玉涛：干燥是最好的消毒</span></div>';
+  h += '<div class="sep"></div><div class="lbl" style="margin-bottom:4px"><b>标题生成器（仅 A 类：核心词必须进前 10 字）</b></div>';
+  if(isA){
+    h += '<div class="field"><div class="lbl">标题（核心词：<b>'+esc(f.word||'未选')+'</b>）</div><input id="t_title_inp" value="'+esc(D.t_title||'')+'" placeholder="如：烘干要多久？满载实测 8 分钟" oninput="D.t_title=this.value;titleLive()"></div><div id="titleResult"></div>';
+  } else {
+    h += '<div class="hint">手动入口（B 类种词）不做标题关键词强制检查，吃推荐流不吃搜索。</div>';
+  }
+  h += '<div class="medal"><b>4 页图文结构建议（自动填充）：</b>① 封面大字关键词＋结论 → ② 直接回答 → ③ 参数实证 → ④ 轻引导。封面大字必须是核心词本身。</div>';
+  h += '<div class="btn-row"><button class="btn primary" onclick="saveTopic()">保存到选题库</button></div>';
+  h += why('选题＝搜索词 × 处境 × 差异化答案，全程不需要灵感。五问是给「用户决策瞬间」做侧写：搜什么、在哪怕什么、比什么、要安全完成什么决策——每一问都指向一个可写的攻击角度。规则匹配八成对，双容器叠加等场合是人的判断超越规则的地方——你是司令，工具是参谋。');
+  return h + '</div>';
+}
+function sitAreaHTML(){
+  const f = D.five;
+  if(!f.sits || !f.sits.length){
+    return '<div class="medal" style="margin-top:10px">处境列表会显示在这里，可编辑、可多选。每个处境＝一个攻击角度。</div>';
+  }
+  let h = '<div class="sep"></div><div class="field"><div class="lbl">处境列表（可编辑，一行一个处境）</div><textarea rows="4" oninput="D.five.sitEdit=this.value">'+esc(f.sitEdit||f.sits.join('\n'))+'</textarea></div>';
+  h += '<div class="btn-row tight"><button class="btn mini" onclick="confirmSits()">确认处境</button></div>';
+  h += '<div class="lbl" style="margin:9px 0 4px"><b>点击选择一个处境出匹配建议</b></div>';
+  f.sits.forEach((s,i)=>{
+    h += '<div class="row click" onclick="pickSit('+i+')"><span class="chip b">处境'+(i+1)+'</span><span class="grow" style="font-size:13px">'+esc(s)+'</span>'+(f.sel===i?'<span class="chip g">已选</span>':'')+'</div>';
+  });
+  return h;
+}
+function genSituations(){
+  const labels = ['为什么搜这个词','他处在什么场景','最怕什么','在比较什么','想安全完成什么决策'];
+  const lines = [];
+  ['q2','q3','q4','q5'].forEach((k,i)=>{ const v=(D.five[k]||'').trim(); if(v) lines.push('处境：'+labels[i+1]+'——'+v); });
+  if(!lines.length){ toast('请至少填一个场景类问题（q2-q5）','warn'); return; }
+  D.five.sitEdit = lines.join('\n');
+  confirmSits();
+}
+function confirmSits(){
+  const raw = (D.five.sitEdit||'').split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!raw.length){ toast('处境不能为空','warn'); return; }
+  D.five.sits = raw; D.five.sel = -1;
+  commit(); renderAll();
+}
+function aiSituations(){
+  if(!hasAI()){ toast('未配置 AI：点顶栏齿轮进设置，填入智谱 API Key','warn'); return; }
+  const f=D.five; const kw=(f.word||'').trim();
+  if(!kw){ toast('请先选择或输入关键词','warn'); return; }
+  toast('AI 拆处境中…');
+  (async()=>{
+    try{
+      const out=await aiChat([
+        {role:'system',content:'你是小红书选题拆处境专家。针对给定关键词，给出用户会真实经历的 3-6 个具体处境，每行格式：处境：场景/心理——担忧或需求。只输出 JSON 字符串数组，如["处境：……","处境：……"]，不要其他文字。'},
+        {role:'user',content:'关键词：'+kw+(f.q4?'\n在比较什么：'+f.q4:'')+(f.q5?'\n想安全完成什么决策：'+f.q5:'')}
+      ]);
+      let arr=JSON.parse(stripCode(out));
+      if(!Array.isArray(arr)) throw new Error('返回格式错误');
+      const lines=arr.map(x=>String(x).trim()).filter(Boolean).map(x=>x.replace(/^处境[：:]\s*/,'处境：'));
+      if(!lines.length) throw new Error('未生成出处境');
+      D.five.sitEdit=lines.join('\n');
+      confirmSits();
+      toast('AI 已生成 '+lines.length+' 个处境，可编辑后再选');
+    }catch(e){ toast('AI 拆处境失败：'+(e.message||e),'err'); }
+  })();
+}
+function suggestFor(word, sit){
+  const all = (word+' '+(sit||'')).toLowerCase();
+  const groups = [
+    {v:'焦虑',k:['怕','担心','后悔','坑','纠结','安全','毒','细菌','不放心']},
+    {v:'结果',k:['最后','选哪个','对比','哪个好','测评','结果','买什么']},
+    {v:'场景',k:['夜奶','梅雨季','二胎','月子','半夜','上班','带娃','出门']},
+    {v:'身份',k:['同类','新手妈妈','二胎','宝妈','过来人','同款']},
+    {v:'认知',k:['一直以为','误区','骗','没想到','原来','智商税','内幕','套路','不知道']},
+    {v:'利益',k:['省','便宜','划算','快','时间','钱','麻烦']}
+  ];
+  let container = '';
+  for(const g of groups){ if(g.k.some(k=>all.includes(k))){ container=g.v; break; } }
+  if(!container) container = '焦虑';
+  const formula = /怎么选|标准|避雷|防忽悠|内幕|编号|套路/.test(all) ? '信息差/内幕框架' : '场景反转+技术实证';
+  let cta = '认可期中度引导';
+  if(/有必要|是什么|要不要|好不好/.test(all)) cta = '认知期不推产品';
+  else if(/测评|哪个好|多少钱|推荐/.test(all)) cta = '认购期闭环引导';
+  return {container, formula, cta};
+}
+function pickSit(i){
+  D.five.sel = i;
+  const sit = D.five.sits[i];
+  const sug = suggestFor(D.five.word, sit);
+  D.t_angle = sit.replace(/^处境：/,'').replace(/——/,'：');
+  let h = '<div class="sep"></div><div class="lbl"><b>匹配建议（可手动改）</b></div>';
+  h += '<div class="field"><div class="lbl">容器匹配</div><select onchange="D.t_container=this.value">' + CONTAINERS.map(c=>'<option value="'+c.v+'"'+(c.v===sug.container?' selected':'')+'>'+c.l+'</option>').join('') + '</select></div>';
+  h += '<div class="field"><div class="lbl">公式匹配</div><select onchange="D.t_formula=this.value">' + FORMULAS.map(x=>'<option'+(x===sug.formula?' selected':'')+'>'+x+'</option>').join('') + '</select></div>';
+  h += '<div class="field"><div class="lbl">决策阶段 → CTA 强度</div><select onchange="D.t_cta=this.value">' + CTAS.map(x=>'<option'+(x===sug.cta?' selected':'')+'>'+x+'</option>').join('') + '</select></div>';
+  h += '<div class="field"><div class="lbl">角度（可改）</div><input value="'+esc(D.t_angle||'')+'" oninput="D.t_angle=this.value"></div>';
+  h += '<div class="field"><div class="lbl">是否挂组件「沐婴爱消毒柜」</div>'+segHTML('t_widget',[{v:'no',l:'不挂'},{v:'yes',l:'挂'}], D.t_widget||'no')+'</div>';
+  h += '<div class="hint">推荐：容器 '+CONTAINERS.find(c=>c.v===sug.container).l+' ／ 公式 '+sug.formula+' ／ CTA '+sug.cta+'</div>';
+  h += '<div class="hint" style="margin-top:5px">规则匹配八成对，双容器叠加等场合是人的判断超越规则的地方——你是司令，工具是参谋，可手动推翻。</div>';
+  $('#sitSuggest').innerHTML = h;
+}
+function dirAreaHTML(){
+  const dirs=D.t_dirs||[];
+  if(!dirs.length) return '<div class="medal" style="margin-top:8px">选题方向会显示在这里——基于你上面的五问和处境生成，不是凭空套模板。先点「生成处境列表」（或 AI 处境辅助），再点下方按钮。</div>';
+  let h='<div class="sep"></div>';
+  dirs.forEach((d,i)=>{
+    h+='<div class="sig" style="margin-bottom:6px"><div class="sg-t"><span style="font-size:13.5px">'+esc(d.title)+'</span><span class="chip b">'+esc(d.container)+'</span></div>'
+      +'<div class="sg-r">角度：'+esc(d.angle)+' ／ CTA：'+esc(d.cta)+'<br><span class="dim">为什么：'+esc(d.reason||'')+'</span></div>'
+      +'<div class="btn-row tight" style="margin-top:6px"><button class="btn mini primary" onclick="applyDirection('+i+')">选用·填入下方标题栏</button></div></div>';
+  });
+  return h;
+}
+function scenePhrase(s){
+  s=String(s||'').replace(/^处境[：:]\s*/,'').trim();
+  let seg=s.split(/——/).pop().split(/[：:]/).pop().trim();
+  if(!seg) seg=s;
+  return seg.length>18 ? seg.slice(0,18)+'…' : seg;
+}
+function ruleDirections(){
+  const kw=(D.five.word||'').trim();
+  const f=D.five;
+  const ammo='满载烘干实测 8 分钟';
+  const sits=(f.sits||[]).map(s=>String(s).replace(/^处境[：:]\s*/,'').trim()).filter(Boolean);
+  const fear=(f.q3||'').replace(/^最怕什么[：:]\s*/,'').trim()||'怕买错';
+  const compare=(f.q4||'').trim();
+  const decide=(f.q5||'').trim();
+  const allTxt=kw+' '+sits.join(' ')+' '+compare+' '+decide;
+  const container=f.t_container||'焦虑';
+  const cta=/怎么选|标准|避雷|要不要|有必要/.test(allTxt)?'认知期不推产品':(/测评|哪个好|对比|推荐|多少钱/.test(allTxt)?'认购期闭环引导':'认可期中度引导');
+  const dirs=[];
+  const pushes=(scene,reasonBase)=>{
+    const s=scenePhrase(scene);
+    const items=[
+      {title:kw+'，'+s+'？'+ammo+'告诉你答案', angle:'直给答案：'+s, reason:'用「处境问句＋实测数字」直接回应决策瞬间，前 10 字含核心词'},
+      {title:'关于'+kw+'：'+s+'，'+ammo, angle:'处境切入：'+s, reason:'把用户经历写进标题，推荐流也愿意点'},
+      {title:'别急着下单'+kw+'：'+s+'，先看'+ammo, angle:'防坑视角：'+s, reason:'防忽悠框架，适合「怎么选」类对比期用户'},
+      {title:s+'？'+kw+'这样选，'+ammo, angle:'结果导向：'+s, reason:'结果容器，直接给结论，转化期主力'}
+    ];
+    items.forEach((it,i)=>{ dirs.push({title:it.title, container:container, angle:it.angle+(reasonBase?'（基于处境'+(i+1)+'）':''), cta:cta, reason:it.reason}); });
+  };
+  if(sits.length){ sits.slice(0,3).forEach(s=>pushes(s,true)); }
+  else if(compare||decide){ pushes(compare||decide,false); }
+  else { pushes(fear,false); }
+  return dirs.slice(0,8);
+}
+function genTopicDirections(mode){
+  const kw=(D.five.word||'').trim();
+  if(!kw){ toast('请先选择或输入关键词','warn'); return; }
+  if(mode==='ai'){
+    if(!hasAI()){ toast('未配置 AI：点顶栏齿轮进设置，填入 API Key','warn'); return; }
+    toast('AI 生成选题方向中…');
+    (async()=>{
+      try{
+        const f=D.five;
+        const sits=(f.sits||[]).join('\n')||'（未生成处境，请先点生成处境列表）';
+        const chain=chainDataFor(kw);
+        const out=await aiChat([
+          {role:'system',content:'你是小红书母婴类选题策划，职责是把「用户处境」翻译成可直接发布的标题方向。必须严格基于给定的处境/对比/决策拆解来生成，不得套用通用模板、不得机械拼接关键词。生成 3-4 个标题方向，输出严格 JSON 数组，每项{title:完整标题(核心关键词在前10字内，口语化、有具体画面，可引用实测数字如"满载烘干实测8分钟") , container:六容器之一或组合(焦虑/结果/利益/身份/认知/场景，可写"焦虑+场景"双容器), angle:切入角度一句话, cta:三选一(认知期不推产品/认可期中度引导/认购期闭环引导), reason:这条方向为什么成立(一句话)}。只输出JSON。'},
+          {role:'user',content:'关键词：'+kw
+            +'\n行为链带入（为什么搜/什么场景/最怕什么）：'+(chain?(chain.pain+'；'+chain.fear):'—')
+            +'\n全部处境（每个处境=一个攻击角度）：\n'+sits
+            +'\n在比较什么：'+(f.q4||'—')
+            +'\n想安全完成什么决策：'+(f.q5||'—')}
+        ]);
+        let arr=JSON.parse(stripCode(out));
+        if(!Array.isArray(arr)) throw new Error('返回格式错误');
+        D.t_dirs=arr.filter(x=>x&&x.title).map(x=>({title:String(x.title).slice(0,60), container:x.container||'焦虑', angle:String(x.angle||''), cta:['认知期不推产品','认可期中度引导','认购期闭环引导'].includes(x.cta)?x.cta:'认可期中度引导', reason:String(x.reason||'')}));
+        if(!D.t_dirs.length) throw new Error('未生成出有效方向');
+        renderAll(); toast('AI 已生成 '+D.t_dirs.length+' 个选题方向');
+      }catch(e){ toast('AI 生成失败：'+(e.message||e),'err'); }
+    })();
+  } else {
+    if(!(D.five.sits&&D.five.sits.length)){
+      const hasAny=['q2','q3','q4','q5'].some(k=>(D.five[k]||'').trim());
+      if(!hasAny){ toast('先填五问并点「生成处境列表」——选题方向从处境里长出来','warn'); return; }
+      genSituations();
+    }
+    D.t_dirs=ruleDirections();
+    if(!D.t_dirs.length){ toast('生成失败，请先填写五问','warn'); return; }
+    renderAll(); toast('已基于拆解生成 '+D.t_dirs.length+' 个选题方向');
+  }
+}
+function applyDirection(i){
+  const d=D.t_dirs&&D.t_dirs[i]; if(!d) return;
+  D.t_title=d.title; D.t_angle=d.angle; D.t_container=d.container; D.t_cta=d.cta;
+  _keepY=false; renderAll();
+  const inp=$('#t_title_inp');
+  if(inp){ inp.scrollIntoView({behavior:'auto',block:'center'}); inp.classList.add('flash-in'); setTimeout(()=>inp.classList.remove('flash-in'),2000); }
+  toast('已填入下方标题栏，可修改后点「保存到选题库」');
+}
+function titleLive(){
+  const el = $('#titleResult'); if(!el) return;
+  if(D.five.entry==='m'){ el.innerHTML='<div class="hint">B 类手动入口：不做标题关键词强制检查（吃推荐流不吃搜索）。</div>'; return; }
+  const t = D.t_title||''; const kw = D.five.word||'';
+  if(!t || !kw){ el.innerHTML=''; return; }
+  const head = t.slice(0,10);
+  const ok = head.includes(kw);
+  el.innerHTML = ok
+    ? '<div class="hint ok">核心词「'+esc(kw)+'」已在前 10 字内，符合军规。</div>'
+    : '<div class="hint r">核心词「'+esc(kw)+'」不在前 10 字内，需调整——前 10 字是小红书搜索结果里用户能看到的部分。</div>';
+}
+function saveTopic(){
+  const kw = (D.five.word||'').trim();
+  const title = (D.t_title||'').trim();
+  if(!kw || !title){ toast('请先选词并写标题','warn'); return; }
+  const city = S.cities.find(c=>c.word===kw);
+  const tier = city ? city.tier : 4;
+  const container = D.t_container || '焦虑';
+  const formula = D.t_formula || '场景反转+技术实证';
+  const cta = D.t_cta || '认可期中度引导';
+  S.topics.push({
+    id:S._tid++, title:title, kw:kw, tier:tier,
+    angle:(D.t_angle||'').trim()||'待细化角度',
+    container:container, formula:formula, cta:cta,
+    widget:readSeg('t_widget')==='yes', type:'A', status:'待写', blogger:'', date:'', periods:0
+  });
+  D.t_title=''; D.t_angle=''; D.t_container=''; D.t_formula=''; D.t_cta=''; D.five.sel=-1;
+  commit(); toast('选题已入选题库'); renderAll();
+}
+
+/* ================= 行动：向导3 自查 ================= */
+const COMPETITORS = ['波洛洛','小白熊','大嘴鸭'];
+const BLACKLIST = ['慢','差','坑','别买','不推荐','智商税'];
+function renderWizard3(){
+  const f = D.check;
+  const opts = S.topics.filter(t=>['待写','已写','已过审'].includes(t.status));
+  let h = '<div class="card" id="wiz3"><div class="card-title"><span class="bar"></span>向导 3 · 成稿自查（发布前军规）<span class="sub">10 项逐条核对 · B 类豁免※两项</span></div>';
+  h += '<div class="field"><div class="lbl">选择待自查选题（自动带入标题与关键词）</div><select onchange="loadCheckTopic(this.value)"><option value="">— 选择 —</option>'+opts.map(t=>'<option value="'+t.id+'"'+(f.topic==String(t.id)?' selected':'')+'>['+(t.type==='B'?'B':'A')+'] '+esc(t.title.slice(0,20))+'</option>').join('')+'</select></div>';
+  h += '<div class="medal" style="margin-top:0;margin-bottom:8px"><b>豁免说明：</b>带 ※ 两项（标题前 10 字含核心词、标签第一个是核心词）仅 A 类核验，B 类选题自动豁免——吃推荐流不吃搜索。</div>';
+  h += '<div class="field"><div class="lbl">标题</div><input value="'+esc(f.title)+'" placeholder="最终标题" oninput="D.check.title=this.value"></div>';
+  h += '<div class="field"><div class="lbl">正文片段（用于自动核验，可只贴开头 150 字）</div><textarea rows="4" placeholder="粘贴正文开头" oninput="D.check.body=this.value">'+esc(f.body)+'</textarea></div>';
+  h += '<div class="field"><div class="lbl">标签（空格分隔，5~8 个，第一个为核心词）</div><input value="'+esc(f.tags)+'" placeholder="烘干要多久 消毒柜 宝妈 实测…" oninput="D.check.tags=this.value"></div>';
+  h += '<div class="field"><div class="lbl">人工核验项（默认勾＝已符合）</div></div>';
+  const man = [
+    ['emoji','无数字 emoji 序号（用一二三）'],
+    ['arrow','无方向箭头 emoji（→↑↓）'],
+    ['sensitive','无敏感词变体（替换、错别字写法）'],
+    ['component','评论区组件「沐婴爱消毒柜」已挂']
+  ];
+  man.forEach(m=>{
+    h += '<label class="chk"><input type="checkbox" '+(f[m[0]]?'checked':'')+' onchange="D.check.'+m[0]+'=this.checked"><span class="ct">'+m[1]+'</span></label>';
+  });
+  h += '<div class="btn-row"><button class="btn primary" onclick="runCheck()">提交自查</button></div><div id="checkResult"></div>';
+  h += why('发布前 10 项军规全过才允许排期——标题前 10 字决定曝光入口，正文前 100 字决定是否被算法当主题，标签第一个必须是核心词决定搜索归位。竞品黑名单词是红线，碰了轻则限流重则举报。');
+  return h + '</div>';
+}
+function loadCheckTopic(id){
+  const t = S.topics.find(x=>x.id==Number(id));
+  if(t){ D.check.topic=String(t.id); D.check.title=t.title; D.check.body=''; D.check.tags=t.kw; }
+  renderAll();
+}
+function runCheck(){
+  const f = D.check;
+  const kw = (function(){ const t=S.topics.find(x=>x.id==Number(f.topic)); return t?t.kw:''; })();
+  const title=f.title||'', body=f.body||'', tags=(f.tags||'').split(/[\s，,、]+/).filter(Boolean);
+  const items = [];
+  const isB = S.topics.find(x=>x.id==Number(f.topic)) && S.topics.find(x=>x.id==Number(f.topic)).type==='B';
+  function add(name, pass, tip, manual){ items.push({name,pass,tip,manual}); }
+  // 1 标题前10字（B类豁免）
+  add('标题前 10 字含核心词 ※', isB ? true : (!!kw && title.slice(0,10).includes(kw)), isB?'B 类豁免（吃推荐流不吃搜索）':(kw?('核心词「'+kw+'」'+(title.slice(0,10).includes(kw)?'已进前10字':'未进前10字，请前置')):'未关联选题，无法核验'));
+  // 2 正文前100字含核心词且全文3~5次
+  const head100 = body.slice(0,100);
+  const cnt = body.split(kw).length-1;
+  add('正文前 100 字含核心词，全文 3~5 次不堆砌', !!kw && head100.includes(kw) && cnt>=3 && cnt<=5, kw?('正文出现 '+cnt+' 次'+(head100.includes(kw)?'，前100字已含':'，前100字未含')):'无法核验');
+  // 3 无数字emoji序号
+  add('无数字 emoji 序号（用一二三）', f.emoji && !/[\u2460-\u2473\u2776-\u277F]|\d[\uFE0F]?[\u20E3]/.test(title+body), '检测到 ①②③ 或 1️⃣ 式序号，请改用「一二三」');
+  // 4 无方向箭头
+  add('无方向箭头 emoji', f.arrow && !/[→←↑↓↗↘➡️⬅️]/.test(title+body), '检测到方向箭头，请删除');
+  // 5 敏感词变体
+  add('无敏感词变体', f.sensitive, '人工核验项');
+  // 6 标题不是只含竞品名
+  const hasComp = COMPETITORS.some(c=>title.includes(c));
+  const hasOwn = title.includes('沐婴爱') || /消毒柜|烘干|奶瓶/.test(title);
+  add('标题不单含竞品名（需配沐婴爱或中性词）', !(hasComp&&!hasOwn), hasComp&&!hasOwn?'标题只含竞品名，须配沐婴爱或中性词（如「对比 3 款烘干」）':'通过');
+  // 7 横测类
+  const t = S.topics.find(x=>x.id==Number(f.topic));
+  const isCross = t && (t.tier===3 || /横测|测评对比/.test(t.angle||''));
+  if(isCross){
+    const compName = COMPETITORS.find(c=>title.includes(c));
+    const half = Math.floor(title.length/2);
+    add('横测：竞品名在标题前段且正文≥3次', !!compName && title.slice(0,half).includes(compName) && (body.split(compName).length-1)>=3, compName?('竞品「'+compName+'」正文出现 '+(body.split(compName).length-1)+' 次'+(title.slice(0,half).includes(compName)?'，标题前段已含':'，标题前段未含')):'标题未含竞品名');
+  } else {
+    items.push({name:'横测项（非横测，不适用）', pass:true, tip:'通过', manual:true});
+  }
+  // 8 黑名单词
+  const bad = BLACKLIST.filter(w=>body.includes(w)||title.includes(w));
+  add('竞品描述无黑名单词', !bad.length, bad.length?('出现黑名单词：'+bad.join('、')+'——改为数据对比表述'):'通过');
+  // 9 标签（B类豁免）
+  add('标签 5~8 个且第一个是核心关键词 ※', isB ? true : (tags.length>=5 && tags.length<=8 && tags[0]===kw), isB?'B 类豁免':(tags.length+' 个；首个「'+(tags[0]||'空')+'」'+(tags[0]===kw?'':'(应为 '+kw+')')));
+  // 10 组件
+  add('评论区组件已挂', f.component, '人工核验项');
+  let h='', allPass=true;
+  items.forEach(it=>{
+    allPass = allPass && it.pass;
+    h += '<div class="row"><span class="chip '+(it.pass?'g':'r')+'">'+(it.pass?'通过':'不过')+'</span><span class="grow" style="font-size:12.5px"><b>'+it.name+'</b><br><span style="color:var(--muted)">'+it.tip+'</span></span></div>';
+  });
+  if(allPass){
+    if(t){ t.status='已过审'; commit(); }
+    h = '<div class="medal" style="background:var(--green-soft)"><b class="ok">10 项全过</b>'+(isB?'（含 B 类豁免 2 项）':'')+'，选题已标记「已过审」，可走向导 4 排期。</div>'+h;
+  } else {
+    h = '<div class="medal" style="background:var(--red-soft)"><b class="danger">仍有未过项</b>，按上方提示修改后重交。状态保持未变。</div>'+h;
+  }
+  $('#checkResult').innerHTML = h;
+}
+
+/* ================= 行动：向导4 分发排期 ================= */
+function renderWizard4(){
+  const f = D.schedule;
+  const ready = S.topics.filter(t=>['已过审','已排'].includes(t.status));
+  let h = '<div class="card" id="wiz4"><div class="card-title"><span class="bar"></span>向导 4 · 分发排期<span class="sub">过审选题分配博主＋日期</span></div>';
+  h += '<div class="field"><div class="lbl">选题（已过审）</div><select onchange="D.schedule.topic=this.value"><option value="">— 选择 —</option>'+ready.map(t=>'<option value="'+t.id+'"'+(f.topic==String(t.id)?' selected':'')+'>'+esc(t.title.slice(0,22))+'</option>').join('')+'</select></div>';
+  h += '<div class="field"><div class="lbl">博主</div><select onchange="D.schedule.blogger=this.value"><option value="">— 选择 —</option>'+S.bloggers.map(b=>'<option'+(f.blogger===b.name?' selected':'')+'>'+esc(b.name)+'</option>').join('')+'</select></div>';
+  h += '<div class="field"><div class="lbl">发布日期</div><input type="date" value="'+esc(f.date)+'" onchange="D.schedule.date=this.value"></div>';
+  h += '<div class="btn-row"><button class="btn primary" onclick="addSchedule()">排期（自动蚕食检查）</button></div>';
+  h += '<div id="scheduleList">'+scheduleListHTML()+'</div>';
+  h += why('直发模式下同词多篇＝占位策略，允许但角度必须不同；同词同角度＝自相残杀，禁止。蚕食检查在排期瞬间自动完成，别等到发布那天才发现撞车。');
+  return h + '</div>';
+}
+function scheduleListHTML(){
+  const rows = S.schedule.slice().sort((a,b)=>a.date<b.date?-1:1);
+  if(!rows.length) return '<div class="medal" style="margin-top:10px">暂无排期。过审选题分配博主与日期后出现在这里。</div>';
+  let h = '<div class="sep"></div><div class="lbl"><b>本周排期表</b></div><div class="tbl-wrap"><table class="tbl"><colgroup><col style="width:34%"><col style="width:16%"><col style="width:16%"><col style="width:22%"><col style="width:12%"></colgroup><thead><tr><th>选题</th><th>核心词</th><th>博主</th><th>日期</th><th></th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    const t = S.topics.find(x=>x.id===r.topicId);
+    h += '<tr><td>'+esc(t?t.title.slice(0,14):'?')+'</td><td>'+esc(r.word)+'</td><td>'+esc(r.blogger)+'</td><td>'+esc(r.date)+'</td><td><button class="btn mini red" onclick="delSchedule('+r.id+')">撤</button></td></tr>';
+  });
+  return h + '</tbody></table></div>';
+}
+function addSchedule(){
+  const f = D.schedule;
+  const t = S.topics.find(x=>x.id==Number(f.topic));
+  if(!t){ toast('请选择已过审选题','warn'); return; }
+  if(!f.blogger){ toast('请选择博主','warn'); return; }
+  if(!f.date){ toast('请选择日期','warn'); return; }
+  // 蚕食检查：同周同词
+  const d = new Date(f.date+'T00:00:00');
+  const ws = new Date(d); ws.setDate(d.getDate()-d.getDay()+1);
+  const we = new Date(d); we.setDate(d.getDate()-d.getDay()+7);
+  const sameWeek = S.schedule.filter(r=>{ const dd=new Date(r.date+'T00:00:00'); return r.word===t.kw && dd>=ws && dd<=we; });
+  if(sameWeek.length){
+    const angleSame = sameWeek.some(r=>{ const ot=S.topics.find(x=>x.id===r.topicId); return ot && ot.angle===t.angle; });
+    if(angleSame){
+      toast('禁止：同词同角度同周发布（自相残杀），请改角度或改期','err'); return;
+    }
+    toast('提示：直发模式下同词多篇＝占位策略，允许，但角度必须不同（本次已满足）','warn');
+  }
+  // 同词 3 天内错峰建议
+  const near = S.schedule.some(r=>{ if(r.word!==t.kw) return false; const dd=new Date(r.date+'T00:00:00'); const diff=Math.abs((dd-d)/86400000); return diff<=3; });
+  if(near) toast('同词已有排期在 3 天内，建议隔 3~5 天错峰发布','warn');
+  S.schedule.push({id:(S._sid=S._sid||100)+1, topicId:t.id, word:t.kw, blogger:f.blogger, date:f.date, angle:t.angle});
+  S._sid = S._sid || 100;
+  t.status='已排'; t.blogger=f.blogger; t.date=f.date;
+  D.schedule.topic=''; D.schedule.date='';
+  commit(); toast('已排期：'+t.title.slice(0,16)+' → '+f.date); renderAll();
+}
+function delSchedule(id){ S.schedule=S.schedule.filter(r=>r.id!==id); commit(); renderAll(); }
+
+/* ================= 行动：博主档案 ================= */
+function renderBloggers(){
+  const f = D.blogger;
+  let h = '<div class="card"><div class="card-title"><span class="bar"></span>博主档案<span class="sub">人设与档期</span></div>';
+  h += '<div class="btn-row tight" style="gap:6px">'
+    + '<div class="field" style="flex:2;margin:0"><div class="lbl">名字</div><input value="'+esc(f.name)+'" placeholder="如：小沐妈妈" oninput="D.blogger.name=this.value"></div>'
+    + '<div class="field" style="flex:1;margin:0"><div class="lbl">素人感评分</div><input type="number" min="1" max="10" value="'+esc(f.score)+'" oninput="D.blogger.score=this.value"></div></div>';
+  h += '<div class="field"><div class="lbl">主页</div><input value="'+esc(f.home)+'" placeholder="小红书@xxx" oninput="D.blogger.home=this.value"></div>';
+  h += '<div class="field"><div class="lbl">历史表现</div><input value="'+esc(f.perf)+'" placeholder="如：母婴囤货稳定，素人感强" oninput="D.blogger.perf=this.value"></div>';
+  h += '<div class="field"><div class="lbl">档期</div><input value="'+esc(f.avail)+'" placeholder="如：下周有空" oninput="D.blogger.avail=this.value"></div>';
+  h += '<div class="btn-row"><button class="btn primary" onclick="addBlogger()">存入博主档案</button></div>';
+  h += '<div class="sep"></div>';
+  S.bloggers.forEach(b=>{
+    h += '<div class="row"><span class="grow"><div class="t1">'+esc(b.name)+' <span class="chip '+(b.score>=8?'g':b.score>=6?'o':'n')+'">素人感 '+b.score+'/10</span></div><div class="t2">'+esc(b.home)+' ｜ '+esc(b.perf)+' ｜ 档期：'+esc(b.avail)+'</div></span></div>';
+  });
+  h += '<div class="medal"><b>军规：</b>卫戍内容选主页有真实生活痕迹的宝妈号——宁可粉丝少，不要投放机器号；执法内容配功课研究型人设。</div>';
+  return h + '</div>';
+}
+function addBlogger(){
+  const f = D.blogger;
+  if(!f.name.trim()){ toast('请填博主名字','warn'); return; }
+  S.bloggers.push({id:S._bid++, name:f.name.trim(), score:Number(f.score)||7, home:f.home, perf:f.perf, avail:f.avail});
+  Object.assign(f,{name:'',score:'7',home:'',perf:'',avail:''});
+  commit(); toast('博主已存档'); renderAll();
+}
+
+/* ================= 行动：选题库 ================= */
+function topicsHTML(){
+  if(!S.topics.length) return '<div class="medal">选题库为空。走向导 2 拆题入库。</div>';
+  let h = '<div class="sep"></div><div class="lbl"><b>选题库（'+S.topics.length+' 条）</b> <span style="color:var(--muted)">点击「推进」流转状态</span></div>';
+  S.topics.slice().reverse().forEach(t=>{
+    const idx = STATUS_FLOW.indexOf(t.status);
+    const si = STATUS_FLOW.indexOf('待写');
+    h += '<div class="row"><span class="grow"><div class="t1">'+(t.type==='B'?'<span class="chip o">B类种词</span> ':'<span class="chip b">A类</span> ')+esc(t.title.slice(0,26))+'</div><div class="t2">'+esc(t.kw)+' · '+TIER_NAMES[t.tier]+' · '+esc(t.container)+' · '+esc(t.formula)+' · '+(t.widget?'挂组件':'不挂')+'</div></span><span class="chip '+(t.status==='已发'||t.status==='已复盘'?'g':t.status==='已过审'||t.status==='已排'?'b':'o')+'">'+t.status+'</span>';
+    if(idx<STATUS_FLOW.length-1) h += '<button class="btn mini" onclick="advTopic('+t.id+')">推进</button>';
+    h += '</div>';
+  });
+  return h;
+}
+function advTopic(id){
+  const t = S.topics.find(x=>x.id===id); if(!t) return;
+  const idx = STATUS_FLOW.indexOf(t.status);
+  if(idx>=0 && idx<STATUS_FLOW.length-1){
+    t.status = STATUS_FLOW[idx+1];
+    commit(); toast('已推进至「'+t.status+'」');
+    renderAll();
+  }
+}
+function exportTopicsCSV(){
+  exportCSV(['选题标题','核心关键词','梯队','角度','容器','公式','CTA类型','内容类型','是否挂组件','状态'],
+    S.topics.map(t=>[t.title,t.kw,TIER_NAMES[t.tier],t.angle,t.container,t.formula,t.cta,t.type==='B'?'B推荐流种词':'A搜索占位',t.widget?'是':'否',t.status]),
+    '沐婴爱选题库.csv');
+}
+function exportAllCSV(){ exportTopicsCSV(); }
+function resetData(){
+  openModal('<h3>重置示例数据</h3><div class="m-body"><p style="margin-bottom:8px">将清空当前全部本地数据并恢复内置示例数据，此操作不可撤销。</p><div class="btn-row"><button class="btn" onclick="closeModal()">取消</button><button class="btn red" onclick="doReset()">确认重置</button></div></div>');
+}
+function doReset(){
+  try{ localStorage.removeItem(STORE); }catch(e){}
+  S = seedData(); D.chain.journeyId = S.journeys[0]?S.journeys[0].id:null; D.mtg.step=1;
+  commit(); closeModal(); renderAll(); toast('已重置为示例数据');
+}
+function renderAction(){
+  let h = flowBarHTML();
+  h += '<div class="card" style="background:var(--navy);color:#fff"><div class="card-title" style="margin-bottom:4px"><span class="bar" style="background:#7EA6FF"></span>作战流程<span class="sub" style="color:#AFC0E6">按周循环</span></div><div style="font-size:12.5px;line-height:1.8;color:#C9D5F2">拆链（向导 0 行为链路生产词）→ 验城（向导 1）→ 拆题（向导 2）→ 自查（向导 3）→ 分发（向导 4）→ 排名检查（复盘 Tab）。词库新词不从词根拼，从用户的一天里捡。</div></div>';
+  h += renderWizard0();
+  h += renderObsList();
+  h += renderWizard1();
+  h += renderWizard2();
+  h += renderWizard3();
+  h += renderWizard4();
+  h += renderBloggers();
+  h += '<div class="card"><div class="card-title"><span class="bar"></span>选题库<span class="sub"><button class="btn mini" onclick="exportTopicsCSV()">导出 CSV</button></span></div>' + topicsHTML() + '</div>';
+  $('#tab-action').innerHTML = h;
+}
+/* ================= 复盘：1 排名追踪表 ================= */
+function loadRankTopic(id){
+  const t=S.topics.find(x=>x.id==Number(id)); if(!t) return;
+  D.rank.topic=String(t.id); D.rank.word=t.kw; D.rank.title=t.title;
+  D.rank.blogger=t.blogger||''; D.rank.type=t.type||'A';
+  D.rank.period=String((t.periods||0)+1);
+  renderAll();
+}
+function rankIdxForNum(n){ n=Number(n)||0; return n>0&&n<=10?1:n>10&&n<=20?2:n>20&&n<=40?3:4; }
+function syncCityFromRank(word,rank){
+  const c=S.cities.find(x=>x.word===word); if(!c) return;
+  const rn=rankIdx(rank);
+  if(c.rank>0){ c.trend = rn<rankIdxForNum(c.rank)?'↑':rn>rankIdxForNum(c.rank)?'↓':'→'; }
+  c.rank = rank==='前10'?8:rank==='前20'?18:rank==='前40'?38:55;
+}
+function localParseRank(txt){
+  const lines=txt.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  lines.forEach(l=>{
+    const parts=l.split(/[\t｜|,，、]+/).map(s=>s.trim()).filter(Boolean);
+    if(parts.length<2) return;
+    const rankTok = ['前10','前20','前40','50外'].find(r=>parts.includes(r));
+    const rank = rankTok||'前20';
+    const rest = parts.filter(p=>p!==rankTok);
+    const nums=[]; const text=[];
+    rest.forEach(p=>{ /^-?\d+(\.\d+)?%?$/.test(p) ? nums.push(parseFloat(p)) : text.push(p); });
+    const word=parts[0];
+    let title=word, blogger='', type='A';
+    if(text.length){ if(/^[AB]$/i.test(text[0])) type=text[0].toUpperCase(); else { title=text[0]; if(text.length>1) blogger=text[text.length-1]; } }
+    out.push({word:word, title:title, blogger:blogger, period:1, type:type, rank:rank,
+      searchPct:nums[0]||0, colRate:nums[1]||0, interact:nums[2]||0, shop:nums[3]||0});
+  });
+  return out;
+}
+function aiFillRankings(){
+  const txt=(D.aiRank||'').trim();
+  if(!txt){ toast('请先粘贴一周笔记数据','warn'); return; }
+  toast(hasAI()?'AI 识别中…':'本地规则解析中…');
+  (async()=>{
+    try{
+      let entries=null;
+      if(hasAI()){
+        const out=await aiChat([
+          {role:'system',content:'你是小红书运营数据分析助手。从用户粘贴的原始数据中提取每周笔记数据，输出严格 JSON 数组，每项字段：{word:核心关键词, title:标题(缺省给词), blogger:博主名(缺省空), period:第几期数字, type:"A"或"B", rank:只能是"前10"/"前20"/"前40"/"50外"之一, searchPct:搜索来源占比数字, colRate:收藏率数字, interact:互动率数字, shop:进店数数字}。识别不到的数字给 0，不确定的 rank 给"前20"。只输出 JSON，不要任何其他文字。'},
+          {role:'user',content:txt}
+        ]);
+        entries=JSON.parse(stripCode(out));
+      } else {
+        entries=localParseRank(txt);
+      }
+      if(!Array.isArray(entries)||!entries.length) throw new Error('未能从内容中识别出数据');
+      let n=0;
+      entries.forEach(e=>{
+        const word=String(e.word||'').trim(); if(!word) return;
+        const period=Math.round(Number(e.period))||1;
+        const type=e.type==='B'?'B':'A';
+        const rank=['前10','前20','前40','50外'].includes(e.rank)?e.rank:'前20';
+        S.rankings.push({id:S._rid++, topicId:0, word:word, title:String(e.title||word).slice(0,60), blogger:String(e.blogger||'').slice(0,30), period:period, type:type, rank:rank,
+          searchPct:Number(e.searchPct)||0, colRate:Number(e.colRate)||0, interact:Number(e.interact)||0, shop:Number(e.shop)||0});
+        syncCityFromRank(word,rank);
+        n++;
+      });
+      if(!n) throw new Error('未识别出有效条目');
+      commit(); D.aiRank=''; renderAll();
+      toast('已填充 '+n+' 条排名记录'+(hasAI()?'':'（本地规则解析）'));
+    }catch(err){
+      toast('识别失败：'+(err.message||err),'err');
+    }
+  })();
+}
+function addRanking(){
+  const f=D.rank;
+  const word=(f.word||'').trim();
+  if(!word){ toast('请填关键词','warn'); return; }
+  const period=Number(f.period)||1;
+  const rank=readSeg('rk_rank')||'前20';
+  S.rankings.push({id:S._rid++, topicId:Number(f.topic)||0, word:word, title:f.title||word, blogger:f.blogger||'', period:period, rank:rank, type:f.type==='B'?'B':'A', searchPct:Number(f.searchPct)||0, colRate:Number(f.colRate)||0, interact:Number(f.interact)||0, shop:Number(f.shop)||0});
+  const t=S.topics.find(x=>x.id==Number(f.topic));
+  if(t){ t.periods=Math.max(t.periods||0, period); }
+  commit(); toast('已录入第 '+period+' 期排名'); renderAll();
+}
+function rankListHTML(){
+  const words=[...new Set(S.rankings.map(r=>r.word))];
+  if(!words.length) return '<div class="medal" style="margin-top:10px">暂无排名记录。发布笔记后每周五录入。</div>';
+  let h='<div class="sep"></div>';
+  words.forEach(w=>{
+    const rows=S.rankings.filter(r=>r.word===w).sort((a,b)=>a.period-b.period);
+    const last=rows[rows.length-1];
+    let arrow='<span class="arrow flat">→</span>';
+    if(rows.length>=2){ if(rankIdx(last.rank)<rankIdx(rows[0].rank)) arrow='<span class="arrow up">↑</span>'; else if(rankIdx(last.rank)>rankIdx(rows[0].rank)) arrow='<span class="arrow down">↓</span>'; }
+    h+='<div class="row"><span class="grow"><div class="t1">'+esc(w)+' '+arrow+' <span class="chip '+(last.type==='B'?'o':'b')+'">'+(last.type==='B'?'B':'A')+'</span></div><div class="t2">'+rows.length+' 期 · 最新 '+last.rank+'</div></span></div>';
+    h+='<div class="tbl-wrap"><table class="tbl"><colgroup><col style="width:22%"><col style="width:13%"><col style="width:12%"><col style="width:12%"><col style="width:12%"><col style="width:13%"><col style="width:16%"></colgroup><thead><tr><th>标题</th><th>期</th><th>排名</th><th>搜索%</th><th>收藏%</th><th>互动%</th><th>进店</th></tr></thead><tbody>';
+    rows.forEach(r=>{
+      h+='<tr><td>'+esc(r.title.slice(0,12))+'</td><td>P'+r.period+'</td><td>'+esc(r.rank)+'</td><td>'+r.searchPct+'</td><td>'+r.colRate+'</td><td>'+r.interact+'</td><td>'+r.shop+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+  });
+  return h;
+}
+function exportRankingsCSV(){
+  exportCSV(['关键词','标题','博主','期数','内容类型','排名','搜索来源占比%','收藏率%','互动率%','进店数'],
+    S.rankings.map(r=>[r.word,r.title,r.blogger,'第'+r.period+'期',r.type,r.rank,r.searchPct,r.colRate,r.interact,r.shop]),
+    '沐婴爱排名追踪.csv');
+}
+function copyRankingsTxt(){
+  const lines=S.rankings.map(r=>'['+(r.type==='B'?'B':'A')+']'+r.word+' P'+r.period+' '+r.rank+' 搜索'+r.searchPct+'% 收藏'+r.colRate+'% 互动'+r.interact+'% 进店'+r.shop);
+  const txt='【沐婴爱·排名追踪 '+new Date().toLocaleDateString()+'】\n'+(lines.join('\n')||'暂无记录');
+  copyText(txt);
+}
+function renderRankings(){
+  const f=D.rank;
+  const t=S.topics.find(x=>x.id===f.topic);
+  const hasB=S.topics.some(x=>x.type==='B');
+  let h='<div class="card" id="rankings"><div class="card-title"><span class="bar"></span>1 · 排名追踪表<span class="sub">每周五录入 · 按词聚合趋势</span></div>';
+  h+='<div class="form">'
+    +'<label>已发笔记（自动带出词/博主）</label><select onchange="loadRankTopic(this.value)"><option value="">手动输入</option>'+S.topics.filter(x=>x.status==='已发'||x.status==='已复盘').map(x=>'<option value="'+x.id+'"'+(f.topic===x.id?' selected':'')+'>['+(x.type==='B'?'B':'A')+']'+(x.title||x.kw)+'</option>').join('')+'</select>'
+    +'<div class="row"><span class="grow"><label>核心关键词</label><input id="rankWord" value="'+esc(f.word)+'" placeholder="如 烘干速度" oninput="setD(\'rank.word\',this.value)"></span></div>'
+    +'<div class="row"><span class="grow"><label>笔记标题</label><input id="rankTitle" value="'+esc(f.title)+'" placeholder="如 烘干速度实测" oninput="setD(\'rank.title\',this.value)"></span></div>'
+    +'<div class="row"><span class="grow"><label>博主</label><input id="rankBlogger" value="'+esc(f.blogger)+'" placeholder="博主名" oninput="setD(\'rank.blogger\',this.value)"></span>'
+    +'<span class="grow"><label>期数</label><input type="number" min="1" id="rankPeriod" value="'+esc(f.period)+'" placeholder="第几期" oninput="setD(\'rank.period\',this.value)"></span></div>'
+    +'<div class="row"><span class="grow"><label>内容类型</label><select onchange="setD(\'rank.type\',this.value)"><option value="A"'+(f.type==='A'?' selected':'')+'>A 搜索占位</option><option value="B"'+(f.type==='B'?' selected':'')+'>B 推荐流留种</option></select></span>'
+    +'<span class="grow"><label>排名</label><select onchange="setD(\'rank.rank\',this.value)">'+['前10','前20','前40','50外'].map(x=>'<option'+(f.rank===x?' selected':'')+'>'+x+'</option>').join('')+'</select></span></div>'
+    +'<div class="row"><span class="grow"><label>搜索来源占比 %</label><input type="number" step="0.1" value="'+esc(f.searchPct)+'" placeholder="0" oninput="setD(\'rank.searchPct\',this.value)"></span>'
+    +'<span class="grow"><label>收藏率 %</label><input type="number" step="0.1" value="'+esc(f.colRate)+'" placeholder="0" oninput="setD(\'rank.colRate\',this.value)"></span></div>'
+    +'<div class="row"><span class="grow"><label>互动率 %</label><input type="number" step="0.1" value="'+esc(f.interact)+'" placeholder="0" oninput="setD(\'rank.interact\',this.value)"></span>'
+    +'<span class="grow"><label>进店数</label><input type="number" value="'+esc(f.shop)+'" placeholder="0" oninput="setD(\'rank.shop\',this.value)"></span></div>'
+    +'<div class="btn-row"><button class="btn" onclick="addRanking()">录入本期数据</button></div></div>';
+  if(!hasB){ h+='<div class="medal o">未录入过 B 类内容。B 类不参与信号判定，但需回填互动率/共鸣数据，供「推荐流实验室」取角度。</div>'; }
+  h+='<div class="sep"></div><div class="ai-fold" onclick="toggleAI(\'aiRankOpen\')"><b>AI 批量识别填充</b><span class="chip '+(hasAI()?'g':'o')+'">'+(hasAI()?'AI 已配置':'未配置 API')+'</span><span class="grow"></span><span class="dim">'+(S.ui.aiRankOpen?'收起 ▲':'展开 ▼')+'</span></div>';
+  if(S.ui.aiRankOpen){
+    h+='<div class="field"><div class="lbl">粘贴一周笔记数据（小红书后台/表格复制的原文即可，AI 自动识别后填入排名表）</div>'
+      +'<textarea id="aiRankText" placeholder="示例：烘干要多久 | 消毒柜烘干要多久？实测8分钟 | 前20 | 38% | 12% | 9% | 31 | 小沐妈妈\n没有 AI 时也支持「词|标题|排名|搜索%|收藏%|互动%|进店」竖线格式本地解析" oninput="D.aiRank=this.value">'+esc(D.aiRank)+'</textarea></div>';
+    h+='<div class="btn-row tight"><button class="btn primary" onclick="aiFillRankings()">AI 识别并填充排名表</button><button class="btn ghost" onclick="D.aiRank=\'\';var ta=$(\'#aiRankText\');if(ta)ta.value=\'\'">清空</button></div>';
+    h+='<div class="hint">自动写入排名追踪表并按词聚合趋势；匹配到城池档案的词会同步最新排名与趋势箭头。</div>';
+  }
+  h+='<div class="row" style="margin:10px 0"><button class="btn ghost mini" onclick="copyRankingsTxt()">一键复制</button><button class="btn ghost mini" onclick="exportRankingsCSV()">导出 CSV</button></div>';
+  h+=rankListHTML();
+  h+='</div>';
+  return h;
+}
+
+/* ================= 复盘：2 信号台 ================= */
+function signalForWord(word){
+  const rows=S.rankings.filter(r=>r.word===word).sort((a,b)=>a.period-b.period);
+  const t=S.topics.find(x=>x.kw===word);
+  const isB=(t&&t.type==='B')||(rows.length&&rows.every(r=>r.type==='B'));
+  if(isB) return {skip:true};
+  const o=(S.signalOverride||{})[word];
+  const reasons=[]; let color='n';
+  if(o==='red'){ color='red'; reasons.push('手动标真死'); }
+  else if(o==='green'){ color='green'; reasons.push('手动标假死'); }
+  else{
+    if(rows.length>=2){
+      const last2=rows.slice(-2);
+      if(last2.every(r=>r.rank==='50外')) reasons.push('连攻两期 50 名外');
+      if(rankIdx(last2[1].rank)>rankIdx(last2[0].rank)) reasons.push('第二期数据差于第一期');
+    }
+    const inf=S.infiltration, li=inf.length?inf[inf.length-1]:null;
+    if(li && li.suggest===false) reasons.push('下拉框联想消失');
+    const city=S.cities.find(c=>c.word===word);
+    if(city && (city.notes>20 || city.likes>=1000)) reasons.push('蓝海变红海（笔记量暴涨＋前排千赞）');
+    if(S.supplyOverload && S.supplyOverload.includes(word)) reasons.push('供养失衡（维持排名所需加更频率超出产能）');
+    if(reasons.length){ color='red'; }
+    else{
+      if(rows.length<2) reasons.push('发布不足两期，考察中');
+      if(rows.length>=2 && rankIdx(rows[rows.length-1].rank)<rankIdx(rows[0].rank)) reasons.push('缓慢爬坡');
+      const lr=rows[rows.length-1];
+      if(lr && (Number(lr.colRate)>12||Number(lr.interact)>10) && rankIdx(lr.rank)>=3) reasons.push('互动好但排名差（换博主不撤内容）');
+      if(S.seasonal && S.seasonal.includes(word)) reasons.push('季节性词淡季');
+      if(reasons.length){ color='green'; }
+      else reasons.push('暂无信号，正常推进');
+    }
+  }
+  return {color:color,reasons:reasons,rows:rows};
+}
+function renderSignal(){
+  const words=[...new Set(S.rankings.map(r=>r.word))];
+  let h='<div class="card" id="sig"><div class="card-title"><span class="bar"></span>2 · 信号台<span class="sub">自动判定 · 仅 A 类参与</span></div>';
+  if(!words.length){ h+='<div class="medal">尚无排名数据。录入排名追踪表后自动判定。</div>'; }
+  words.forEach(w=>{
+    const s=signalForWord(w);
+    if(s.skip){
+      h+='<div class="sig"><div class="sg-t"><span style="font-size:14px">'+esc(w)+'</span><span class="chip o">B类·留种豁免</span></div><div class="sg-r">B 类不参与信号判定：KPI 是互动率与共鸣，不是排名。</div></div>';
+      return;
+    }
+    h+='<div class="sig '+(s.color==='red'?'red':s.color==='green'?'green':'')+'"><div class="sg-t"><span style="font-size:14px">'+esc(w)+'</span><span class="chip '+(s.color==='red'?'r':s.color==='green'?'g':'n')+'">'+(s.color==='red'?'真死信号':s.color==='green'?'假死信号':'正常')+'</span></div>';
+    h+='<div class="sg-r"><ul>'+s.reasons.map(r=>'<li>'+esc(r)+'</li>').join('')+'</ul></div>';
+    h+='<div class="btn-row tight" style="margin-top:6px">';
+    if(s.color==='red') h+='<button class="btn mini red" onclick="startVerify(\''+w+'\')">进入三验流程</button>';
+    h+='<button class="btn mini" onclick="setSig(\''+w+'\',\'red\')">标真死</button><button class="btn mini" onclick="setSig(\''+w+'\',\'green\')">标假死</button>'+(s.color!=='n'?'<button class="btn mini ghost" onclick="setSig(\''+w+'\',\'\')">取消</button>':'')
+      +'<label class="chk" style="min-height:34px;padding:5px 9px;margin:0;flex:none"><input type="checkbox" '+((S.supplyOverload||[]).includes(w)?'checked':'')+' onchange="toggleOverload(\''+w+'\')"><span class="ct" style="font-size:12px">供养失衡</span></label>';
+    h+='</div></div>';
+  });
+  return h+why('真死＝城有问题，进入三验；假死＝城没事，换弹继续。红绿判断错了代价也不大——真正贵的是「不敢判」。')+'</div>';
+}
+function setSig(w,v){ (S.signalOverride=S.signalOverride||{})[w]=v; commit(); renderAll(); }
+function toggleOverload(w){
+  S.supplyOverload = S.supplyOverload || [];
+  if(S.supplyOverload.includes(w)) S.supplyOverload=S.supplyOverload.filter(x=>x!==w);
+  else S.supplyOverload.push(w);
+  commit(); renderAll();
+}
+function startVerify(w){
+  S.verifyFlow={word:w,step:1,w1:{a:false,b:false,c:false,d:false,e:false},w2:{angle:'',collide:'无'},w3:{a:false,b:false,c:false,d:false}};
+  commit(); renderAll();
+  const el=$('#vrf'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ================= 复盘：3 三验流程 ================= */
+function v1set(k,chk){ if(S.verifyFlow){ S.verifyFlow.w1[k]=chk; commit(); } }
+function v3set(k,chk){ if(S.verifyFlow){ S.verifyFlow.w3[k]=chk; commit(); } }
+function v1submit(){
+  const v=S.verifyFlow; if(!v) return;
+  const ok=Object.keys(v.w1).every(k=>v.w1[k]);
+  v.w1OK=ok; v.step=2; commit(); renderAll();
+  const el=$('#vrf'); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+  toast(ok?'一验通过：城没问题，继续验角度':'一验不过：城可能有问题，继续验以定位归因');
+}
+function v2submit(){
+  const v=S.verifyFlow; if(!v) return;
+  v.w2.angle=D.verify.w2.angle; v.w2.collide=D.verify.w2.collide||'无';
+  v.w2OK = (v.w2.collide==='无');
+  v.step=3; commit(); renderAll();
+  const el=$('#vrf'); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+}
+function v3submit(){
+  const v=S.verifyFlow; if(!v) return;
+  const ok=Object.keys(v.w3).every(k=>v.w3[k]);
+  v.w3OK=ok; v.step=4; commit(); renderAll();
+  const el=$('#vrf'); if(el) el.scrollIntoView({behavior:'auto',block:'start'});
+}
+function verifyAttribution(v){
+  if(!v.w1OK) return {lv:'L2撤词', reason:'一验词不过：城本身有问题（需求假／供给深／军管／红海）'};
+  if(!v.w2OK) return {lv:'L1撤角度留词', reason:'二验弹不过：角度撞车，换角度重打同一词'};
+  if(!v.w3OK) return {lv:'不撤重打（换执行）', reason:'三验行不过：词与角度都对，执行细节换打法'};
+  return {lv:'不撤重打（继续打）', reason:'三验全过：词、弹、行都没问题，继续投喂'};
+}
+function renderVerify(){
+  const v=S.verifyFlow;
+  if(!v) return '<div class="card" id="vrf"><div class="card-title"><span class="bar"></span>3 · 三验流程<span class="sub">顺序向导 · 不可跳步</span></div><div class="medal">红色信号词会在这里进入三验：一验词（城对不对）→ 二验弹（角度对不对）→ 三验行（执行对不对）。红色词在信号台点「进入三验流程」。</div></div>';
+  let h='<div class="card" id="vrf"><div class="card-title"><span class="bar"></span>3 · 三验流程 · '+esc(v.word)+'<span class="sub">顺序向导</span></div>';
+  h+='<div class="steps">'+[['一验词'],['二验弹'],['三验行']].map((s,i)=>'<div class="step-dot'+(v.step===i+1?' cur':(v.step>i+1?' done':''))+'">'+s[0]+'</div>').join('')+'</div>';
+  if(v.step===1){
+    h+='<div class="lbl" style="margin-bottom:6px"><b>一验词 · 城对不对（重跑验城五项）</b></div>';
+    const w1=[['a','需求真实（下拉联想／大词追问／差评抱怨 ≥2 有）'],['b','供给普遍很浅（前排内容浅、未接追问少）'],['c','无付费位垄断（商品卡不多）'],['d','笔记量正常（非红海暴涨）'],['e','前排存在可超越的空隙']];
+    w1.forEach(it=>{ h+='<label class="chk"><input type="checkbox" '+(v.w1[it[0]]?'checked':'')+' onchange="v1set(\''+it[0]+'\',this.checked)"><span class="ct">'+it[1]+'</span></label>'; });
+    h+='<div class="btn-row"><button class="btn primary" onclick="v1submit()">一验提交</button></div>';
+  } else if(v.step===2){
+    h+='<div class="field"><div class="lbl">全网前排用什么角度？（逐条翻前排标题与封面）</div><textarea rows="3" placeholder="记录前排都在讲什么" oninput="D.verify.w2.angle=this.value">'+esc(D.verify.w2.angle)+'</textarea></div>';
+    h+='<div class="field"><div class="lbl">我的角度是否撞车？</div><select onchange="D.verify.w2.collide=this.value"><option value="无"'+(D.verify.w2.collide!=='有'?' selected':'')+'>不撞车</option><option value="有"'+(D.verify.w2.collide==='有'?' selected':'')+'>撞车</option></select></div>';
+    h+='<div class="btn-row"><button class="btn primary" onclick="v2submit()">二验提交</button></div>';
+  } else if(v.step===3){
+    const w3=[['a','标题关键词位置合规（前10字）'],['b','封面结论清晰（大字直接给答案）'],['c','博主主页人设匹配'],['d','发布时间踩准需求时段']];
+    w3.forEach(it=>{ h+='<label class="chk"><input type="checkbox" '+(v.w3[it[0]]?'checked':'')+' onchange="v3set(\''+it[0]+'\',this.checked)"><span class="ct">'+it[1]+'</span></label>'; });
+    h+='<div class="btn-row"><button class="btn primary" onclick="v3submit()">三验提交 · 出归因</button></div>';
+  } else if(v.step===4){
+    const at=verifyAttribution(v);
+    h+='<div class="medal" style="background:var(--blue-soft);border:1px solid var(--blue)"><b style="color:var(--blue)">归因定级：'+at.lv+'</b><br>'+at.reason+'</div>';
+    h+='<div class="lbl" style="margin:10px 0 4px"><b>写入阵亡档案</b></div>';
+    h+='<div class="field"><div class="lbl">词</div><input value="'+esc(v.word)+'" id="fl-word"></div>';
+    const t=S.topics.find(x=>x.kw===v.word);
+    h+='<div class="field"><div class="lbl">角度</div><input id="fl-angle" value="'+esc(t?t.angle:'')+'" placeholder="被撤的角度"></div>';
+    h+='<div class="field"><div class="lbl">人设</div><input id="fl-persona" placeholder="用的什么博主类型"></div>';
+    h+='<div class="field"><div class="lbl">死因（三验归因）</div><input id="fl-cause" value="'+esc(at.lv)+'：'+esc(at.reason)+'"></div>';
+    h+='<div class="btn-row tight" style="gap:6px"><div class="field" style="flex:1;margin:0"><div class="lbl">花费（元）</div><input type="number" min="0" id="fl-cost" value="0"></div><div class="field" style="flex:1.6;margin:0"><div class="lbl">一句话教训</div><input id="fl-lesson" placeholder="下次怎么避免"></div></div>';
+    h+='<div class="btn-row"><button class="btn primary" onclick="saveFallen()">存档</button><button class="btn ghost" onclick="cancelVerify()">放弃三验</button></div>';
+  }
+  if(v.step<3) h+='<div class="hint">不可跳步：前一步未过不得进入下一步。</div>';
+  return h+'</div>';
+}
+function saveFallen(){
+  const v=S.verifyFlow; if(!v) return;
+  S.fallen.push({id:S._fid++, word:($('#fl-word').value)||v.word, angle:$('#fl-angle').value||'', persona:$('#fl-persona').value||'', cause:$('#fl-cause').value||'', cost:Number($('#fl-cost').value)||0, lesson:$('#fl-lesson').value||''});
+  S.verifyFlow=null; commit(); toast('已写入阵亡档案'); renderAll();
+}
+function cancelVerify(){ S.verifyFlow=null; commit(); renderAll(); }
+
+/* ================= 复盘：4 阵亡档案 ================= */
+function renderFallen(){
+  let h='<div class="card"><div class="card-title"><span class="bar"></span>4 · 阵亡档案<span class="sub">死因是唯一不过时的知识</span></div>';
+  if(!S.fallen.length){ h+='<div class="medal">尚无阵亡记录。三验输出归因后自动入档。</div>'; }
+  S.fallen.slice().reverse().forEach(x=>{
+    h+='<div class="row" style="align-items:flex-start"><span class="grow"><div class="t1">'+esc(x.word)+' <span class="chip r">'+esc((x.cause||'').split('：')[0])+'</span></div><div class="t2">角度：'+esc(x.angle)+' ｜ 人设：'+esc(x.persona)+'<br>死因：'+esc(x.cause)+' ｜ 花费：'+esc(x.cost)+' 元</div><div class="medal" style="margin-top:4px"><b>教训：</b>'+esc(x.lesson||'—')+'</div></span></div>';
+  });
+  h+='<div class="medal"><b>原则卡：</b>死因是唯一不过时的知识——爆款模板有保质期，死坑永远是真的。</div>';
+  return h+'</div>';
+}
+
+/* ================= 复盘：5 双周军情会 ================= */
+function mtgRefresh(){ renderAll(); const el=$('#mtg'); if(el) el.scrollIntoView({behavior:'auto',block:'start'}); }
+function mtgNext(step){
+  const m=D.mtg;
+  if(step===1 && !(m.enemy.trim()||m.complaints.trim())){ toast('请至少填一项敌情','warn'); return; }
+  m.step=step+1; mtgRefresh();
+}
+function mtgBack(){ D.mtg.step=Math.max(1,D.mtg.step-1); mtgRefresh(); }
+/* ===== 军情会第一步·敌情 实时反馈 ===== */
+const ENEMY_SELL=[
+  {k:['消毒','除菌','杀菌','细菌','紫外线','灭菌','杀毒'], txt:'消毒力/除菌率', say:'竞品在讲「消毒力」——不正面比消毒，立旗讲烘干：满载烘干实测 8 分钟；崔玉涛公开观点「干燥是最好的消毒」。'},
+  {k:['容量','多瓶','大容量','装得下','一次消毒'], txt:'容量', say:'容量是参数不是痛点——转回场景：睡前最后一瓶洗完要不要等烘干，比「装得下」更能抢决策。'},
+  {k:['颜值','外观','轻奢','奶油','复古','好看'], txt:'颜值', say:'颜值拼不过审美疲劳——用烘干速度立标准，把战场从外观拉到参数。'},
+  {k:['静音','安静','噪音','声音'], txt:'静音', say:'静音可打但别只打静音——把「满载烘干 8 分钟全程噪音」写进实测，用数字回应。'},
+  {k:['烘干','干燥','快干','速干','干爽'], txt:'烘干', say:'竞品开始讲烘干——窗口收窄，加速立旗，或挖第二差异点（臭氧浓度实测 0.000mg/m³ 无残留）。'},
+  {k:['奶瓶','辅食','婴儿','宝宝'], txt:'品类通用词', say:'还在讲品类通用卖点，说明竞品还没立标准——你的「烘干快＝好消毒柜」心智等式有机会先占。'}
+];
+const GAP_RULES=[
+  {k:['慢','久','没干','不干','烘不干','要等','半天','等好久'], gap:'烘干速度', tip:'用满载烘干实测 8 分钟堵住「烘干慢」——这是沐婴爱的立旗主场', action:'等消毒烘干'},
+  {k:['味','臭','塑料味','异味','难闻'], gap:'异味', tip:'臭氧浓度实测 0.000mg/m³，烘干后无味无残留', action:'取出存放'},
+  {k:['吵','噪音','声音','响'], gap:'噪音', tip:'把满载烘干全程噪音数值写进实测', action:'按启动'},
+  {k:['霉','细菌','不卫生','消毒不彻底','脏','发霉'], gap:'消毒力', tip:'干燥是最好的消毒（崔玉涛）＋304 不锈钢——讲干燥不讲杀菌率', action:'取出存放'},
+  {k:['售后','坏了','漏水','退款','客服','质保','维修'], gap:'售后', tip:'质保白纸黑字写进判决书结构，对应检验官第五问', action:'等消毒烘干'},
+  {k:['塑料','材质','掉色','开裂','变形'], gap:'304 不锈钢', tip:'304 不锈钢材质实证，对应检验官第四问安全', action:'取出存放'},
+  {k:['小','装不下','放不下','容量不够','太少'], gap:'容量', tip:'满装载量写清楚，别让「装不下」成为下单一瞬间的犹豫', action:'放消毒柜'}
+];
+function splitComplaints(txt){ return String(txt||'').split(/[\n。；;！!？?]+/).map(s=>s.trim()).filter(s=>s.length>=4).slice(0,8); }
+function mtgEnemyHTML(){
+  const m=D.mtg;
+  let h='';
+  const sells=(m.enemy||'').trim()?ENEMY_SELL.filter(r=>r.k.some(k=>m.enemy.includes(k))):[];
+  if((m.enemy||'').trim()){
+    if(sells.length){ h+='<div class="medal"><b>竞品在打：</b>'+sells.map(s=>'<span class="chip b">'+esc(s.txt)+'</span>').join('')+'<br>'+sells.map(s=>'· '+esc(s.say)).join('<br>')+'</div>'; }
+    else { h+='<div class="hint warn" style="margin-top:6px">没识别到常见卖点词（消毒／容量／颜值／静音／烘干…）——手动看看竞品主图在讲什么，「他讲 X、我们讲烘干」的立旗角度可从卖点反推。</div>'; }
+  }
+  const cs=splitComplaints(m.complaints);
+  if(cs.length){
+    h+='<div class="sep" style="margin:8px 0"></div><div class="lbl" style="margin-bottom:5px"><b>吐槽拆解（每条＝一个进攻缺口）</b></div>';
+    cs.forEach((c,i)=>{
+      const rule=GAP_RULES.find(r=>r.k.some(k=>c.includes(k)));
+      if(rule){
+        h+='<div class="sig" style="margin-bottom:6px"><div class="sg-t"><span style="font-size:13px;line-height:1.5">'+esc(c)+'</span><span class="chip o">缺口·'+esc(rule.gap)+'</span></div>'
+          +'<div class="sg-r">'+esc(rule.tip)+'</div>'
+          +'<div class="btn-row tight" style="margin-top:6px"><button class="btn mini" onclick="gapToCand('+i+')">送入向导0候选痛点</button><button class="btn mini" onclick="gapToObs('+i+')">进观察名单</button></div></div>';
+      } else {
+        h+='<div class="sig" style="margin-bottom:6px"><div class="sg-t"><span style="font-size:13px;line-height:1.5">'+esc(c)+'</span><span class="chip n">缺口待人工判断</span></div>'
+          +'<div class="sg-r">想一下：这条槽点对应用户哪个动作、哪个词？可先送入向导 0 分诊。</div>'
+          +'<div class="btn-row tight" style="margin-top:6px"><button class="btn mini" onclick="gapToCand('+i+')">送入向导0候选痛点</button></div></div>';
+      }
+    });
+  }
+  if(D.mtg.digHTML) h+=D.mtg.digHTML;
+  return h;
+}
+function mtgLive(){ const el=$('#mtgEnemyHint'); if(el) el.innerHTML=mtgEnemyHTML(); }
+function gapToCand(i){
+  const cs=splitComplaints(D.mtg.complaints); const c=cs[i]; if(!c) return;
+  D.chain.cands.push({id:Math.random().toString(36).slice(2,8), action:'竞品槽点', pain:c.slice(0,30), aLink:'无', aAsk:'无', b1:false,b2:false,b3:false, grey:false});
+  commit(); switchTab('action'); renderAll();
+  toast('已送入向导 0 候选痛点，去行动 Tab 分诊');
+}
+function gapToObs(i){
+  const cs=splitComplaints(D.mtg.complaints); const c=cs[i]; if(!c) return;
+  S.observations.push({id:S._oid++, pain:c.slice(0,30), scene:'竞品评论区槽点（'+todayISO()+'）', date:todayISO(), checks:[], sprout:false});
+  commit(); toast('已进观察名单（B 类留种），每月复查一次');
+}
+function aiEnemyDig(){
+  if(!hasAI()){ toast('未配置 AI：点顶栏齿轮进设置','warn'); return; }
+  const m=D.mtg; const src=(m.enemy+' '+m.complaints).trim();
+  if(!src){ toast('请先填竞品卖点或吐槽','warn'); return; }
+  toast('AI 敌情分析中…');
+  (async()=>{
+    try{
+      const out=await aiChat([
+        {role:'system',content:'你是母婴品类竞争情报分析师。基于竞品卖点与用户吐槽，输出严格 JSON：{sellpoints:["竞品主打卖点，2-4条"], holes:[{gap:"进攻缺口词，如烘干速度", reason:"为什么是缺口，一句话", ammo:"用什么弹药/数字回应"}], attack:[{title:"可直接发布的完整标题，核心词在前10字", angle:"切入角度一句话", container:"焦虑|结果|利益|身份|认知|场景（可双容器）", cta:"认知期不推产品|认可期中度引导|认购期闭环引导"}]}。弹药可引用：满载烘干实测8分钟／臭氧浓度实测0.000mg/m³／304不锈钢／崔玉涛：干燥是最好的消毒。只输出JSON。'},
+        {role:'user',content:'竞品卖点：'+(m.enemy||'未填')+'\n竞品评论区吐槽：'+(m.complaints||'未填')+'\n竞品是否开始讲烘干：'+(m.dry||'无')}
+      ]);
+      const j=JSON.parse(stripCode(out));
+      if(!j||!(Array.isArray(j.sellpoints)||Array.isArray(j.holes)||Array.isArray(j.attack))) throw new Error('返回格式错误');
+      D.mtg.digJSON=j;
+      let h='<div class="sep" style="margin:8px 0"></div><div class="medal" style="background:var(--blue-soft)"><b>AI 敌情分析</b><br>'
+        +'<b>竞品主打：</b>'+(j.sellpoints&&j.sellpoints.length?j.sellpoints.map(esc).join('、'):'—')+'<br>'
+        +'<b>进攻缺口：</b>'+(j.holes&&j.holes.length?j.holes.map(x=>'<span class="chip b">'+esc(x.gap)+'</span>').join(''):'—')+'<br>'
+        +((j.holes||[]).map(x=>'· '+esc(x.reason)+' —— '+esc(x.ammo)).join('<br>')||'')+'<br>'
+        +'<b>可直接发布的标题：</b><br>'+((j.attack||[]).map((x,i)=>(i+1)+'. '+esc(x.title)+'（'+esc(x.angle)+'／'+esc(x.container||'')+'／'+esc(x.cta)+'）').join('<br>')||'—')+'</div>'
+        +'<div class="btn-row tight"><button class="btn mini primary" onclick="aiDigToDirs()">把 AI 标题方向带入向导 2</button></div>';
+      D.mtg.digHTML=h;
+      mtgLive();
+      toast('AI 敌情分析完成');
+    }catch(e){ toast('AI 敌情分析失败：'+(e.message||e),'err'); }
+  })();
+}
+function aiDigToDirs(){
+  const j=D.mtg.digJSON; if(!j||!Array.isArray(j.attack)) return;
+  D.t_dirs=(j.attack||[]).filter(x=>x&&x.title).map(x=>({title:String(x.title).slice(0,60), container:x.container||'焦虑', angle:String(x.angle||''), cta:['认知期不推产品','认可期中度引导','认购期闭环引导'].includes(x.cta)?x.cta:'认可期中度引导', reason:'来自军情会敌情分析（'+((j.holes||[]).map(h=>h.gap).join('／')||'竞品缺口')+'）'}));
+  switchTab('action'); renderAll();
+  toast('已带入向导 2 选题方向，可选用填入标题栏');
+}
+function toggleRetreat(w){
+  const a=D.order.retreat||[];
+  if(a.includes(w)) D.order.retreat=a.filter(x=>x!==w);
+  else a.push(w);
+  D.order.retreat=a;
+}
+function bRatioLive(){
+  const el=$('#bRatioBox'); if(!el) return;
+  const bCount=S.topics.filter(t=>t.type==='B').length, tCount=Math.max(1,S.topics.length), bRatio=bCount/tCount;
+  el.innerHTML='<b>本期 B 类产能占比：'+(bRatio*100).toFixed(0)+'%</b>（上限 20%）'+(bRatio>0.2?'<br><span class="danger">超红线：</span>A 类是主粮，B 类是留种。没人靠吃种子过冬，但断了种的人活不过下一个春天。':'<br>红线内：A 类是主粮，B 类是留种。');
+}
+function renderMeeting(){
+  const m=D.mtg;
+  let h='<div class="card" id="mtg"><div class="card-title"><span class="bar"></span>5 · 双周军情会<span class="sub">四步向导 · 双周庙算</span></div>';
+  h+='<div class="steps">'+['敌情','民情','我情','作战令'].map((s,i)=>'<div class="step-dot'+(m.step===i+1?' cur':(m.step>i+1?' done':''))+'">'+s+'</div>').join('')+'</div>';
+  if(m.step===1){
+    h+='<div class="lbl" style="margin-bottom:6px"><b>第一步 · 敌情</b><span class="dim" style="margin-left:6px;font-weight:400">输入即出反馈，吐槽可直接变成进攻缺口</span></div>';
+    if(S.mtgLog&&S.mtgLog.length){
+      const last=S.mtgLog[S.mtgLog.length-1];
+      h+='<div class="hint">上次军情会（'+esc(last.date)+'）：'+(last.dry==='有'?'竞品<b>已</b>开始讲烘干，窗口收窄中；':'竞品尚未讲烘干，窗口仍在；')+' 敌情摘要已存档，共 '+S.mtgLog.length+' 期。</div>';
+    }
+    h+='<div class="field"><div class="lbl">竞品近 2 周主打卖点</div><textarea rows="3" placeholder="逐条记录竞品最近在讲什么（消毒／容量／颜值／静音…）" oninput="D.mtg.enemy=this.value;mtgLive()">'+esc(m.enemy)+'</textarea></div>';
+    h+='<div class="field"><div class="lbl">竞品评论区新吐槽 <span class="dim">（每条吐槽＝一个进攻缺口，换行或标点分隔）</span></div><textarea rows="3" placeholder="差评里藏着进攻角度" oninput="D.mtg.complaints=this.value;mtgLive()">'+esc(m.complaints)+'</textarea></div>';
+    h+='<div class="field"><div class="lbl">竞品有无开始讲烘干</div><select onchange="D.mtg.dry=this.value;mtgRefresh()"><option value="无"'+(m.dry!=='有'?' selected':'')+'>无</option><option value="有"'+(m.dry==='有'?' selected':'')+'>有</option></select></div>';
+    if(m.dry==='有') h+='<div class="medal" style="background:var(--orange-soft);border:1px solid var(--orange-line)"><b class="warn">橙色预警：</b>差异化窗口收窄——加速立旗，或挖第二差异点。</div>';
+    if(hasAI()) h+='<div class="btn-row tight"><button class="btn mini" onclick="aiEnemyDig()">AI 敌情分析</button></div>';
+    h+='<div id="mtgEnemyHint">'+mtgEnemyHTML()+'</div>';
+    h+=why('敌情不是记流水账：竞品卖点告诉我们「旗立在哪」，吐槽告诉我们「刀从哪下」。每条吐槽都能变成一篇笔记的开头。');
+    h+='<div class="btn-row"><button class="btn primary" onclick="mtgNext(1)">下一步 · 民情</button></div>';
+  } else if(m.step===2){
+    h+='<div class="lbl" style="margin-bottom:6px"><b>第二步 · 民情</b></div>';
+    h+='<div class="field"><div class="lbl">大词评论区提问占比</div><select onchange="D.mtg.ask=this.value;mtgRefresh()"><option value="need"'+(m.ask!=='how'?' selected':'')+'>「有没有必要」多</option><option value="how"'+(m.ask==='how'?' selected':'')+'>「怎么选」多</option></select></div>';
+    const stage=m.ask==='how'?'对比期':'认知期';
+    h+='<div class="medal"><b>自动判断：'+stage+'</b><br>兵力倾斜建议：'+(m.ask==='how'?'对比期转一三梯队（立旗＋执法）':'认知期压第二梯队科普（唤醒）')+'</div>';
+    h+='<div class="btn-row"><button class="btn" onclick="mtgBack()">上一步</button><button class="btn primary" onclick="mtgNext(2)">下一步 · 我情</button></div>';
+  } else if(m.step===3){
+    h+='<div class="lbl" style="margin-bottom:6px"><b>第三步 · 我情</b>（自动汇总排名数据）</div>';
+    const words=[...new Set(S.rankings.map(r=>r.word))];
+    const up=[],st=[],red=[];
+    words.forEach(w=>{ const s=signalForWord(w); if(s.skip) return;
+      const rows=S.rankings.filter(r=>r.word===w).sort((a,b)=>a.period-b.period);
+      if(s.color==='red') red.push(w);
+      else if(rows.length>=2 && rankIdx(rows[rows.length-1].rank)<rankIdx(rows[0].rank)) up.push(w);
+      else st.push(w);
+    });
+    h+='<div class="medal"><b>上升词：</b>'+(up.length?up.map(esc).join('、'):'暂无')+'</div>';
+    h+='<div class="medal"><b>稳定词：</b>'+(st.length?st.map(esc).join('、'):'暂无')+'</div>';
+    h+='<div class="medal" style="background:var(--red-soft)"><b class="danger">红色信号词：</b>'+(red.length?red.map(esc).join('、'):'暂无')+'</div>';
+    h+='<div class="btn-row"><button class="btn" onclick="mtgBack()">上一步</button><button class="btn primary" onclick="mtgNext(3)">下一步 · 作战令</button></div>';
+  } else {
+    h+='<div class="lbl" style="margin-bottom:6px"><b>第四步 · 作战令</b></div>';
+    const ZS=[['1','一梯队·立旗区'],['2','二梯队·唤醒区'],['3','三梯队·执法区'],['4','四梯队·空城区'],['5','品牌词·卫戍区']];
+    h+='<div class="btn-row tight" style="gap:6px">'
+      +'<div class="field" style="flex:1.4;margin:0"><div class="lbl">主力战区</div><select onchange="D.order.main=this.value">'+ZS.map(z=>'<option value="'+z[0]+'"'+(D.order.main===z[0]?' selected':'')+'>'+z[1]+'</option>').join('')+'</select></div>'
+      +'<div class="field" style="flex:1;margin:0"><div class="lbl">兵力%</div><input type="number" min="0" max="100" value="'+esc(D.order.mainPct)+'" oninput="D.order.mainPct=this.value"></div></div>';
+    h+='<div class="btn-row tight" style="gap:6px">'
+      +'<div class="field" style="flex:1.4;margin:0"><div class="lbl">辅助战区</div><select onchange="D.order.aux=this.value">'+ZS.map(z=>'<option value="'+z[0]+'"'+(D.order.aux===z[0]?' selected':'')+'>'+z[1]+'</option>').join('')+'</select></div>'
+      +'<div class="field" style="flex:1;margin:0"><div class="lbl">兵力%</div><input type="number" min="0" max="100" value="'+esc(D.order.auxPct)+'" oninput="D.order.auxPct=this.value"></div></div>';
+    h+='<div class="btn-row tight" style="gap:6px">'
+      +'<div class="field" style="flex:1;margin:0"><div class="lbl">卫戍任务（品牌词补位 X 篇）</div><input type="number" min="0" value="'+esc(D.order.garrison)+'" oninput="D.order.garrison=this.value"></div>'
+      +'<div class="field" style="flex:1;margin:0"><div class="lbl">B 类留种配额（篇）</div><input type="number" min="0" value="'+esc(D.order.bQuota)+'" oninput="D.order.bQuota=this.value;bRatioLive()"></div></div>';
+    const redWords=[]; [...new Set(S.rankings.map(r=>r.word))].forEach(w=>{ const s=signalForWord(w); if(s.color==='red') redWords.push(w); });
+    if(redWords.length){
+      h+='<div class="lbl" style="margin:4px 0"><b>撤退名单（勾选红色信号词）</b></div>';
+      redWords.forEach(w=>{ h+='<label class="chk" style="min-height:38px;padding:7px 9px"><input type="checkbox" '+((D.order.retreat||[]).includes(w)?'checked':'')+' onchange="toggleRetreat(\''+w+'\')"><span class="ct">'+esc(w)+'</span></label>'; });
+    }
+    h+='<div class="field"><div class="lbl">下期校验点</div><input value="'+esc(D.order.check)+'" placeholder="如：烘干速度进前 15、渗透率上 15%" oninput="D.order.check=this.value"></div>';
+    const bCount=S.topics.filter(t=>t.type==='B').length, tCount=Math.max(1,S.topics.length), bRatio=bCount/tCount;
+    h+='<div class="medal" id="bRatioBox" style="'+(bRatio>0.2?'background:var(--red-soft);border:1px solid var(--red-line)':'background:var(--bg)')+'"><b>本期 B 类产能占比：'+(bRatio*100).toFixed(0)+'%</b>（上限 20%）'+(bRatio>0.2?'<br><span class="danger">超红线：</span>A 类是主粮，B 类是留种。没人靠吃种子过冬，但断了种的人活不过下一个春天。':'<br>红线内：A 类是主粮，B 类是留种。')+'</div>';
+    h+='<div class="btn-row"><button class="btn" onclick="mtgBack()">上一步</button><button class="btn primary" onclick="mtgOrder()">生成作战令卡片</button></div>';
+    h+='<div id="mtgOrder"></div>';
+  }
+  return h+'</div>';
+}
+function mtgOrder(){
+  const o=D.order;
+  const ZN={1:'第一梯队·立旗区',2:'第二梯队·唤醒区',3:'第三梯队·执法区',4:'第四梯队·空城区',5:'品牌词·卫戍区'};
+  const mainZone=Number(o.main)||4, auxZone=Number(o.aux)||2;
+  const no=(S.meetings.length)+1;
+  const retreatTxt=(o.retreat||[]).join('、')||'无';
+  const order={no:no, date:todayISO(), mainZone:mainZone, mainName:ZN[mainZone], mainPct:o.mainPct||'50', auxZone:auxZone, auxName:ZN[auxZone], auxPct:o.auxPct||'30', garrison:o.garrison||'0', bQuota:o.bQuota||'0', retreatTxt:retreatTxt, retreat:(o.retreat||[]).slice(), check:o.check||'', note:'双周军情会第 '+no+' 期产出'};
+  let h='<div class="sep"></div><div class="order-card"><div class="ot"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7EA6FF" stroke-width="2" stroke-linecap="round"><path d="M4 3v18"/><path d="M6 4c5-2 7 3 14 0v11c-7 3-9-2-14 0z"/></svg>第 '+no+' 期作战令 · '+order.date+'</div>';
+  h+='<div class="ov">主力战区：<b>'+esc(order.mainName)+'</b> 兵力 <b>'+esc(order.mainPct)+'%</b><br>辅助战区：<b>'+esc(order.auxName)+'</b> 兵力 <b>'+esc(order.auxPct)+'%</b><br>卫戍任务：<b>品牌词补位 '+esc(order.garrison)+' 篇</b><br>B 类留种配额：<b>'+esc(order.bQuota)+' 篇</b><br>撤退名单：<b>'+esc(order.retreatTxt)+'</b><br>下期校验点：<b>'+esc(order.check)+'</b></div></div>';
+  h+='<div class="btn-row tight"><button class="btn mini" onclick="copyOrderTxt(\''+esc(no)+'\')">一键复制</button><button class="btn mini primary" onclick="saveOrder(\''+esc(no)+'\')">确认存档并同步沙盘</button></div>';
+  const el=$('#mtgOrder');
+  if(el) el.innerHTML=h;
+  window._pendingOrder=order;
+}
+function copyOrderTxt(no){
+  const o=window._pendingOrder; if(!o) return;
+  const txt='【第'+no+'期作战令】'+o.date+'\n主力战区：'+o.mainName+' · 兵力'+o.mainPct+'%\n辅助战区：'+o.auxName+' · 兵力'+o.auxPct+'%\n卫戍任务：品牌词补位'+(o.garrison||0)+'篇\nB类留种配额：'+(o.bQuota||0)+'篇\n撤退名单：'+(o.retreatTxt||'无')+'\n下期校验点：'+o.check;
+  copyText(txt,'作战令已复制');
+}
+function saveOrder(no){
+  const o=window._pendingOrder; if(!o) return;
+  S.order=o;
+  S.meetings.push({no:Number(no), date:o.date});
+  S.mtgLog=S.mtgLog||[];
+  S.mtgLog.push({date:o.date, enemy:D.mtg.enemy, complaints:D.mtg.complaints, dry:D.mtg.dry, ask:D.mtg.ask});
+  if(S.mtgLog.length>6) S.mtgLog.shift();
+  S.lastMeeting=o.date;
+  if(!S.firstMeeting) S.firstMeeting=o.date;
+  if(!S.garrisonDate) S.garrisonDate=addDays(o.date,30);
+  if(!S.quarterlyDate) S.quarterlyDate=addDays(o.date,90);
+  D.mtg.step=1; D.mtg.enemy=''; D.mtg.complaints=''; D.mtg.dry='无'; D.mtg.ask='';
+  commit(); toast('作战令已存档并同步沙盘'); renderAll();
+}
+
+/* ================= 复盘：6 卫戍月检 ================= */
+function renderGarrison(){
+  const f=D.garrison;
+  let h='<div class="card"><div class="card-title"><span class="bar"></span>6 · 卫戍月检<span class="sub">每月一次</span></div>';
+  h+='<div class="field"><div class="lbl">品牌词及变体（沐婴爱消毒柜／怎么样／测评／避雷）前排自家占位数（目标 ≥4）</div><input type="number" min="0" value="'+esc(f.occ)+'" placeholder="如 4" oninput="D.garrison.occ=this.value"></div>';
+  h+='<div class="lbl" style="margin-bottom:5px"><b>检验官覆盖</b>（逐项勾，含踩坑核验）</div>';
+  const qs=[['q1','杂牌疑虑'],['q2','值不值'],['q3','效果'],['q4','安全'],['q5','售后'],['q6','踩坑核验']];
+  qs.forEach(q=>{ h+='<label class="chk"><input type="checkbox" '+(f[q[0]]?'checked':'')+' onchange="D.garrison.'+q[0]+'=this.checked"><span class="ct">'+q[1]+' 已覆盖</span></label>'; });
+  h+='<div class="field"><div class="lbl">前排有无负面</div>'+segHTML('g_neg',[{v:'无',l:'无'},{v:'有',l:'有'}], f.neg||'无')+'</div>';
+  h+='<div class="field"><div class="lbl">进店·品牌词搜索比</div><input type="number" min="0" step="0.1" value="'+esc(f.ratio)+'" placeholder="如 1.5" oninput="D.garrison.ratio=this.value"></div>';
+  h+='<div class="field"><div class="lbl">复查观察名单下拉框（每月十秒）</div><label class="chk"><input type="checkbox" '+(f.obs?'checked':'')+' onchange="D.garrison.obs=this.checked"><span class="ct">已复查观察名单，无发芽或已处理发芽</span></label></div>';
+  h+='<div class="btn-row"><button class="btn primary" onclick="garrisonSubmit()">输出城防判定</button></div><div id="garResult"></div>';
+  h+=why('品牌词是收银台：前排 100% 好评＝0% 信任。有负面不删除不对抗，真实解决＋用供给稀释。');
+  return h+'</div>';
+}
+function garrisonSubmit(){
+  const f=D.garrison;
+  const occ=Number(f.occ)||0;
+  const allQ=['q1','q2','q3','q4','q5','q6'].every(k=>f[k]);
+  const neg=readSeg('g_neg')==='有';
+  const obsOk=!!f.obs;
+  const ratio=Number(f.ratio)||0;
+  const ok=occ>=4&&allQ&&!neg&&obsOk;
+  S.garrisonLast={date:todayISO(),occ:occ,allQ:allQ,neg:neg,ratio:ratio,ok:ok};
+  if(ok) S.garrisonDate=addDays(todayISO(),30);
+  commit();
+  let h='<div class="medal" style="'+(ok?'background:var(--green-soft)':'background:var(--orange-soft)')+'"><b class="'+(ok?'ok':'warn')+'">'+(ok?'城防稳固':'城防预警')+'</b><br>';
+  h+='占位 '+occ+' 篇（≥4）'+(occ>=4?'达标':'未达标')+' ｜ 检验官六项 '+(allQ?'全覆盖':'有缺漏')+' ｜ 负面 '+(neg?'存在':'无')+' ｜ 观察名单复查 '+(obsOk?'已复查':'未复查')+' ｜ 进店·搜索比 '+ratio;
+  if(ok){ h+='<br>已顺延下一次卫戍检查（+30 天）。'; }
+  else { h+='<br>处置：负面不删除不对抗，真实解决＋用供给稀释；缺口项逐项补齐，30 天内复查。'; }
+  h+='</div>';
+  $('#garResult').innerHTML=h;
+}
+
+/* ================= 复盘：7 数据回填与爆款拆解 ================= */
+function renderBackfill(){
+  const published=S.topics.filter(t=>['已发','已复盘'].includes(t.status));
+  let h='<div class="card"><div class="card-title"><span class="bar"></span>7 · 数据回填与爆款拆解<span class="sub">回填走这里，排名走第 1 步</span></div>';
+  h+='<div class="lbl" style="margin-bottom:5px"><b>回填数据</b>（选择已发笔记，追加本期记录）</div>';
+  h+='<div class="field"><div class="lbl">笔记</div><select onchange="D.bf.topic=this.value"><option value="">— 选择 —</option>'+published.map(t=>'<option value="'+t.id+'"'+(D.bf.topic==String(t.id)?' selected':'')+'>['+(t.type==='B'?'B':'A')+'] '+esc(t.title.slice(0,16))+'</option>').join('')+'</select></div>';
+  h+='<div class="btn-row tight" style="gap:6px">'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">本期排名</div><select onchange="D.bf.rank=this.value"><option'+(D.bf.rank==='前10'?' selected':'')+'>前10</option><option'+(D.bf.rank==='前20'?' selected':'')+'>前20</option><option'+(D.bf.rank==='前40'?' selected':'')+'>前40</option><option'+(D.bf.rank==='50外'?' selected':'')+'>50外</option></select></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">收藏率%</div><input type="number" value="'+esc(D.bf.colRate)+'" oninput="D.bf.colRate=this.value"></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">互动率%</div><input type="number" value="'+esc(D.bf.interact)+'" oninput="D.bf.interact=this.value"></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">进店数</div><input type="number" value="'+esc(D.bf.shop)+'" oninput="D.bf.shop=this.value"></div></div>';
+  h+='<div class="btn-row"><button class="btn primary" onclick="bfSubmit()">回填</button></div>';
+  h+='<div class="sep"></div><div class="ai-fold" onclick="toggleAI(\'aiViralOpen\')"><b>AI 爆款拆解</b><span class="chip '+(hasAI()?'g':'o')+'">'+(hasAI()?'AI 已配置':'本地规则版')+'</span><span class="grow"></span><span class="dim">'+(S.ui.aiViralOpen?'收起 ▲':'展开 ▼')+'</span></div>';
+  if(S.ui.aiViralOpen){
+    h+='<div class="field"><div class="lbl">粘贴爆款笔记内容（标题／正文／评论区，整段复制进来）</div>'
+      +'<textarea id="aiViralText" placeholder="把跑爆的笔记文字整段复制进来，AI 自动拆出容器／核心钩子／结构模板／封面类型／可复用角度并填入下方表单" oninput="D.viral.text=this.value">'+esc(D.viral.text)+'</textarea></div>';
+    h+='<div class="btn-row"><button class="btn primary" onclick="aiBreakdown()">AI 拆解框架角度</button></div>';
+    h+='<div class="hint">拆解结果自动填入下方表单，核对后点「拆解入库」。未配 API 时用内置本地规则做粗拆，建议配置智谱后重拆。</div>';
+  }
+  h+='<div class="sep"></div><div class="lbl" style="margin-bottom:5px"><b>爆款拆解入库</b>（跑爆的单篇）</div>';
+  const v=D.viral;
+  h+='<div class="field"><div class="lbl">笔记标题</div><input value="'+esc(v.title)+'" oninput="D.viral.title=this.value"></div>';
+  h+='<div class="btn-row tight" style="gap:6px">'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">类型</div><select onchange="D.viral.type=this.value"><option value="A"'+(v.type!=='B'?' selected':'')+'>A</option><option value="B"'+(v.type==='B'?' selected':'')+'>B</option></select></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">容器</div><input value="'+esc(v.container)+'" oninput="D.viral.container=this.value"></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">核心钩子</div><input value="'+esc(v.hook)+'" oninput="D.viral.hook=this.value"></div></div>';
+  h+='<div class="btn-row tight" style="gap:6px">'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">结构模板</div><input value="'+esc(v.structure)+'" oninput="D.viral.structure=this.value"></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">封面类型</div><input value="'+esc(v.cover)+'" oninput="D.viral.cover=this.value"></div>'
+    +'<div class="field" style="flex:1;margin:0"><div class="lbl">可复用角度</div><input value="'+esc(v.angle)+'" oninput="D.viral.angle=this.value"></div></div>';
+  h+='<div class="medal" style="margin-top:6px"><b>仅 B 类爆款：</b>哪个场景共鸣最强 → 作为 A 类搜索内容的切入角度建议。</div>';
+  h+='<div class="btn-row tight" style="gap:6px"><div class="field" style="flex:1;margin:0"><div class="lbl">共鸣最强场景（B 类）</div><input value="'+esc(v.scene)+'" oninput="D.viral.scene=this.value"></div><div class="field" style="flex:1;margin:0"><div class="lbl">转 A 类切入角度建议（B 类）</div><input value="'+esc(v.toA)+'" oninput="D.viral.toA=this.value"></div></div>';
+  h+='<div class="btn-row"><button class="btn primary" onclick="addViral()">拆解入库</button></div>';
+  h+='<div id="viralList">'+viralListHTML()+'</div>';
+  return h+'</div>';
+}
+function bfSubmit(){
+  const t=S.topics.find(x=>x.id==Number(D.bf.topic));
+  if(!t){ toast('请选择已发笔记','warn'); return; }
+  const period=(t.periods||0)+1;
+  S.rankings.push({id:S._rid++, topicId:t.id, word:t.kw, title:t.title, blogger:t.blogger||'', period:period, rank:D.bf.rank||'前20', type:t.type||'A', searchPct:0, colRate:Number(D.bf.colRate)||0, interact:Number(D.bf.interact)||0, shop:Number(D.bf.shop)||0});
+  t.periods=period;
+  D.bf.topic=''; D.bf.rank='前20'; D.bf.colRate=''; D.bf.interact=''; D.bf.shop='';
+  commit(); toast('已回填第 '+period+' 期数据'); renderAll();
+}
+function viralListHTML(){
+  if(!S.viral.length) return '<div class="medal" style="margin-top:10px">暂无爆款拆解。</div>';
+  let h='<div class="sep"></div><div class="lbl"><b>爆款库</b></div>';
+  S.viral.slice().reverse().forEach(x=>{
+    h+='<div class="row" style="align-items:flex-start"><span class="grow"><div class="t1"><span class="chip '+(x.type==='B'?'o':'b')+'">'+(x.type==='B'?'B':'A')+'</span> '+esc(x.title.slice(0,22))+'</div><div class="t2">容器：'+esc(x.container)+' ｜ 钩子：'+esc(x.hook)+'<br>结构：'+esc(x.structure)+' ｜ 封面：'+esc(x.cover)+'<br>可复用角度：'+esc(x.angle)+(x.type==='B'&&x.scene?(' ｜ 共鸣场景：'+esc(x.scene)):'')+(x.type==='B'&&x.toA?(' ｜ 转A角度：'+esc(x.toA)):'')+'</div></span></div>';
+  });
+  return h;
+}
+function addViral(){
+  const v=D.viral;
+  if(!v.title.trim()){ toast('请填爆款标题','warn'); return; }
+  S.viral.push({id:S._vid++, title:v.title, type:v.type==='B'?'B':'A', container:v.container, hook:v.hook, structure:v.structure, cover:v.cover, angle:v.angle, scene:v.scene, toA:v.toA});
+  Object.assign(v,{title:'',type:'A',container:'',hook:'',structure:'',cover:'',angle:'',scene:'',toA:'',text:''});
+  commit(); toast('爆款已拆解入库'); renderAll();
+}
+function localBreakdown(txt){
+  const t=txt.slice(0,400);
+  let container='场景';
+  if(/怕|担心|后悔|坑|纠结|安全|毒|细菌|不放心|崩溃|急|干着急|睡不着/.test(t)) container='焦虑';
+  if(/省|便宜|划算|快|时间|钱|麻烦/.test(t)) container='利益';
+  if(/原来|误区|骗|没想到|内幕|套路|智商税|一直以为/.test(t)) container='认知';
+  if(/测评|对比|哪个好|最后选|买什么/.test(t)) container='结果';
+  if(/新手妈妈|宝妈|二胎|同类|过来人/.test(t)) container='身份';
+  const head=(txt.split(/[\n。！？]/)[0]||'').trim();
+  const isB=!/测评|怎么选|多少钱|有必要|避雷|实测|对比|评测|排名/.test((head+' '+txt.slice(0,80)));
+  return {title:head.slice(0,40), type:isB?'B':'A', container:container,
+    hook:'开头钩子：'+(head.slice(0,24)||'待补'), structure:'封面→直接回答→证据→轻引导', cover:'大字关键词＋结论',
+    angle:'待细化（本地规则版，建议配置 AI 后重拆）', scene:isB?'待补：共鸣最强场景':'', toA:isB?'待补：转 A 切入角度':''};
+}
+function aiBreakdown(){
+  const txt=(D.viral.text||'').trim();
+  if(!txt){ toast('请先粘贴爆款笔记内容','warn'); return; }
+  toast(hasAI()?'AI 拆解中…':'本地规则拆解中…');
+  (async()=>{
+    try{
+      let r;
+      if(hasAI()){
+        const out=await aiChat([
+          {role:'system',content:'你是小红书爆款拆解分析师。根据粘贴的笔记内容，输出严格 JSON：{title:笔记标题或核心主题, type:"A"或"B"(从标题判断：搜索占位词型A ／ 场景种词型B), container:六容器之一或组合(焦虑/结果/利益/身份/认知/场景，可写"焦虑+场景"等双容器), hook:核心钩子(开头怎么抓住人，一句话), structure:结构模板(按 封面→开头→中段→结尾 概括，如"误解→实测→标准→轻引导"), cover:封面类型(如"大字关键词＋实测数字"), angle:差异化切入角度(可复用的说法), scene:若B类写共鸣最强场景，否则空, toA:若B类写可转化为A类搜索内容的切入角度，否则空}。只输出 JSON，不要任何其他文字。'},
+          {role:'user',content:txt}
+        ]);
+        r=JSON.parse(stripCode(out));
+      } else {
+        r=localBreakdown(txt);
+      }
+      if(!r||typeof r!=='object') throw new Error('返回格式错误');
+      const v=D.viral;
+      v.title=String(r.title||'').slice(0,60); v.type=r.type==='B'?'B':'A';
+      v.container=String(r.container||''); v.hook=String(r.hook||''); v.structure=String(r.structure||'');
+      v.cover=String(r.cover||''); v.angle=String(r.angle||''); v.scene=String(r.scene||''); v.toA=String(r.toA||''); v.text='';
+      renderAll();
+      toast('拆解完成，请核对后入库'+(hasAI()?'':'（本地规则版）'));
+    }catch(e){ toast('拆解失败：'+(e.message||e),'err'); }
+  })();
+}
+
+function renderReview(){
+  $('#tab-review').innerHTML = renderRankings() + renderSignal() + renderVerify() + renderFallen() + renderMeeting() + renderGarrison() + renderBackfill();
+}
+
+/* ================= 初始化 ================= */
+S = loadState();
+D.chain.journeyId = S.journeys && S.journeys[0] ? S.journeys[0].id : null;
+D.mtg.step = 1;
+window.addEventListener('hashchange', ()=>{ _keepY=false; renderAll(); });
+if(!location.hash) location.hash = 'map';
+renderAll();
+</script>
+</body>
+</html>
