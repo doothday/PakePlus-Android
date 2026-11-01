@@ -16,6 +16,22 @@
     --chip-text:#546E7A;
     --red:#E53935;
     --danger:#F44336;
+    /* 字号档位（标准档基准） */
+    --fs-root:16px;
+    --fs-title:17px; --fs-meta:13px; --fs-coin:17px; --fs-tab:14px;
+    --fs-chip:12.5px; --fs-body:16px; --fs-goal-title:18px; --fs-nav:13px;
+  }
+  /* 小字号档 */
+  body.font-sm{
+    --fs-root:14px;
+    --fs-title:15px; --fs-meta:12px; --fs-coin:15px; --fs-tab:13px;
+    --fs-chip:11.5px; --fs-body:14.5px; --fs-goal-title:16px; --fs-nav:12px;
+  }
+  /* 大字号档 */
+  body.font-lg{
+    --fs-root:18px;
+    --fs-title:19px; --fs-meta:14px; --fs-coin:19px; --fs-tab:15.5px;
+    --fs-chip:13.5px; --fs-body:17px; --fs-goal-title:20.5px; --fs-nav:14px;
   }
   /* 夜间模式 */
   body.dark{
@@ -31,42 +47,42 @@
   html,body{height:100%;background:var(--bg);}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
-    background:var(--bg);color:var(--text);
+    background:var(--bg);color:var(--text);font-size:var(--fs-root);
     max-width:520px;margin:0 auto;display:flex;flex-direction:column;height:100vh;overflow:hidden;
   }
 
   /* ===== 顶部栏 ===== */
   header{
     background:linear-gradient(180deg,#2AA7F7 0%,#1E9BF5 100%);
-    color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+    color:#fff;padding:7px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
   }
-  header .title{font-size:23px;font-weight:700;letter-spacing:.5px;}
-  header .head-right{display:flex;align-items:center;gap:12px;}
-  header .coin-pill{font-size:14px;font-weight:600;background:rgba(255,255,255,.18);padding:5px 12px;border-radius:20px;}
+  header .head-left{display:flex;align-items:center;}
+  header .head-right{display:flex;align-items:center;gap:8px;}
+  header .coin-pill{font-size:13px;font-weight:600;background:rgba(255,255,255,.18);padding:4px 11px;border-radius:20px;}
   header .add-btn{
-    width:34px;height:34px;border:none;background:transparent;color:#fff;
-    font-size:28px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    width:30px;height:30px;border:none;background:transparent;color:#fff;
+    font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;
   }
 
   /* ===== 任务分类 Tab ===== */
   .tabs{background:var(--card);display:flex;border-bottom:1px solid var(--line);flex-shrink:0;}
   .tab{
-    flex:1;text-align:center;padding:15px 0 13px;font-size:15.5px;color:var(--chip-text);cursor:pointer;
+    flex:1;text-align:center;padding:11px 0 9px;font-size:var(--fs-tab);color:var(--chip-text);cursor:pointer;
     border-bottom:3px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;
   }
   .tab.active{color:var(--primary);font-weight:600;border-bottom-color:var(--primary);}
 
   /* ===== 标签筛选条 ===== */
-  .tag-bar{display:flex;gap:8px;overflow-x:auto;padding:10px 18px;background:var(--card);flex-shrink:0;
+  .tag-bar{display:flex;gap:8px;overflow-x:auto;padding:8px 18px;background:var(--card);flex-shrink:0;
     border-bottom:1px solid var(--line);scrollbar-width:none;}
   .tag-bar::-webkit-scrollbar{display:none;}
-  .tag-chip{flex-shrink:0;border:1px solid var(--line);background:var(--card);color:var(--chip-text);font-size:13.5px;
-    font-family:inherit;border-radius:15px;padding:6px 13px;cursor:pointer;white-space:nowrap;}
+  .tag-chip{flex-shrink:0;border:1px solid var(--line);background:var(--card);color:var(--chip-text);font-size:var(--fs-chip);
+    font-family:inherit;border-radius:15px;padding:4px 11px;cursor:pointer;white-space:nowrap;}
   .tag-chip.active{background:var(--primary);border-color:var(--primary);color:#fff;}
 
   /* ===== 表单内标签快捷选择 ===== */
   .tag-picker{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-  .tag-picker .chip{font-size:13px;border:1px solid var(--line);border-radius:14px;padding:5px 12px;
+  .tag-picker .chip{font-size:var(--fs-chip);border:1px solid var(--line);border-radius:14px;padding:5px 12px;
     background:var(--card);color:var(--chip-text);cursor:pointer;font-family:inherit;}
   .tag-picker .chip.on{background:#E8F4FE;color:var(--primary);border-color:#BBDDF5;}
 
@@ -100,31 +116,52 @@
   .task-row .check svg{width:16px;height:16px;stroke:#fff;display:none;}
   .task-main{flex:1 1 auto;width:0;min-width:0;cursor:pointer;transition:opacity .12s;}
   .task-main:active{opacity:.7;}
-  .task-title{font-size:17px;color:var(--text);word-break:break-all;line-height:1.35;}
-  .task-meta{font-size:13px;color:var(--sub);margin-top:4px;}
-  .task-tag{display:inline-block;font-size:12px;color:var(--primary);background:#E8F4FE;border-radius:4px;padding:1px 7px;margin-left:6px;}
+  .task-title{font-size:var(--fs-title);color:var(--text);word-break:break-all;line-height:1.35;}
+  .task-meta{font-size:var(--fs-meta);color:var(--sub);margin-top:4px;}
+  .task-tag{display:none;font-size:var(--fs-meta);color:var(--primary);background:#E8F4FE;border-radius:4px;padding:1px 7px;margin-left:6px;}
+  .chal-tag{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:#FF9800;border-radius:5px;padding:1px 7px;margin-left:6px;vertical-align:middle;}
   .task-right{display:flex;align-items:center;gap:10px;flex:0 0 auto;flex-shrink:0;}
-  .task-coins{color:var(--primary);font-size:17px;font-weight:600;white-space:nowrap;}
+  .task-coins{color:var(--primary);font-size:var(--fs-coin);font-weight:600;white-space:nowrap;}
   .move-group{display:none;flex-direction:column;gap:1px;}
   .list-wrap.sorting .move-group{display:flex;}
   .move-btn{background:none;border:none;cursor:pointer;color:var(--sub);padding:0 3px;display:flex;align-items:center;}
   .move-btn:active{color:var(--primary);}
   .move-btn svg{width:15px;height:15px;fill:currentColor;}
 
+  /* ===== 副本链式任务 ===== */
+  .chain-arrow{flex-shrink:0;background:none;border:none;color:var(--sub);cursor:pointer;padding:2px;display:flex;align-items:center;}
+  .chain-arrow svg{width:18px;height:18px;fill:currentColor;transition:transform .15s;}
+  .task-row.expanded .chain-arrow svg{transform:rotate(90deg);}
+  .child-list{padding:2px 18px 8px 54px;border-bottom:1px solid var(--line);}
+  .child-row{display:flex;align-items:center;gap:12px;padding:12px 0;}
+  .child-row .check{width:22px;height:22px;border:2px solid var(--sub);border-radius:6px;flex-shrink:0;
+    background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .child-row .check svg{width:13px;height:13px;stroke:#fff;display:none;}
+  .child-row .check.checked{background:var(--primary);border-color:var(--primary);}
+  .child-row .check.checked svg{display:block;}
+  .child-title{flex:1 1 auto;min-width:0;font-size:var(--fs-meta);color:var(--text);word-break:break-all;}
+  .child-row.done .child-title{color:var(--sub);text-decoration:line-through;}
+  .child-coins{color:var(--primary);font-size:var(--fs-meta);font-weight:600;white-space:nowrap;}
+  .child-form-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+  .child-form-row .cf-title{flex:2;}
+  .child-form-row .cf-coins{flex:1;}
+  .child-form-row .cf-min{flex:1;}
+  .child-form-row .cf-del{background:none;border:none;color:var(--danger);font-size:20px;cursor:pointer;padding:0 6px;flex-shrink:0;}
+
   /* ===== 奖励行 ===== */
   .reward-row{display:flex;flex-wrap:nowrap;align-items:center;padding:18px;border-bottom:1px solid var(--line);gap:14px;cursor:pointer;}
   .sorting .reward-row{cursor:default;}
   .reward-main{flex:1 1 auto;width:0;min-width:0;cursor:pointer;}
-  .reward-title{font-size:17px;line-height:1.35;word-break:break-all;}
-  .reward-meta{font-size:13px;color:var(--sub);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-  .reward-cost{color:var(--danger);font-size:17px;font-weight:600;white-space:nowrap;}
+  .reward-title{font-size:var(--fs-title);line-height:1.35;word-break:break-all;}
+  .reward-meta{font-size:var(--fs-meta);color:var(--sub);margin-top:5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .reward-cost{color:var(--danger);font-size:var(--fs-coin);font-weight:600;white-space:nowrap;}
   .reward-cost.disabled{color:var(--sub);opacity:.6;}
   .reward-main{cursor:pointer;transition:opacity .12s;}
   .reward-main:active{opacity:.65;}
   .reward-row.redeem-flash{animation:flashPulse .5s ease,rowPop .3s ease;}
   @keyframes rowPop{0%{transform:scale(1);}45%{transform:scale(1.025);}100%{transform:scale(1);}}
 
-  .empty-tip{text-align:center;color:var(--sub);padding:80px 20px;font-size:15px;line-height:1.8;}
+  .empty-tip{text-align:center;color:var(--sub);padding:80px 20px;font-size:var(--fs-title);line-height:1.8;}
 
   /* ===== 成果墙（左右两个独立列，各自紧凑堆叠，互不拉扯高度） ===== */
   .wall-wrap{flex:1;overflow-y:auto;background:var(--bg);padding:14px;}
@@ -141,7 +178,7 @@
   }
   .wall-time{font-size:12.5px;color:var(--sub);margin-bottom:8px;padding-right:26px;}
   .wall-card img{width:100%;border-radius:8px;display:block;height:auto;}
-  .wall-text{font-size:15px;line-height:1.55;word-break:break-word;white-space:pre-wrap;}
+  .wall-text{font-size:var(--fs-title);line-height:1.55;word-break:break-word;white-space:pre-wrap;}
   .wall-card .wall-text.only{padding:6px 2px;}
   .wall-bottom{margin-top:8px;}
   .wall-more{
@@ -149,13 +186,18 @@
     color:var(--sub);padding:4px;display:flex;border-radius:6px;z-index:2;
   }
   .wall-more svg{width:18px;height:18px;fill:currentColor;}
+  .rant-card{background:#FFF6E8;}
+  .rant-card .tape{background:rgba(255,213,160,.85);}
+  .rant-card .wall-text{color:#5D4E37;}
+  body.dark .rant-card{background:#2C2620;}
+  body.dark .rant-card .wall-text{color:#E6D9C4;}
 
   /* ===== 成果操作菜单 ===== */
   .action-sheet{position:fixed;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:150;display:none;}
   .action-sheet.show{display:block;}
   .action-sheet .sheet-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);z-index:1;}
   .action-sheet .sheet-body{position:relative;z-index:2;background:var(--card);border-radius:18px 18px 0 0;padding:10px 16px 24px;}
-  .action-item{display:block;width:100%;background:none;border:none;font-family:inherit;font-size:17px;
+  .action-item{display:block;width:100%;background:none;border:none;font-family:inherit;font-size:var(--fs-title);
     padding:16px;text-align:center;border-bottom:1px solid var(--line);cursor:pointer;}
   .action-item.danger{color:var(--danger);}
   .action-cancel{margin-top:10px;background:var(--bg);border-radius:12px;}
@@ -163,8 +205,8 @@
   /* ===== 历史记录列表 ===== */
   .hist-row{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid var(--line);}
   .hist-main{flex:1 1 auto;width:0;min-width:0;}
-  .hist-title{font-size:16px;color:var(--text);word-break:break-all;line-height:1.35;}
-  .hist-meta{font-size:12.5px;color:var(--sub);margin-top:4px;}
+  .hist-title{font-size:var(--fs-title);color:var(--text);word-break:break-all;line-height:1.35;}
+  .hist-meta{font-size:var(--fs-meta);color:var(--sub);margin-top:4px;}
   .hist-coins{font-size:15px;font-weight:600;white-space:nowrap;flex-shrink:0;}
   .hist-coins.plus{color:var(--primary);}
   .hist-coins.minus{color:var(--danger);}
@@ -182,14 +224,20 @@
   .goal-card.c2{background:#F3EEFC;} .goal-card.c3{background:#FDF1E3;}
   .goal-card.c4{background:#ECF5EC;} .goal-card.c5{background:#E8F4F6;}
   .goal-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-  .goal-title{font-size:18px;font-weight:700;color:#263238;line-height:1.35;word-break:break-all;flex:1;min-width:0;}
+  .goal-title{font-size:var(--fs-goal-title);font-weight:700;color:#263238;line-height:1.35;word-break:break-all;flex:1;min-width:0;}
   .goal-more{background:none;border:none;cursor:pointer;color:#78909C;padding:4px;flex-shrink:0;border-radius:6px;}
   .goal-more svg{width:19px;height:19px;fill:currentColor;}
-  .goal-mid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;font-size:13.5px;color:#546E7A;}
-  .goal-tag{display:inline-block;font-size:12px;background:rgba(255,255,255,.65);color:#455A64;border-radius:5px;padding:2px 9px;margin-right:8px;}
+  .goal-mid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;font-size:var(--fs-meta);color:#546E7A;}
+  .goal-tag{display:inline-block;font-size:var(--fs-meta);background:rgba(255,255,255,.65);color:#455A64;border-radius:5px;padding:2px 9px;margin-right:8px;}
   .goal-deadline{color:#546E7A;}
   .goal-deadline.overdue{color:var(--danger);}
   .goal-count{font-weight:600;color:#263238;white-space:nowrap;}
+  .pending-chip{display:inline-block;font-size:var(--fs-meta);color:#9A6B00;background:rgba(255,255,255,.65);border-radius:5px;padding:2px 9px;margin-left:6px;}
+  .goal-note{margin-top:9px;font-size:var(--fs-meta);color:var(--sub);line-height:1.5;word-break:break-word;}
+  .verify-status{background:var(--bg);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:var(--fs-meta);color:var(--chip-text);line-height:1.9;}
+  .verify-status b{color:var(--text);}
+  .verify-status .v-pass{color:#388E3C;font-weight:600;}
+  .verify-status .v-fail{color:var(--danger);font-weight:600;}
   .goal-bar{margin-top:13px;height:14px;border-radius:8px;background:rgba(255,255,255,.6);overflow:hidden;position:relative;}
   .goal-bar-fill{height:100%;border-radius:8px;transition:width .3s;}
   .goal-card.c0 .goal-bar-fill{background:#F48B8B;} .goal-card.c1 .goal-bar-fill{background:#8B9DF4;}
@@ -206,7 +254,7 @@
   .nav-item .nav-ico{width:25px;height:25px;margin:0 auto 3px;fill:var(--sub);}
   .nav-item.active{color:var(--primary);}
   .nav-item.active .nav-ico{fill:var(--primary);}
-  .nav-item .nav-label{font-size:13px;}
+  .nav-item .nav-label{font-size:var(--fs-nav);}
 
   /* ===== 撤销条 ===== */
   .undo-bar{
@@ -227,7 +275,7 @@
   .panel h2{font-size:18px;margin:18px 0 12px;}
   .panel h2:first-child{margin-top:0;}
   .field{margin-bottom:14px;}
-  .field label{display:block;font-size:14px;color:var(--chip-text);;margin-bottom:6px;}
+  .field label{display:block;font-size:var(--fs-body);color:var(--chip-text);margin-bottom:6px;}
   .field input,.field select,.field textarea{
     width:100%;padding:12px;border:1px solid var(--line);border-radius:8px;font-size:16px;font-family:inherit;
     background:var(--card);color:var(--text);
@@ -235,10 +283,10 @@
   .field textarea{min-height:90px;resize:vertical;}
   .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary);}
   .btn{width:100%;padding:14px;border:none;border-radius:8px;background:var(--primary);color:#fff;
-    font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;margin:8px 0;}
+    font-size:var(--fs-body);font-weight:600;cursor:pointer;font-family:inherit;margin:8px 0;}
   .btn.ghost{background:var(--card);color:var(--primary);border:1px solid var(--primary);}
   .btn.danger{background:var(--card);color:var(--danger);border:1px solid var(--danger);}
-  .rule-box{background:var(--bg);border-radius:10px;padding:14px;font-size:13.5px;color:var(--chip-text);line-height:1.9;}
+  .rule-box{background:var(--bg);border-radius:10px;padding:14px;font-size:var(--fs-meta);color:var(--chip-text);line-height:1.9;}
   .rule-box b{color:var(--text);}
   .status-line{font-size:13px;color:var(--sub);margin:8px 0;word-break:break-all;}
 
@@ -252,12 +300,49 @@
   .modal-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:100;}
   .modal-mask.show{display:flex;}
   .modal{background:var(--card);border:0;outline:none;box-sizing:border-box;width:100%;max-width:520px;border-radius:18px 18px 0 0;padding:22px 20px 30px;max-height:85vh;overflow-y:auto;}
-  .modal-title{font-size:19px;font-weight:700;margin-bottom:18px;}
+  .modal-title{font-size:var(--fs-goal-title);font-weight:700;margin-bottom:18px;}
   .modal .row2{display:flex;gap:12px;}
   .modal .row2 .field{flex:1;}
   .modal .del-link{display:block;text-align:center;color:var(--danger);font-size:15px;margin-top:14px;background:none;border:none;cursor:pointer;font-family:inherit;}
   .preview-box{margin:10px 0;}
   .preview-box img{max-width:100%;border-radius:10px;display:block;}
+
+  /* ===== 修仙等级 ===== */
+  .level-pill{font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.18);border:none;border-radius:20px;padding:4px 11px;margin-left:8px;cursor:pointer;font-family:inherit;white-space:nowrap;}
+  .level-box{max-height:82vh;display:flex;flex-direction:column;}
+  .level-summary{margin-bottom:12px;}
+  .lv-now{font-size:22px;font-weight:800;color:var(--primary);}
+  .lv-score{font-size:13px;color:var(--sub);margin:6px 0 10px;}
+  .lv-bar{height:8px;background:var(--line);border-radius:6px;overflow:hidden;}
+  .lv-bar-fill{height:100%;background:linear-gradient(90deg,#2AA7F7,#1E9BF5);border-radius:6px;}
+  .lv-next{font-size:12px;color:var(--sub);margin-top:8px;}
+  .level-scroll{overflow-y:auto;flex:1;margin-bottom:10px;}
+  .lv-realm{font-size:13px;font-weight:700;color:var(--sub);margin:14px 0 6px;}
+  .lv-row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;border-radius:10px;font-size:14px;margin-bottom:4px;}
+  .lv-row.active{background:rgba(30,155,245,.12);font-weight:700;color:var(--primary);}
+  .lv-row.locked{color:var(--sub);opacity:.55;}
+  .lv-thr{font-size:12px;color:var(--sub);}
+
+  /* ===== 签到彩蛋 ===== */
+  #checkinModal{align-items:center;}
+  .checkin-box{background:var(--card);border-radius:20px;padding:28px 24px;width:min(86%,340px);text-align:center;}
+  .checkin-ico{width:58px;height:58px;border-radius:50%;margin:0 auto 12px;background:linear-gradient(135deg,#2AA7F7,#1E9BF5);color:#fff;font-size:26px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .checkin-title{font-size:17px;font-weight:700;}
+  .checkin-coins{font-size:30px;font-weight:800;color:var(--primary);margin:12px 0 6px;}
+  .checkin-streak{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  .checkin-box .btn{width:100%;}
+
+  /* ===== 每周战绩 ===== */
+  #reportModal{align-items:center;}
+  .report-box{background:var(--card);border-radius:20px;padding:26px 22px;width:min(90%,360px);text-align:center;}
+  .report-crest{width:52px;height:52px;border-radius:50%;margin:0 auto 10px;background:linear-gradient(135deg,#FFC86B,#FF9800);color:#fff;font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+  .report-title{font-size:18px;font-weight:800;margin:6px 0 18px;}
+  .report-cards{display:flex;gap:10px;}
+  .report-card{flex:1;background:var(--bg);border-radius:14px;padding:14px 6px;}
+  .report-num{font-size:22px;font-weight:800;color:var(--primary);}
+  .report-label{font-size:12px;color:var(--sub);margin-top:4px;}
+  .report-comment{font-size:13px;color:var(--sub);margin:16px 0 18px;line-height:1.6;}
+  .report-box .btn{width:100%;}
 
   /* ===== 大图查看 ===== */
   .lightbox{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.93);display:none;z-index:300;}
@@ -286,17 +371,6 @@
   .confirm-actions .ok{color:var(--primary);font-weight:600;}
 
 
-  /* ===== 字体大小档位 ===== */
-  body.font-sm .tab{font-size:14px;}
-  body.font-sm .task-title,body.font-sm .reward-title{font-size:15px;}
-  body.font-sm .task-meta,body.font-sm .reward-meta{font-size:12px;}
-  body.font-sm .task-coins{font-size:15px;}
-  body.font-lg .tab{font-size:16.5px;}
-  body.font-lg .task-title,body.font-lg .reward-title{font-size:18.5px;}
-  body.font-lg .task-meta,body.font-lg .reward-meta{font-size:13.5px;}
-  body.font-lg .task-coins{font-size:18.5px;}
-  body.font-lg .goal-title{font-size:19.5px;}
-
   /* ===== 夜间模式专项适配 ===== */
   body.dark header{background:linear-gradient(180deg,#1E6FB0 0%,#1760A0 100%);}
   body.dark .tag-picker .chip.on{background:rgba(30,155,245,.16);border-color:rgba(66,165,245,.5);}
@@ -311,14 +385,19 @@
 
 <!-- ===== 顶部栏 ===== -->
 <header>
-  <div class="title">PlayTask</div>
-  <div class="head-right">
+  <div class="head-left">
     <div class="coin-pill" id="coinTotal">金币 0</div>
+    <button class="level-pill" id="levelPill" onclick="openLevelModal()" aria-label="查看修仙等级"></button>
+  </div>
+  <div class="head-right">
     <button class="add-btn" id="histBtn" onclick="openHistory()" aria-label="历史记录" style="display:none">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 9 8 9"/><polyline points="8 12 11 15 16 10"/></svg>
     </button>
     <button class="add-btn" id="sortBtn" onclick="toggleSortMode()" aria-label="排序" style="display:none">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M3 6h18v2H3V6zm4 5h10v2H7v-2zm4 5h6v2h-6v-2z"/></svg>
+    </button>
+    <button class="add-btn" id="settingsBtn" onclick="switchNav('settings')" aria-label="设置">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
     <button class="add-btn" id="headAdd" aria-label="新增">＋</button>
   </div>
@@ -346,6 +425,11 @@
   <div class="wall-wrap" id="wallList"></div>
 </div>
 
+<!-- ===== 视图：吐槽碎碎念 ===== -->
+<div id="view-rants" style="display:none;flex-direction:column;flex:1;min-height:0;">
+  <div class="wall-wrap" id="rantList"></div>
+</div>
+
 <!-- ===== 视图：长期目标 ===== -->
 <div id="view-goals" style="display:none;flex-direction:column;flex:1;min-height:0;">
   <div class="goal-wrap" id="goalList"></div>
@@ -369,6 +453,13 @@
   <button class="btn" onclick="saveDavConfig()">保存配置</button>
   <button class="btn ghost" onclick="manualSync()">立即同步（拉取云端 → 上传本地）</button>
   <div class="status-line" id="syncStatus">尚未连接云端</div>
+
+  <h2>每日挑战</h2>
+  <div class="status-line" id="challengeStatus">今日剩余 2 次双倍挑战</div>
+  <button class="btn ghost" onclick="drawDailyChallenge()">抽取 1 个普通任务 · 双倍积分</button>
+
+  <h2>每周战绩</h2>
+  <button class="btn ghost" onclick="openWeeklyReport()">生成本周战绩小结</button>
 
   <h2>外观</h2>
   <div class="field">
@@ -414,17 +505,17 @@
     <svg class="nav-ico" viewBox="0 0 24 24"><path d="M20 7h-4V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3h1a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zm-6 0h-4V5h4v2z"/></svg>
     <div class="nav-label">奖励</div>
   </button>
-  <button class="nav-item" data-nav="wall" onclick="switchNav('wall')">
-    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.5 13.5l2.5 3.5 3.5-4.5 4.5 6H5l3.5-5z"/></svg>
-    <div class="nav-label">成果</div>
-  </button>
   <button class="nav-item" data-nav="goals" onclick="switchNav('goals')">
     <svg class="nav-ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>
     <div class="nav-label">目标</div>
   </button>
-  <button class="nav-item" data-nav="settings" onclick="switchNav('settings')">
-    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-    <div class="nav-label">设置</div>
+  <button class="nav-item" data-nav="wall" onclick="switchNav('wall')">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8.5 13.5l2.5 3.5 3.5-4.5 4.5 6H5l3.5-5z"/></svg>
+    <div class="nav-label">成果</div>
+  </button>
+  <button class="nav-item" data-nav="rants" onclick="switchNav('rants')">
+    <svg class="nav-ico" viewBox="0 0 24 24"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM7 9h10v2H7V9zm0 4h7v2H7v-2z"/></svg>
+    <div class="nav-label">吐槽</div>
   </button>
 </footer>
 
@@ -449,8 +540,45 @@
   </div>
 </div>
 
+<!-- ===== 修仙等级详情弹窗 ===== -->
+<div class="modal-mask" id="levelModal" onclick="if(event.target===this)closeLevelModal()">
+  <div class="modal level-box">
+    <div class="modal-title">修仙境界</div>
+    <div class="level-summary" id="levelSummary"></div>
+    <div class="level-scroll" id="levelList"></div>
+    <button class="del-link" onclick="closeLevelModal()">关闭</button>
+  </div>
+</div>
+
+<!-- ===== 每日签到彩蛋弹窗 ===== -->
+<div class="modal-mask" id="checkinModal" onclick="if(event.target===this)closeCheckin()">
+  <div class="checkin-box">
+    <div class="checkin-ico">签</div>
+    <div class="checkin-title">今日签到成功</div>
+    <div class="checkin-coins" id="checkinCoins">+0</div>
+    <div class="checkin-streak" id="checkinStreak"></div>
+    <button class="btn" onclick="closeCheckin()">收下今日奖励</button>
+  </div>
+</div>
+
+<!-- ===== 每周战绩结算弹窗 ===== -->
+<div class="modal-mask" id="reportModal" onclick="if(event.target===this)closeReport()">
+  <div class="report-box">
+    <div class="report-crest">战绩</div>
+    <div class="report-title">本周战绩结算</div>
+    <div class="report-cards">
+      <div class="report-card"><div class="report-num" id="rpTasks">0</div><div class="report-label">完成任务</div></div>
+      <div class="report-card"><div class="report-num" id="rpCoins">0</div><div class="report-label">赚取金币</div></div>
+      <div class="report-card"><div class="report-num" id="rpStickers">0</div><div class="report-label">新增贴纸</div></div>
+    </div>
+    <div class="report-comment" id="rpComment"></div>
+    <button class="btn" onclick="closeReport()">收下战绩</button>
+  </div>
+</div>
+
+
 <!-- ===== 任务编辑弹窗 ===== -->
-<div class="modal-mask" id="taskModal">
+<div class="modal-mask" id="taskModal" onclick="if(event.target===this)closeTaskEditor()">
   <div class="modal">
     <div class="modal-title" id="taskModalTitle">新建任务</div>
     <div class="field">
@@ -470,7 +598,7 @@
     <div class="row2">
       <div class="field">
         <label>任务类型</label>
-        <select id="fType">
+        <select id="fType" onchange="onTaskTypeChange()">
           <option value="daily">每日任务</option>
           <option value="weekly">每周任务</option>
           <option value="normal">普通任务</option>
@@ -487,13 +615,22 @@
       <label>预计时长（分钟，选填，用于时长型目标累计）</label>
       <input id="fDuration" type="number" min="0" value="0" placeholder="如运动 30 分钟填 30">
     </div>
+    <div class="field" id="chainBox" style="display:none">
+      <label>链式养成（副本专用）：全部子任务完成后，才发放上方主任务的大额金币；子任务各自只发小金币</label>
+      <div class="field">
+        <label>周期天数（到期自动重置整条链，如 7 天）</label>
+        <input id="fCycleDays" type="number" min="1" value="7">
+      </div>
+      <div id="fChildList"></div>
+      <button type="button" class="btn ghost" onclick="addChildRow()">＋ 添加子任务</button>
+    </div>
     <button class="btn" onclick="saveEditor()">完成</button>
     <button class="del-link" id="delBtn" onclick="deleteCurrentTask()" style="display:none">删除此任务</button>
   </div>
 </div>
 
 <!-- ===== 奖励编辑弹窗 ===== -->
-<div class="modal-mask" id="rewardModal">
+<div class="modal-mask" id="rewardModal" onclick="if(event.target===this)closeRewardEditor()">
   <div class="modal">
     <div class="modal-title" id="rewardModalTitle">新建奖励</div>
     <div class="field">
@@ -524,7 +661,7 @@
 </div>
 
 <!-- ===== 成果记录弹窗 ===== -->
-<div class="modal-mask" id="achModal">
+<div class="modal-mask" id="achModal" onclick="if(event.target===this)closeAchEditor()">
   <div class="modal">
     <div class="modal-title" id="achModalTitle">记录成果</div>
     <div class="field">
@@ -543,6 +680,29 @@
     <div class="preview-box" id="aPreview" style="display:none"></div>
     <button class="btn" onclick="saveAchievement()">保存到成果墙</button>
     <button class="del-link" onclick="closeAchEditor()">取消</button>
+  </div>
+</div>
+
+<!-- ===== 吐槽 / 碎碎念 编辑弹窗 ===== -->
+<div class="modal-mask" id="rantModal" onclick="if(event.target===this)closeRantEditor()">
+  <div class="modal">
+    <div class="modal-title" id="rantModalTitle">记一条吐槽</div>
+    <div class="field">
+      <label>想说的话（选填，吐槽、碎碎念都行）</label>
+      <textarea id="rText" rows="4" placeholder="今天有什么想吐槽、想随手记下的…"></textarea>
+    </div>
+    <div class="field">
+      <label>添加照片（选填，自动压缩到 0.7 质量）</label>
+      <div style="display:flex;gap:12px;">
+        <button class="btn ghost" style="margin:0;flex:1;" onclick="document.getElementById('rCamera').click()">拍照</button>
+        <button class="btn ghost" style="margin:0;flex:1;" onclick="document.getElementById('rAlbum').click()">从相册选择</button>
+      </div>
+      <input id="rCamera" type="file" accept="image/*" capture="environment" style="display:none" onchange="onRantImagePicked(event)">
+      <input id="rAlbum" type="file" accept="image/*" style="display:none" onchange="onRantImagePicked(event)">
+    </div>
+    <div class="preview-box" id="rPreview" style="display:none"></div>
+    <button class="btn" onclick="saveRant()">保存吐槽</button>
+    <button class="del-link" onclick="closeRantEditor()">取消</button>
   </div>
 </div>
 
@@ -585,9 +745,44 @@
 <div class="action-sheet" id="goalSheet">
   <div class="sheet-mask" onclick="closeGoalSheet()"></div>
   <div class="sheet-body">
+    <button class="action-item" onclick="openVerifyEditor()">阶段校验（进度签证）</button>
     <button class="action-item" onclick="editGoal()">编辑目标</button>
     <button class="action-item danger" onclick="deleteCurrentGoalFromSheet()">删除此目标</button>
     <button class="action-item action-cancel" onclick="closeGoalSheet()">取消</button>
+  </div>
+</div>
+
+<!-- ===== 目标阶段校验弹窗 ===== -->
+<div class="modal-mask" id="verifyModal" onclick="if(event.target===this)closeVerifyEditor()">
+  <div class="modal">
+    <div class="modal-title">阶段校验 · 进度签证</div>
+    <div class="field">
+      <label><input type="checkbox" id="vEnabled" onchange="onVerifyEnabledChange()"> 开启阶段性校验（进度照常累加，到期人工校验；未达标会扣回本阶段进度）</label>
+    </div>
+    <div class="field" id="vConfigBox" style="display:none">
+      <div class="row2">
+        <div class="field">
+          <label>校验周期（天）</label>
+          <input id="vDays" type="number" min="1" value="7">
+        </div>
+        <div class="field">
+          <label>阶段门槛（%）</label>
+          <input id="vRatio" type="number" min="1" max="100" value="25">
+        </div>
+      </div>
+      <div class="field">
+        <label>本阶段检验内容（验收标准，如：7 天减重 1.7 斤 / 完成验房理论积累）</label>
+        <textarea id="vNote" rows="2" placeholder="如：7 天减重 1.7 斤"></textarea>
+      </div>
+      <div class="field">
+        <label>阶段通过奖励金币（自定义大额）</label>
+        <input id="vBonus" type="number" min="1" value="20">
+      </div>
+      <div class="verify-status" id="vStatus"></div>
+      <button class="btn" onclick="runVerify()">立即校验当前阶段</button>
+      <div class="rule-box" style="margin-top:8px">进度平时照常累加显示；到期校验：达到门槛即通过，发放上方奖励金币并在成果墙生成一张阶段贴纸；未达标则把本阶段新增进度扣回（已得金币不退回），随后进入下一周期。</div>
+    </div>
+    <button class="btn ghost" onclick="saveVerify()">保存设置</button>
   </div>
 </div>
 
@@ -598,6 +793,16 @@
     <button class="action-item" onclick="editAchievement()">编辑文字 / 照片</button>
     <button class="action-item danger" onclick="deleteAchievement()">删除这条成果</button>
     <button class="action-item action-cancel" onclick="closeAchSheet()">取消</button>
+  </div>
+</div>
+
+<!-- ===== 吐槽操作菜单 ===== -->
+<div class="action-sheet" id="rantSheet">
+  <div class="sheet-mask" onclick="closeRantSheet()"></div>
+  <div class="sheet-body">
+    <button class="action-item" onclick="editRant()">编辑这条吐槽</button>
+    <button class="action-item danger" onclick="deleteRant()">删除这条吐槽</button>
+    <button class="action-item action-cancel" onclick="closeRantSheet()">取消</button>
   </div>
 </div>
 
@@ -626,7 +831,8 @@
 const LOCAL_KEY = 'topic_workbench_state_v2';
 const DAV_KEY = 'topic_workbench_dav_v1';
 const APPEAR_KEY = 'topic_workbench_appearance_v1';
-let state = { coins:0, tasks:[], archive:[], rewards:[], achievements:[], history:[], goals:[] };
+let state = { coins:0, tasks:[], archive:[], rewards:[], achievements:[], rants:[], history:[], goals:[],
+  totalEarned:0, lastCheckinDay:null, streakDays:0, challengeDay:null, challengeCount:0 };
 let currentType = 'daily';
 let currentTag = '全部';   // 任务页标签筛选，'全部' 表示不筛选
 let currentNav = 'tasks';
@@ -635,7 +841,9 @@ let editingRewardId = null;
 let undoStack = [];
 let saveTimer = null;
 let pendingAchImage = null;
+let pendingRantImage = null;
 let sortMode = false;   // 排序模式：开启后才显示上下移按钮
+let expandedChains = new Set(); // 已展开的副本链主任务 id
 
 const TYPE_NAME = { daily:'每日任务', weekly:'每周任务', normal:'普通任务', dungeon:'副本任务' };
 
@@ -654,10 +862,35 @@ function weekKey(d=new Date()){
 }
 
 /* ---------- 本地读写（图片较多时 localStorage 可能超限，做兜底） ---------- */
+function normalizeState(){
+  (state.goals||[]).forEach(g=>{
+    if(g.verifyEnabled==null) g.verifyEnabled=false;
+    if(g.verifyDays==null) g.verifyDays=7;
+    if(g.verifyRatio==null) g.verifyRatio=25;
+    if(g.verifyBonus==null) g.verifyBonus=20;
+    if(g.verifyNote==null) g.verifyNote='';
+    if(g.stageBase===undefined) g.stageBase=g.current||0;
+    if(g.stageStart===undefined) g.stageStart=null;
+    if(g.lastResult===undefined) g.lastResult=null;
+    if(g.lastCheck===undefined) g.lastCheck=null;
+    delete g.pending; delete g.phaseStart; // 清理旧版缓存字段
+  });
+  (state.tasks||[]).forEach(t=>{
+    if(t.chain==null) t.chain=false;
+    if(!Array.isArray(t.children)) t.children=[];
+  });
+  if(!Array.isArray(state.rants)) state.rants=[];
+  if(typeof state.totalEarned!=='number') state.totalEarned=0;
+  if(state.lastCheckinDay==null) state.lastCheckinDay=null;
+  if(typeof state.streakDays!=='number') state.streakDays=0;
+  if(typeof state.challengeCount!=='number') state.challengeCount=0;
+  if(state.challengeDay==null) state.challengeDay=null;
+}
 function loadLocal(){
   try{
     const raw = localStorage.getItem(LOCAL_KEY);
-    if(raw) state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],history:[],goals:[]}, JSON.parse(raw));
+    if(raw) state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],rants:[],history:[],goals:[],totalEarned:0,lastCheckinDay:null,streakDays:0,challengeDay:null,challengeCount:0}, JSON.parse(raw));
+    normalizeState();
   }catch(e){ console.warn(e); }
 }
 function persistLocal(){
@@ -671,7 +904,19 @@ function resetDueTasks(){
   state.tasks.forEach(t=>{
     if(t.type==='daily' && t.done && t.dayKey !== dk){ t.done=false; t.doneCount=0; t.dayKey=dk; t.weekKey=wk; }
     if(t.type==='weekly' && t.done && t.weekKey !== wk){ t.done=false; t.doneCount=0; t.dayKey=dk; t.weekKey=wk; }
+    if(t.chain && Array.isArray(t.children) && !t.done){
+      const end=(t.cycleStart||0)+Number(t.cycleDays||7)*86400000;
+      if(Date.now()>=end){
+        t.children.forEach(c=>{c.done=false;c.doneCount=0;});
+        t.done=false; t.doneCount=0; t.cycleStart=Date.now();
+      }
+    }
   });
+  // 每日挑战跨天重置：清零次数并解除旧挑战标记
+  if(state.challengeDay!==dk){
+    state.challengeDay=dk; state.challengeCount=0;
+    state.tasks.forEach(t=>{ t.challenge=false; });
+  }
 }
 
 /* ---------- 外观：主题 / 字体大小（设备本地偏好，不随业务数据同步） ---------- */
@@ -696,6 +941,53 @@ function setFont(v){ appearance.font=v; persistAppearance(); applyAppearance(); 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
+/* ===== 完成音效（Web Audio 内联合成，无外部音频文件） ===== */
+let audioCtx = null;
+function ensureAudio(){
+  try{
+    if(!audioCtx){
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return null;
+      audioCtx = new AC();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }catch(e){ return null; }
+}
+function playTone(freq, delay, dur, type, vol){
+  const ctx = ensureAudio(); if(!ctx) return;
+  const osc = ctx.createOscillator(), g = ctx.createGain();
+  osc.type = type || 'sine'; osc.frequency.value = freq;
+  const t0 = ctx.currentTime + delay;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol || 0.16, t0 + 0.015);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  osc.connect(g); g.connect(ctx.destination);
+  osc.start(t0); osc.stop(t0 + dur + 0.05);
+}
+function playSound(kind){
+  try{
+    if(kind === 'task'){            // 完成任务：轻快双音
+      playTone(659.25, 0, 0.12, 'sine', 0.15);
+      playTone(783.99, 0.08, 0.16, 'sine', 0.15);
+    }else if(kind === 'reward'){    // 领取奖励：柔和下行确认音
+      playTone(523.25, 0, 0.13, 'triangle', 0.14);
+      playTone(392.00, 0.10, 0.18, 'triangle', 0.14);
+    }else if(kind === 'goal'){      // 阶段通关 / 目标达成：上扬琶音
+      playTone(523.25, 0, 0.14, 'sine', 0.17);
+      playTone(659.25, 0.11, 0.14, 'sine', 0.17);
+      playTone(783.99, 0.22, 0.24, 'sine', 0.17);
+    }
+  }catch(e){}
+}
+/* 目标首次达到总量时播放通关音 */
+function playGoalMilestone(goalGain, beforeMet){
+  (goalGain||[]).forEach(gg=>{
+    const g = state.goals.find(x=>x.id===gg.goalId);
+    if(g && g.current>=g.target && !beforeMet.has(gg.goalId)) playSound('goal');
+  });
+}
+
 function fmtTime(ts){
   const d=new Date(ts);
   return (d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
@@ -704,7 +996,165 @@ function fmtTime(ts){
 /* ============================================================
    渲染
    ============================================================ */
-function renderCoin(){ document.getElementById('coinTotal').textContent = '金币 ' + state.coins; }
+/* ===== 修仙等级（修为 = 累计赚取金币，只增不减；1 金币 = 1 元） ===== */
+const LEVELS = [
+  {realm:'凡人', title:'', min:0},
+  {realm:'炼气', title:'1层', min:1},
+  {realm:'炼气', title:'2层', min:500},
+  {realm:'炼气', title:'3层', min:1000},
+  {realm:'炼气', title:'4层', min:1500},
+  {realm:'炼气', title:'5层', min:2000},
+  {realm:'炼气', title:'6层', min:2500},
+  {realm:'炼气', title:'7层', min:3000},
+  {realm:'炼气', title:'8层', min:4000},
+  {realm:'炼气', title:'9层', min:5000},
+  {realm:'炼气', title:'10层', min:6000},
+  {realm:'炼气', title:'11层', min:7000},
+  {realm:'炼气', title:'12层', min:8000},
+  {realm:'炼气', title:'13层', min:9000},
+  {realm:'筑基', title:'初期', min:10000},
+  {realm:'筑基', title:'中期', min:20000},
+  {realm:'筑基', title:'后期', min:100000},
+  {realm:'筑基', title:'大圆满', min:500000},
+  {realm:'结丹', title:'初期', min:600000},
+  {realm:'结丹', title:'中期', min:700000},
+  {realm:'结丹', title:'后期', min:800000},
+  {realm:'结丹', title:'大圆满', min:1000000},
+  {realm:'元婴', title:'初期', min:1200000},
+  {realm:'元婴', title:'中期', min:1500000},
+  {realm:'元婴', title:'后期', min:2000000},
+  {realm:'元婴', title:'大圆满', min:5000000},
+  {realm:'化神', title:'初期', min:10000000},
+  {realm:'化神', title:'中期', min:50000000},
+  {realm:'化神', title:'后期', min:60000000},
+  {realm:'化神', title:'大圆满', min:100000000},
+  {realm:'道祖', title:'', min:200000000},
+];
+function getLevel(score){
+  let idx=0;
+  for(let i=0;i<LEVELS.length;i++){ if(score>=LEVELS[i].min) idx=i; else break; }
+  const cur=LEVELS[idx], next=LEVELS[idx+1]||null;
+  let pct=100;
+  if(next && next.min>cur.min){ pct=Math.min(100,Math.max(0,Math.round((score-cur.min)/(next.min-cur.min)*100))); }
+  return {cur,next,idx,pct};
+}
+function levelName(lv){
+  const c=lv.cur;
+  if(c.realm==='凡人'||c.realm==='道祖') return c.realm;
+  return c.realm+c.title;
+}
+function fmtScore(n){
+  n=Math.floor(n||0);
+  if(n>=100000000) return (n/100000000).toFixed(n%100000000?2:0).replace(/\.?0+$/,'')+'亿';
+  if(n>=10000) return (n/10000).toFixed(n%10000?1:0).replace(/\.?0+$/,'')+'W';
+  return n.toString();
+}
+
+function renderCoin(){
+  document.getElementById('coinTotal').textContent = '金币 ' + state.coins;
+  const badge = document.getElementById('levelPill');
+  if(badge){
+    const lv=getLevel(state.totalEarned||0);
+    badge.textContent = levelName(lv);
+  }
+}
+
+/* ===== 等级详情弹窗 ===== */
+function openLevelModal(){ renderLevelModal(); document.getElementById('levelModal').classList.add('show'); }
+function closeLevelModal(){ document.getElementById('levelModal').classList.remove('show'); }
+function renderLevelModal(){
+  const score=state.totalEarned||0;
+  const lv=getLevel(score);
+  const sum=document.getElementById('levelSummary');
+  let nextText='已达最高境界';
+  if(lv.next){
+    const need=lv.next.min-score;
+    nextText=`距下一档「${levelName({cur:lv.next})}」还需修为 ${fmtScore(need)}`;
+  }
+  sum.innerHTML=`<div class="lv-now">${levelName(lv)}</div>
+    <div class="lv-score">当前修为 ${fmtScore(score)}（累计赚取金币，1 金币 = 1 元）</div>
+    <div class="lv-bar"><div class="lv-bar-fill" style="width:${lv.pct}%"></div></div>
+    <div class="lv-next">${nextText}</div>`;
+  let html='', curRealm=null;
+  LEVELS.forEach((L,i)=>{
+    if(L.realm!==curRealm){ curRealm=L.realm; if(L.realm!=='凡人'&&L.realm!=='道祖') html+=`<div class="lv-realm">${L.realm}</div>`; }
+    const name = L.realm==='凡人'||L.realm==='道祖'?L.realm:L.realm+L.title;
+    const reached=score>=L.min, active=i===lv.idx;
+    html+=`<div class="lv-row ${active?'active':''} ${reached?'':'locked'}">
+      <span>${name}</span><span class="lv-thr">${fmtScore(L.min)} 起</span></div>`;
+  });
+  document.getElementById('levelList').innerHTML=html;
+}
+
+/* ===== 每日签到彩蛋 ===== */
+function yesterdayKey(){ return dayKey(new Date(Date.now()-86400000)); }
+function checkDailyCheckin(){
+  const dk=dayKey();
+  if(state.lastCheckinDay===dk) return;            // 今日已签到，不重复发
+  if(state.lastCheckinDay===yesterdayKey()) state.streakDays=(state.streakDays||0)+1;
+  else state.streakDays=1;
+  state.lastCheckinDay=dk;
+  const bonus=1+Math.floor(Math.random()*5);       // 随机 1–5
+  state.coins+=bonus;
+  state.totalEarned=(state.totalEarned||0)+bonus;
+  state.history.unshift({kind:'checkin', addedCoins:bonus, time:Date.now(), snapshot:null, goalGain:[]});
+  if(state.history.length>100) state.history.pop();
+  persistLocal(); renderCoin();
+  playSound('task');
+  openCheckinModal(bonus, state.streakDays);
+}
+function openCheckinModal(bonus, streak){
+  document.getElementById('checkinCoins').textContent='+'+bonus;
+  document.getElementById('checkinStreak').textContent=`已连续签到 ${streak} 天`;
+  document.getElementById('checkinModal').classList.add('show');
+}
+function closeCheckin(){ document.getElementById('checkinModal').classList.remove('show'); }
+
+/* ===== 每日随机挑战：抽取普通任务，完成双倍积分，每日上限 2 个 ===== */
+function renderChallengeStatus(){
+  const el=document.getElementById('challengeStatus'); if(!el) return;
+  const left=Math.max(0,2-(state.challengeCount||0));
+  el.textContent = left>0 ? `今日剩余 ${left} 次双倍挑战` : '今日挑战已用完，明天再来';
+}
+function drawDailyChallenge(){
+  resetDueTasks();
+  if((state.challengeCount||0)>=2){ toast('今日双倍挑战已达上限（2 个），明天再来'); return; }
+  const pool=state.tasks.filter(t=>t.type==='normal' && !t.done && !t.chain && !t.challenge);
+  if(pool.length===0){ toast('暂无普通任务，请先到任务页添加'); return; }
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  pick.challenge=true;
+  state.challengeDay=dayKey();
+  state.challengeCount=(state.challengeCount||0)+1;
+  persistLocal(); render();
+  renderChallengeStatus();
+  switchNav('tasks');
+  currentType='normal'; syncTabActive(); renderTasks();
+  toast(`已选中「${pick.title}」，完成奖励双倍积分`);
+}
+
+/* ===== 每周战绩回顾 ===== */
+function weekStartTs(){
+  const x=new Date(); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x.getTime();
+}
+function openWeeklyReport(){
+  const start=weekStartTs();
+  const weekHist=state.history.filter(h=>h.time>=start);
+  const doneN=weekHist.filter(h=>h.kind==='task'||h.kind==='childTask').length;
+  const earnM=weekHist.filter(h=>h.kind!=='reward').reduce((s,h)=>s+(Number(h.addedCoins)||0),0);
+  const stickN=state.achievements.filter(a=>a.time>=start).length;
+  document.getElementById('rpTasks').textContent=doneN;
+  document.getElementById('rpCoins').textContent=earnM;
+  document.getElementById('rpStickers').textContent=stickN;
+  let comment;
+  if(doneN===0) comment='本周还没有开始行动，从今天的第一个小任务启程吧。';
+  else if(doneN<5) comment='稳步起步，保持节奏，下周再多推进几项。';
+  else if(doneN<15) comment='状态不错，坚持得很稳，继续保持这份专注。';
+  else comment='本周干劲十足，效率拉满，继续一路通关！';
+  document.getElementById('rpComment').textContent=comment;
+  document.getElementById('reportModal').classList.add('show');
+}
+function closeReport(){ document.getElementById('reportModal').classList.remove('show'); }
+
 
 function allTags(){
   const s = new Set();
@@ -750,27 +1200,60 @@ function renderTasks(){
     list.innerHTML = '<div class="empty-tip">当前分类暂无任务<br>点右上角 ＋ 添加第一个任务</div>';
     return;
   }
-  list.innerHTML = rows.map((t,i)=>`
-    <div class="task-row" data-id="${t.id}">
-      <div class="check" data-action="check">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </div>
-      <div class="task-main" data-action="edit">
-        <div class="task-title">${esc(t.title)}${t.tag?`<span class="task-tag">${esc(t.tag)}</span>`:''}</div>
-        <div class="task-meta">${t.doneCount}/${t.count}</div>
-      </div>
-      <div class="task-right">
-        <span class="task-coins">+${t.coins}</span>
-        <div class="move-group">
-          <button class="move-btn" ${i===0?'disabled style="opacity:.25"':''} data-action="up" aria-label="上移">
-            <svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12z"/></svg>
-          </button>
-          <button class="move-btn" ${i===rows.length-1?'disabled style="opacity:.25"':''} data-action="down" aria-label="下移">
-            <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h12z"/></svg>
-          </button>
+  const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const upBtn = (i)=>`<button class="move-btn" ${i===0?'disabled style="opacity:.25"':''} data-action="up" aria-label="上移"><svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12z"/></svg></button>`;
+  const downBtn = (i,len)=>`<button class="move-btn" ${i===len-1?'disabled style="opacity:.25"':''} data-action="down" aria-label="下移"><svg viewBox="0 0 24 24"><path d="M12 16l-6-6h12z"/></svg></button>`;
+
+  list.innerHTML = rows.map((t,i)=>{
+    const tagHtml = t.tag?`<span class="task-tag">${esc(t.tag)}</span>`:'';
+    const moveHtml = `<div class="move-group">${upBtn(i)}${downBtn(i,rows.length)}</div>`;
+    const isChain = t.chain && Array.isArray(t.children) && t.children.length>0;
+
+    if(!isChain){
+      const chal = !!t.challenge;
+      const coinShow = chal ? t.coins*2 : t.coins;
+      return `
+      <div class="task-row" data-id="${t.id}">
+        <div class="check" data-action="check">${checkSvg}</div>
+        <div class="task-main" data-action="edit">
+          <div class="task-title">${esc(t.title)}${tagHtml}${chal?'<span class="chal-tag">挑战×2</span>':''}</div>
+          <div class="task-meta">${t.doneCount}/${t.count}</div>
+        </div>
+        <div class="task-right">
+          <span class="task-coins">+${coinShow}</span>
+          ${moveHtml}
+        </div>
+      </div>`;
+    }
+
+    const doneN = t.children.filter(c=>c.done).length;
+    const expanded = expandedChains.has(t.id);
+    const remainTxt = cycleRemainText(t);
+    const childHtml = expanded ? `<div class="child-list">${t.children.map(c=>`
+      <div class="child-row ${c.done?'done':''}" data-parent="${t.id}" data-child="${c.id}">
+        <div class="check ${c.done?'checked':''}" data-action="child-check">${checkSvg}</div>
+        <div class="child-title" data-action="child-edit">${esc(c.title)}${c.tag?`<span class="task-tag">${esc(c.tag)}</span>`:''}</div>
+        <span class="child-coins">+${c.coins}</span>
+      </div>`).join('')}</div>` : '';
+
+    return `
+    <div>
+      <div class="task-row ${expanded?'expanded':''}" data-id="${t.id}">
+        <button class="chain-arrow" data-action="toggle-chain" aria-label="展开子任务">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6z"/></svg>
+        </button>
+        <div class="task-main" data-action="edit">
+          <div class="task-title">${esc(t.title)}${tagHtml}</div>
+          <div class="task-meta">子任务 ${doneN}/${t.children.length} · ${remainTxt}</div>
+        </div>
+        <div class="task-right">
+          <span class="task-coins">+${t.coins}</span>
+          ${moveHtml}
         </div>
       </div>
-    </div>`).join('');
+      ${childHtml}
+    </div>`;
+  }).join('');
   list.classList.toggle('sorting', sortMode);
 }
 
@@ -845,6 +1328,35 @@ rewardListEl.addEventListener('click', e=>{
   askRedeem(id);
 });
 
+/* ---------- 目标卡片：短按操作菜单，长按进入阶段校验 ---------- */
+const goalListEl = document.getElementById('goalList');
+let goalPressTimer = null, goalLongFired = false;
+function cancelGoalPress(){ clearTimeout(goalPressTimer); goalPressTimer = null; }
+goalListEl.addEventListener('touchstart', e=>{
+  const card = e.target.closest('.goal-card'); if(!card) return;
+  goalLongFired = false;
+  const id = card.dataset.id;
+  cancelGoalPress();
+  goalPressTimer = setTimeout(()=>{
+    goalLongFired = true;
+    if(navigator.vibrate) navigator.vibrate(30);
+    sheetGoalId = id; openVerifyEditor();
+  }, 550);
+},{passive:true});
+goalListEl.addEventListener('touchmove', cancelGoalPress, {passive:true});
+goalListEl.addEventListener('touchend', cancelGoalPress);
+goalListEl.addEventListener('touchcancel', cancelGoalPress);
+goalListEl.addEventListener('contextmenu', e=>{
+  const card = e.target.closest('.goal-card'); if(!card) return;
+  e.preventDefault(); sheetGoalId = card.dataset.id; openVerifyEditor();
+});
+goalListEl.addEventListener('click', e=>{
+  if(goalLongFired){ goalLongFired=false; e.preventDefault(); e.stopPropagation(); return; }
+  const card = e.target.closest('.goal-card'); if(!card) return;
+  if(e.target.closest('.goal-more')) return; // 三点按钮自带菜单
+  openGoalSheet(card.dataset.id);
+});
+
 function renderWall(){
   const list = document.getElementById('wallList');
   const rows = state.achievements.slice().sort((a,b)=>b.time-a.time);
@@ -877,6 +1389,42 @@ function renderWall(){
   </div>`;
 }
 
+/* ===== 吐槽 / 碎碎念墙 ===== */
+function renderRants(){
+  const list = document.getElementById('rantList');
+  if(!list) return;
+  const rows = (state.rants||[]).slice().sort((a,b)=>b.time-a.time);
+  if(rows.length===0){
+    list.innerHTML = '<div class="empty-tip" style="padding-top:100px;">吐槽墙还是空的<br>点右上角 ＋ 记下此刻的碎碎念</div>';
+    return;
+  }
+  const hashAngle = id=>{
+    let h=0; for(const ch of String(id)){ h=(h*31+ch.charCodeAt(0))>>>0; }
+    const sign = h%2===0?-1:1;
+    const deg = 1.0 + (h%10)/10*1.2;
+    return sign*deg;
+  };
+  const cardHtml = r=>{
+    const clickTarget = r.image ? `openRantLightbox('${r.id}')` : `openRantSheet('${r.id}')`;
+    return `
+    <div class="wall-card rant-card" style="transform:rotate(${hashAngle(r.id).toFixed(1)}deg)" onclick="${clickTarget}">
+      <div class="tape"></div>
+      <button class="wall-more" onclick="event.stopPropagation();openRantSheet('${r.id}')" aria-label="更多操作">
+        <svg viewBox="0 0 24 24"><path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm0 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+      </button>
+      <div class="wall-time">${fmtTime(r.time)}</div>
+      ${r.image?`<img src="${r.image}" alt="吐槽照片">`:''}
+      ${r.text?`<div class="wall-text ${r.image?'wall-bottom':'only'}">${esc(r.text)}</div>`:''}
+    </div>`;
+  };
+  const colA=[], colB=[];
+  rows.forEach((r,i)=>{ (i%2===0?colA:colB).push(cardHtml(r)); });
+  list.innerHTML = `<div class="wall-grid">
+    <div class="wall-col">${colA.join('')}</div>
+    <div class="wall-col">${colB.join('')}</div>
+  </div>`;
+}
+
 /* ============================================================
    长期目标
    ============================================================ */
@@ -886,7 +1434,7 @@ let sheetGoalId = null;
 function goalPct(g){ return g.target>0 ? Math.min(100, g.current/g.target*100) : 0; }
 function fmtGoalCurrent(g){
   if(g.mode==='time'){
-    return `${(g.current/60).toFixed(1)} / ${(g.target/60)} 小时`;
+    return `${(g.current/60).toFixed(1)} / ${(g.target/60).toFixed(1)} 小时`;
   }
   return `${g.current} / ${g.target} 次`;
 }
@@ -899,6 +1447,16 @@ function fmtDeadline(ts){
   const hr = Math.max(1, Math.ceil(diff/3600000));
   return `剩余 ${hr} 小时`;
 }
+function fmtStageDeadline(g){
+  if(!g.stageStart) return '本阶段未开始';
+  const end = g.stageStart + Number(g.verifyDays||7)*86400000;
+  const diff = end - Date.now();
+  if(diff<=0) return '本阶段已到期';
+  const day = Math.ceil(diff/86400000);
+  if(day>=1) return `距阶段截止 ${day} 天`;
+  const hr = Math.max(1, Math.ceil(diff/3600000));
+  return `距阶段截止 ${hr} 小时`;
+}
 
 function renderGoals(){
   const list = document.getElementById('goalList');
@@ -910,8 +1468,10 @@ function renderGoals(){
   }
   list.innerHTML = rows.map((g,i)=>{
     const pct = Math.round(goalPct(g));
-    const overdue = g.deadline && g.deadline<Date.now();
-    return `<div class="goal-card c${i%6}" onclick="openGoalSheet('${g.id}')">
+    const stageEnd = g.verifyEnabled && g.stageStart ? g.stageStart + Number(g.verifyDays||7)*86400000 : null;
+    const overdue = (g.deadline && g.deadline<Date.now()) || (stageEnd && stageEnd<Date.now());
+    const deadlineText = g.verifyEnabled ? fmtStageDeadline(g) : fmtDeadline(g.deadline);
+    return `<div class="goal-card c${i%6}" data-id="${g.id}">
       <div class="goal-top">
         <div class="goal-title">${esc(g.title)}</div>
         <button class="goal-more" onclick="event.stopPropagation();openGoalSheet('${g.id}')" aria-label="更多操作">
@@ -919,9 +1479,13 @@ function renderGoals(){
         </button>
       </div>
       <div class="goal-mid">
-        <div><span class="goal-tag">${esc(g.tag||'未分类')}</span><span class="goal-deadline ${overdue?'overdue':''}">${fmtDeadline(g.deadline)}</span></div>
+        <div>
+          <span class="goal-tag">${esc(g.tag||'未分类')}</span>
+          <span class="goal-deadline ${overdue?'overdue':''}">${deadlineText}</span>
+        </div>
         <div class="goal-count">${fmtGoalCurrent(g)}</div>
       </div>
+      ${g.verifyEnabled && g.verifyNote ? `<div class="goal-note">检验内容：${esc(g.verifyNote)}</div>`:''}
       <div class="goal-bar"><div class="goal-bar-fill" style="width:${pct}%"></div><div class="goal-bar-pct ${pct<15?'low':''}">${pct}%</div></div>
     </div>`;
   }).join('');
@@ -968,7 +1532,9 @@ function saveGoal(){
     const g = state.goals.find(x=>x.id===editingGoalId);
     Object.assign(g,{title,tag,mode,target,deadline});
   }else{
-    state.goals.push({id:uid(), title, tag, mode, target, current:0, deadline, createdAt:Date.now()});
+    state.goals.push({id:uid(), title, tag, mode, target, current:0, deadline, createdAt:Date.now(),
+      verifyEnabled:false, verifyDays:7, verifyRatio:25, verifyBonus:20, verifyNote:'',
+      stageBase:0, stageStart:null, lastCheck:null, lastResult:null});
   }
   persistLocal(); render(); closeGoalEditor(); toast('已保存目标');
 }
@@ -980,13 +1546,92 @@ function deleteCurrentGoal(){
 function openGoalSheet(id){ sheetGoalId=id; document.getElementById('goalSheet').classList.add('show'); }
 function closeGoalSheet(){ sheetGoalId=null; document.getElementById('goalSheet').classList.remove('show'); }
 function editGoal(){ const id=sheetGoalId; closeGoalSheet(); openGoalEditor(id); }
+
+/* ===== 目标阶段性校验（进度签证） ===== */
+let verifyGoalId = null;
+function openVerifyEditor(){
+  if(!sheetGoalId) return;
+  verifyGoalId = sheetGoalId; closeGoalSheet();
+  const g = state.goals.find(x=>x.id===verifyGoalId); if(!g) return;
+  document.getElementById('vEnabled').checked = !!g.verifyEnabled;
+  document.getElementById('vDays').value = g.verifyDays||7;
+  document.getElementById('vRatio').value = g.verifyRatio!=null ? g.verifyRatio : 25;
+  document.getElementById('vBonus').value = g.verifyBonus!=null ? g.verifyBonus : 20;
+  document.getElementById('vNote').value = g.verifyNote||'';
+  onVerifyEnabledChange(); renderVerifyStatus();
+  document.getElementById('verifyModal').classList.add('show');
+}
+function closeVerifyEditor(){ document.getElementById('verifyModal').classList.remove('show'); verifyGoalId=null; }
+function onVerifyEnabledChange(){
+  document.getElementById('vConfigBox').style.display =
+    document.getElementById('vEnabled').checked ? 'block' : 'none';
+}
+function verifyThreshold(g){ return g.target*(g.verifyRatio||25)/100; }
+function fmtVerifyUnit(g, v){ return g.mode==='time' ? `${(v/60).toFixed(1)} 小时` : `${v} 次`; }
+function stageProgress(g){ return Math.max(0,(g.current||0)-(g.stageBase||0)); }
+function renderVerifyStatus(){
+  const g = state.goals.find(x=>x.id===verifyGoalId); if(!g) return;
+  const box = document.getElementById('vStatus');
+  if(!g.verifyEnabled){ box.innerHTML=''; return; }
+  const end = g.stageStart ? g.stageStart + Number(g.verifyDays||7)*86400000 : Date.now();
+  const remain = Math.ceil((end-Date.now())/86400000);
+  const th = verifyThreshold(g), prog = stageProgress(g);
+  let last='';
+  if(g.lastResult==='pass') last='<div class="v-pass">上阶段：已通过，奖励金币与贴纸已发放</div>';
+  else if(g.lastResult==='fail') last='<div class="v-fail">上阶段：未达标，本阶段进度已扣回</div>';
+  box.innerHTML = `
+    <div>目标总进度：<b>${esc(fmtGoalCurrent(g))}</b></div>
+    <div>本阶段新增：<b>${esc(fmtVerifyUnit(g,prog))}</b> / 阶段门槛 ${esc(fmtVerifyUnit(g,th))}</div>
+    ${g.verifyNote?`<div>检验内容：<b>${esc(g.verifyNote)}</b></div>`:''}
+    <div>距下次校验：${remain>0 ? remain+' 天' : '已到期，可立即校验'}</div>
+    ${last}`;
+}
+function saveVerify(){
+  const g = state.goals.find(x=>x.id===verifyGoalId); if(!g) return;
+  g.verifyEnabled = document.getElementById('vEnabled').checked;
+  g.verifyDays = Math.max(1, parseInt(document.getElementById('vDays').value)||7);
+  g.verifyRatio = Math.min(100, Math.max(1, parseInt(document.getElementById('vRatio').value)||25));
+  g.verifyBonus = Math.max(1, parseInt(document.getElementById('vBonus').value)||20);
+  g.verifyNote = document.getElementById('vNote').value.trim();
+  if(g.verifyEnabled){
+    if(g.stageBase===undefined || g.stageBase===null) g.stageBase=g.current||0;
+    if(!g.stageStart) g.stageStart=Date.now();
+  }else{
+    g.stageBase=null; g.stageStart=null;
+  }
+  persistLocal(); render(); closeVerifyEditor(); toast('校验设置已保存');
+}
+function runVerify(){
+  const g = state.goals.find(x=>x.id===verifyGoalId); if(!g) return;
+  const th = verifyThreshold(g), prog = stageProgress(g);
+  if(prog >= th){
+    const bonus = Number(g.verifyBonus)||0;
+    state.coins += bonus;
+    state.totalEarned = (state.totalEarned||0)+bonus;
+    const note = g.verifyNote ? `\n检验内容：${g.verifyNote}` : '';
+    state.achievements.push({id:uid(), time:Date.now(),
+      text:`阶段通过 · ${g.title}${note}\n本阶段完成 ${fmtVerifyUnit(g,prog)}，奖励 ${bonus} 金币`, image:null});
+    g.lastResult='pass'; g.lastCheck=Date.now();
+    g.stageBase=g.current; g.stageStart=Date.now();
+    state.history.unshift({kind:'stageBonus', goalId:g.id, addedCoins:bonus, time:Date.now(), snapshot:null, goalGain:[]});
+    if(state.history.length>100) state.history.pop();
+    playSound('goal');
+    toast(`阶段通过！获得 ${bonus} 金币，已生成成果贴纸`);
+  }else{
+    g.current = g.stageBase||0;
+    g.lastResult='fail'; g.lastCheck=Date.now();
+    g.stageBase=g.current; g.stageStart=Date.now();
+    toast('本阶段未达门槛，已扣回新增进度（已得金币不退回）');
+  }
+  persistLocal(); render(); renderVerifyStatus();
+}
 function deleteCurrentGoalFromSheet(){
   if(!sheetGoalId) return;
   state.goals = state.goals.filter(x=>x.id!==sheetGoalId);
   persistLocal(); render(); closeGoalSheet(); toast('已删除目标');
 }
 
-function render(){ resetDueTasks(); renderCoin(); renderTasks(); renderRewards(); renderWall(); renderGoals(); }
+function render(){ resetDueTasks(); renderCoin(); renderTasks(); renderRewards(); renderRants(); renderWall(); renderGoals(); renderChallengeStatus(); }
 
 /* ============================================================
    任务操作
@@ -1004,12 +1649,20 @@ function spawnCoinFloat(x, y, text, minus){
 function toggleDone(id){
   const t = state.tasks.find(x=>x.id===id);
   if(!t) return;
+  if(t.chain) return; // 副本链由子任务驱动，主任务不单独勾选
   const rowEl = document.querySelector(`.task-row[data-id="${id}"]`);
   const coinEl = rowEl ? rowEl.querySelector('.task-coins') : null;
   t.doneCount++;
-  state.coins += Number(t.coins)||0;
-  // 按标签联动长期目标：次数型 +1，时长型累加任务分钟数
+  const isChallenge = !!t.challenge && state.challengeDay===dayKey();
+  let gain = Number(t.coins)||0;
+  if(isChallenge) gain *= 2;
+  state.coins += gain;
+  state.totalEarned = (state.totalEarned||0)+gain;
+  if(isChallenge) t.challenge=false;
+  playSound('task');
+  // 按标签联动长期目标：次数型 +1，时长型累加任务分钟数；进度始终正常累加
   const goalGain = [];
+  const beforeMet = new Set(state.goals.filter(g=>g.current>=g.target).map(g=>g.id));
   if(t.tag){
     state.goals.forEach(g=>{
       if(g.tag && g.tag.trim()===t.tag.trim()){
@@ -1021,9 +1674,10 @@ function toggleDone(id){
       }
     });
   }
+  playGoalMilestone(goalGain, beforeMet);
   const record = {
     kind:'task',
-    taskId:t.id, addedCoins:Number(t.coins)||0,
+    taskId:t.id, addedCoins:gain,
     beforeCount:t.doneCount-1, archived:false, snapshot:JSON.parse(JSON.stringify(t)),
     goalGain
   };
@@ -1054,7 +1708,94 @@ function toggleDone(id){
   setTimeout(()=>render(), t.done?300:130);
 }
 
+/* 副本链子任务勾选：发小金币；全部完成后主任务再发大额金币并归档 */
+function toggleChild(parentId, childId){
+  const t = state.tasks.find(x=>x.id===parentId);
+  if(!t || !t.chain) return;
+  const c = t.children.find(x=>x.id===childId);
+  if(!c || c.done) return;
+  c.done = true; c.doneCount = 1;
+  t.doneCount = t.children.filter(x=>x.done).length;
+  state.coins += Number(c.coins)||0;
+  state.totalEarned = (state.totalEarned||0)+(Number(c.coins)||0);
+  playSound('task');
+
+  const goalGain = [];
+  const beforeMet = new Set(state.goals.filter(g=>g.current>=g.target).map(g=>g.id));
+  if(t.tag){
+    state.goals.forEach(g=>{
+      if(g.tag && g.tag.trim()===t.tag.trim()){
+        const amount = g.mode==='time' ? (Number(c.durationMin)||0) : 1;
+        if(amount>0){
+          g.current += amount;
+          goalGain.push({goalId:g.id, amount});
+        }
+      }
+    });
+  }
+  playGoalMilestone(goalGain, beforeMet);
+  const record = {
+    kind:'childTask', taskId:t.id, childId:c.id, addedCoins:Number(c.coins)||0,
+    snapshot:JSON.parse(JSON.stringify(t)), goalGain
+  };
+  record.id=uid(); record.time=Date.now();
+  state.history.unshift(record);
+  if(state.history.length>100) state.history.pop();
+  undoStack.push(record); if(undoStack.length>20) undoStack.shift();
+
+  // 子任务勾选动画 + 小金币飘出
+  const rowEl = document.querySelector(`.child-row[data-parent="${parentId}"][data-child="${childId}"]`);
+  if(rowEl){
+    const check = rowEl.querySelector('.check'); if(check) check.classList.add('checked');
+    const anchor = rowEl.getBoundingClientRect();
+    spawnCoinFloat(anchor.left, anchor.top-4, '+'+c.coins, false);
+  }
+
+  // 全部子任务完成 → 主任务大额奖励 + 归档
+  let completedMain = false;
+  if(t.children.every(x=>x.done)){
+    t.doneCount = t.children.length;
+    state.coins += Number(t.coins)||0;
+    state.totalEarned = (state.totalEarned||0)+(Number(t.coins)||0);
+    playSound('goal');
+    const mainGain = [];
+    if(t.tag){
+      state.goals.forEach(g=>{
+        if(g.tag && g.tag.trim()===t.tag.trim()){
+          const amount = g.mode==='time' ? (Number(t.durationMin)||0) : 1;
+          if(amount>0){
+            g.current += amount;
+            mainGain.push({goalId:g.id, amount});
+          }
+        }
+      });
+    }
+    const mainRecord = {
+      kind:'task', taskId:t.id, addedCoins:Number(t.coins)||0, beforeCount:0,
+      archived:true, snapshot:JSON.parse(JSON.stringify(t)), goalGain:mainGain, mainBonus:true
+    };
+    t.done = true; t.dayKey=dayKey(); t.weekKey=weekKey();
+    state.archive.push(t);
+    state.tasks = state.tasks.filter(x=>x.id!==t.id);
+    mainRecord.id=uid(); mainRecord.time=Date.now();
+    state.history.unshift(mainRecord);
+    if(state.history.length>100) state.history.pop();
+    undoStack.push(mainRecord); if(undoStack.length>20) undoStack.shift();
+    expandedChains.delete(t.id);
+    completedMain = true;
+  }
+
+  showUndoBar(); persistLocal();
+  setTimeout(()=>render(), completedMain?300:130);
+}
+
 /* 通用撤销一条记录（最近快速撤销 / 历史列表撤销共用） */
+function rollbackGoalGain(goalGain){
+  (goalGain||[]).forEach(gg=>{
+    const g = state.goals.find(x=>x.id===gg.goalId);
+    if(g) g.current = Math.max(0, g.current-gg.amount);
+  });
+}
 function undoRecord(r){
   if(!r) return;
   if(r.kind === 'reward'){
@@ -1062,13 +1803,18 @@ function undoRecord(r){
     const rr = state.rewards.find(x=>x.id===r.rewardId);
     if(rr){ rr.times = r.beforeTimes; }
     else { state.rewards.push(r.snapshot); }
+  }else if(r.kind === 'childTask'){
+    state.coins = Math.max(0, state.coins - r.addedCoins);
+    rollbackGoalGain(r.goalGain);
+    const t = state.tasks.find(x=>x.id===r.taskId);
+    if(t){
+      const c = t.children.find(x=>x.id===r.childId);
+      if(c){ c.done=false; c.doneCount=0; }
+      t.doneCount = t.children.filter(x=>x.done).length;
+    }
   }else{
     state.coins = Math.max(0, state.coins - r.addedCoins);
-    // 回退本次完成累加的目标进度
-    (r.goalGain||[]).forEach(gg=>{
-      const g = state.goals.find(x=>x.id===gg.goalId);
-      if(g) g.current = Math.max(0, g.current - gg.amount);
-    });
+    rollbackGoalGain(r.goalGain);
     const t = r.snapshot;
     t.doneCount = r.beforeCount;
     t.done = false;
@@ -1116,6 +1862,51 @@ function moveReward(id, dir){
   persistLocal(); renderRewards();
 }
 
+/* ===== 副本链式任务 ===== */
+function cycleRemainText(t){
+  if(!t.cycleStart || !t.cycleDays) return '本周期';
+  const end = t.cycleStart + Number(t.cycleDays)*86400000;
+  const diff = end - Date.now();
+  if(diff<=0) return '周期已到期，待重置';
+  const d = Math.ceil(diff/86400000);
+  return `本周期剩余 ${d} 天`;
+}
+function onTaskTypeChange(){
+  const type = document.getElementById('fType').value;
+  document.getElementById('chainBox').style.display = type==='dungeon' ? 'block' : 'none';
+}
+function renderChildFormRows(children){
+  const box = document.getElementById('fChildList');
+  const list = (children && children.length) ? children : [{title:'',coins:1,durationMin:0}];
+  box.innerHTML = list.map(c=>`
+    <div class="child-form-row">
+      <input class="cf-title" placeholder="子任务内容" value="${esc(c.title||'')}">
+      <input class="cf-coins" type="number" min="1" value="${c.coins||1}" title="小金币">
+      <input class="cf-min" type="number" min="0" value="${c.durationMin||0}" placeholder="分钟" title="时长">
+      <button type="button" class="cf-del" aria-label="删除子任务">×</button>
+    </div>`).join('');
+}
+function addChildRow(){
+  document.getElementById('fChildList').insertAdjacentHTML('beforeend', `
+    <div class="child-form-row">
+      <input class="cf-title" placeholder="子任务内容">
+      <input class="cf-coins" type="number" min="1" value="1">
+      <input class="cf-min" type="number" min="0" value="0" placeholder="分钟">
+      <button type="button" class="cf-del" aria-label="删除子任务">×</button>
+    </div>`);
+}
+function readChildForm(){
+  return [...document.querySelectorAll('#fChildList .child-form-row')].map(r=>{
+    const title=r.querySelector('.cf-title').value.trim();
+    return {
+      id:uid(), title,
+      coins:Math.max(1,parseInt(r.querySelector('.cf-coins').value)||1),
+      durationMin:Math.max(0,parseInt(r.querySelector('.cf-min').value)||0),
+      done:false, doneCount:0
+    };
+  }).filter(c=>c.title);
+}
+
 function openEditor(id){
   editingId = id;
   switchNav('tasks');
@@ -1130,6 +1921,8 @@ function openEditor(id){
     document.getElementById('fType').value = t.type;
     document.getElementById('fTag').value = t.tag||'';
     document.getElementById('fDuration').value = t.durationMin||0;
+    document.getElementById('fCycleDays').value = t.cycleDays||7;
+    renderChildFormRows(t.children||[]);
     document.getElementById('delBtn').style.display='block';
   }else{
     document.getElementById('taskModalTitle').textContent = '新建任务';
@@ -1139,8 +1932,11 @@ function openEditor(id){
     document.getElementById('fType').value=currentType;
     document.getElementById('fTag').value='';
     document.getElementById('fDuration').value=0;
+    document.getElementById('fCycleDays').value=7;
+    renderChildFormRows([]);
     document.getElementById('delBtn').style.display='none';
   }
+  onTaskTypeChange();
   renderTagPicker('fTag','fTagPicker');
   mask.classList.add('show');
 }
@@ -1154,16 +1950,39 @@ function saveEditor(){
   const type = document.getElementById('fType').value;
   const tag = document.getElementById('fTag').value.trim();
   const durationMin = Math.max(0, parseInt(document.getElementById('fDuration').value)||0);
+  const isChain = type==='dungeon';
+  let children = [];
+  let cycleDays = 7;
+  if(isChain){
+    cycleDays = Math.max(1, parseInt(document.getElementById('fCycleDays').value)||7);
+    children = readChildForm();
+    if(children.length===0){ toast('副本链至少添加一个子任务'); return; }
+  }
   if(editingId){
     const t = state.tasks.find(x=>x.id===editingId);
     Object.assign(t,{title,coins,count,type,tag,durationMin});
+    if(isChain){
+      t.chain=true; t.cycleDays=cycleDays;
+      // 保留已完成子任务状态，按标题对齐回填；新建/结构变化时重置
+      const oldMap={}; (t.children||[]).forEach(c=>{oldMap[c.title]=c;});
+      t.children = children.map(c=>{ const old=oldMap[c.title]; return old?Object.assign(old,c):c; });
+      t.doneCount=t.children.filter(c=>c.done).length;
+      if(!t.cycleStart) t.cycleStart=Date.now();
+    }else{
+      t.chain=false; t.children=[];
+    }
     currentType = type; syncTabActive();
   }else{
-    state.tasks.push({
+    const base = {
       id:uid(), title, coins, count, type, tag, durationMin,
       done:false, doneCount:0,
       createdAt:Date.now(), dayKey:dayKey(), weekKey:weekKey()
-    });
+    };
+    if(isChain){
+      base.chain=true; base.cycleDays=cycleDays; base.cycleStart=Date.now(); base.children=children;
+      base.count=children.length;
+    }
+    state.tasks.push(base);
     currentType = type; syncTabActive();
   }
   persistLocal(); render(); closeTaskEditor();
@@ -1188,16 +2007,28 @@ document.getElementById('tagBar').addEventListener('click', e=>{
 
 /* ---------- 任务列表点击委托（排序模式下仅允许上下移动） ---------- */
 document.getElementById('taskList').addEventListener('click', e=>{
-  const row = e.target.closest('.task-row'); if(!row) return;
   const act = e.target.closest('[data-action]'); if(!act) return;
-  const id = row.dataset.id, a = act.dataset.action;
+  const row = e.target.closest('.task-row');
+  const a = act.dataset.action;
   if(sortMode){
-    if(a==='up') moveTask(id,-1);
-    else if(a==='down') moveTask(id,1);
+    if(row && (a==='up'||a==='down')) moveTask(row.dataset.id, a==='up'?-1:1);
     return;
   }
-  if(a==='check') toggleDone(id);
-  else if(a==='edit') openEditor(id);
+  if(a==='toggle-chain' && row){
+    const pid=row.dataset.id;
+    expandedChains.has(pid) ? expandedChains.delete(pid) : expandedChains.add(pid);
+    renderTasks(); return;
+  }
+  if(a==='child-check'){
+    const cr=e.target.closest('.child-row');
+    if(cr) toggleChild(cr.dataset.parent, cr.dataset.child);
+    return;
+  }
+  if(a==='child-edit') return; // 子任务在主任务编辑弹窗内修改
+  if(row){
+    if(a==='check') toggleDone(row.dataset.id);
+    else if(a==='edit') openEditor(row.dataset.id);
+  }
 });
 function syncTabActive(){
   document.querySelectorAll('#tabBar .tab').forEach(b=>b.classList.toggle('active', b.dataset.type===currentType));
@@ -1302,6 +2133,7 @@ function redeemReward(id){
   const snapshot = JSON.parse(JSON.stringify(r));
   state.coins -= r.cost;
   r.times = (r.times||0)+1;
+  playSound('reward');
   const record = {
     kind:'reward', rewardId:r.id, refundCoins:r.cost, beforeTimes:snapshot.times||0,
     snapshot:snapshot
@@ -1437,12 +2269,81 @@ function deleteAchievement(){
   persistLocal(); render(); closeAchSheet(); toast('已删除');
 }
 
+/* ===== 吐槽 / 碎碎念 ===== */
+let editingRantId = null, sheetRantId = null;
+function openRantEditor(){
+  switchNav('rants');
+  editingRantId = null;
+  pendingRantImage = null;
+  document.getElementById('rText').value='';
+  document.getElementById('rCamera').value='';
+  document.getElementById('rAlbum').value='';
+  const pv = document.getElementById('rPreview');
+  pv.style.display='none'; pv.innerHTML='';
+  document.getElementById('rantModalTitle').textContent='记一条吐槽';
+  document.getElementById('rantModal').classList.add('show');
+}
+function openRantEditorForEdit(id){
+  const r = state.rants.find(x=>x.id===id); if(!r) return;
+  editingRantId = id;
+  pendingRantImage = r.image || null;
+  document.getElementById('rText').value = r.text||'';
+  document.getElementById('rCamera').value='';
+  document.getElementById('rAlbum').value='';
+  const pv = document.getElementById('rPreview');
+  if(r.image){ pv.style.display='block'; pv.innerHTML=`<img src="${r.image}" alt="预览">`; }
+  else { pv.style.display='none'; pv.innerHTML=''; }
+  document.getElementById('rantModalTitle').textContent='编辑吐槽';
+  document.getElementById('rantModal').classList.add('show');
+}
+function closeRantEditor(){ document.getElementById('rantModal').classList.remove('show'); editingRantId=null; pendingRantImage=null; }
+
+async function onRantImagePicked(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  try{
+    pendingRantImage = await compressImage(file);
+    const pv = document.getElementById('rPreview');
+    pv.style.display='block';
+    pv.innerHTML = `<img src="${pendingRantImage}" alt="预览">`;
+  }catch(e){ toast('图片读取失败，请换一张'); }
+  ev.target.value='';
+}
+
+function saveRant(){
+  const text = document.getElementById('rText').value.trim();
+  if(!text && !pendingRantImage){ toast('写点文字或选一张照片'); return; }
+  if(editingRantId){
+    const r = state.rants.find(x=>x.id===editingRantId);
+    if(r) Object.assign(r,{text, image:pendingRantImage});
+  }else{
+    state.rants.push({id:uid(), time:Date.now(), text, image:pendingRantImage});
+  }
+  persistLocal(); render(); closeRantEditor(); toast('已记下');
+}
+function openRantSheet(id){ sheetRantId = id; document.getElementById('rantSheet').classList.add('show'); }
+function closeRantSheet(){ sheetRantId=null; document.getElementById('rantSheet').classList.remove('show'); }
+function editRant(){ const id=sheetRantId; closeRantSheet(); openRantEditorForEdit(id); }
+function deleteRant(){
+  if(!sheetRantId) return;
+  state.rants = state.rants.filter(x=>x.id!==sheetRantId);
+  persistLocal(); render(); closeRantSheet(); toast('已删除');
+}
+
 function openLightbox(id){
   const a = state.achievements.find(x=>x.id===id);
   if(!a) return;
   const body = document.getElementById('lbBody');
   if(a.image){ body.innerHTML = `<img src="${a.image}" alt="成果大图">`; }
   else { body.innerHTML = `<div class="lb-text">${esc(a.text)}</div>`; }
+  document.getElementById('lightbox').classList.add('show');
+}
+function openRantLightbox(id){
+  const r = state.rants.find(x=>x.id===id);
+  if(!r) return;
+  const body = document.getElementById('lbBody');
+  if(r.image){ body.innerHTML = `<img src="${r.image}" alt="吐槽大图">`; }
+  else { body.innerHTML = `<div class="lb-text">${esc(r.text)}</div>`; }
   document.getElementById('lightbox').classList.add('show');
 }
 function closeLightbox(ev){
@@ -1457,6 +2358,7 @@ function closeLightbox(ev){
 const NAV_META = {
   tasks:    { add:()=>openEditor(null),    sortable:true, history:true },
   rewards:  { add:()=>openRewardEditor(null), sortable:true, history:true },
+  rants:    { add:()=>openRantEditor(),   sortable:false, history:false },
   wall:     { add:()=>openAchEditor(),     sortable:false, history:false },
   goals:    { add:()=>openGoalEditor(null), sortable:false, history:false },
   settings: { add:null,                    sortable:false, history:false }
@@ -1469,9 +2371,11 @@ function switchNav(nav){
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active', b.dataset.nav===nav));
   document.getElementById('view-tasks').style.display = nav==='tasks'?'flex':'none';
   document.getElementById('view-rewards').style.display = nav==='rewards'?'flex':'none';
+  document.getElementById('view-rants').style.display = nav==='rants'?'flex':'none';
   document.getElementById('view-wall').style.display = nav==='wall'?'flex':'none';
   document.getElementById('view-goals').style.display = nav==='goals'?'flex':'none';
   document.getElementById('view-settings').classList.toggle('show', nav==='settings');
+  if(nav==='settings') renderChallengeStatus();
   const addBtn = document.getElementById('headAdd');
   if(NAV_META[nav].add){ addBtn.style.display='flex'; addBtn.onclick = NAV_META[nav].add; }
   else { addBtn.style.display='none'; }
@@ -1481,6 +2385,7 @@ function switchNav(nav){
   document.getElementById('histBtn').style.display = NAV_META[nav].history?'flex':'none';
   if(nav==='tasks') renderTasks();
   else if(nav==='rewards') renderRewards();
+  else if(nav==='rants') renderRants();
   else if(nav==='wall') renderWall();
   else if(nav==='goals') renderGoals();
 }
@@ -1505,7 +2410,7 @@ function openHistory(){
 function closeHistory(){ document.getElementById('historyModal').classList.remove('show'); }
 function renderHistory(){
   const list = document.getElementById('historyList');
-  const rows = state.history.filter(x=>x.kind===histKind);
+  const rows = state.history.filter(x=> histKind==='reward' ? x.kind==='reward' : x.kind!=='reward');
   if(rows.length===0){
     list.innerHTML = '<div class="hist-empty">暂无' + (histKind==='reward'?'兑换':'完成记录') + '<br>完成任务 / 兑换奖励后会记在这里</div>';
     return;
@@ -1523,10 +2428,18 @@ function renderHistory(){
       </div>`;
     }
     const s = r.snapshot||{};
+    let title = s.title||'任务', meta = TYPE_NAME[s.type]||'';
+    if(r.kind==='childTask'){
+      const c = (s.children||[]).find(x=>x.id===r.childId)||{};
+      title = c.title || s.title;
+      meta = '副本子任务 · ' + fmtTime(r.time);
+    }else{
+      meta = meta + ' · ' + fmtTime(r.time);
+    }
     return `<div class="hist-row">
       <div class="hist-main">
-        <div class="hist-title">${esc(s.title||'任务')}</div>
-        <div class="hist-meta">${TYPE_NAME[s.type]||''} · ${fmtTime(r.time)}</div>
+        <div class="hist-title">${esc(title)}</div>
+        <div class="hist-meta">${meta}</div>
       </div>
       <span class="hist-coins plus">+${r.addedCoins}</span>
       <button class="hist-undo" onclick="undoHistoryRecord('${r.id}')">撤销</button>
@@ -1548,6 +2461,8 @@ function showUndoBar(){
   const last = undoStack[undoStack.length-1];
   if(last.kind==='reward'){
     document.getElementById('undoText').textContent = '奖励兑换，-' + last.refundCoins + ' 金币';
+  }else if(last.kind==='childTask'){
+    document.getElementById('undoText').textContent = '子任务完成，+' + last.addedCoins + ' 金币';
   }else{
     document.getElementById('undoText').textContent = '任务完成，+' + last.addedCoins + ' 金币';
   }
@@ -1617,7 +2532,8 @@ async function manualSync(){
   try{
     const remote = await cloudLoad();
     if(remote){
-      state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],history:[],goals:[]}, remote);
+      state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],rants:[],history:[],goals:[],totalEarned:0,lastCheckinDay:null,streakDays:0,challengeDay:null,challengeCount:0}, remote);
+      normalizeState();
     }
     resetDueTasks();
     await cloudSave();
@@ -1645,7 +2561,8 @@ function importJSON(ev){
   reader.onload = ()=>{
     try{
       const data = JSON.parse(reader.result);
-      state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],history:[],goals:[]}, data);
+      state = Object.assign({coins:0,tasks:[],archive:[],rewards:[],achievements:[],rants:[],history:[],goals:[],totalEarned:0,lastCheckinDay:null,streakDays:0,challengeDay:null,challengeCount:0}, data);
+      normalizeState();
       resetDueTasks(); persistLocal(); render(); toast('导入成功');
     }catch(e){ toast('文件格式错误'); }
   };
@@ -1661,7 +2578,7 @@ function clearLocal(){
     return;
   }
   clearTimeout(clearArmedTimer); clearArmed=false; btn.textContent='清空本地全部数据';
-  state = {coins:0,tasks:[],archive:[],rewards:[],achievements:[],history:[],goals:[]};
+  state = {coins:0,tasks:[],archive:[],rewards:[],achievements:[],rants:[],history:[],goals:[],totalEarned:0,lastCheckinDay:null,streakDays:0,challengeDay:null,challengeCount:0};
   persistLocal(); render(); toast('已清空');
 }
 
@@ -1675,9 +2592,14 @@ resetDueTasks();
 bindTagPicker('fTag','fTagPicker');
 bindTagPicker('gTag','gTagPicker');
 bindTagPicker('rTag','rTagPicker');
+document.getElementById('fChildList').addEventListener('click', e=>{
+  const del=e.target.closest('.cf-del'); if(!del) return;
+  del.closest('.child-form-row').remove();
+});
 render();
 fillDavForm();
 switchNav('tasks');
+checkDailyCheckin();
 if(getDav().url){ manualSync(); }
 </script>
 </body>
